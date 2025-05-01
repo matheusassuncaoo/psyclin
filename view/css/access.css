@@ -1,0 +1,46 @@
+@import url(../src/main/resources/static/css/global.css);
+
+/* Background gradient with improved blending */
+.login-bg {
+    background: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+    background-size: cover;
+    background-position: center;
+}
+
+/* Style for buttons */
+.btn-primary {
+    background-color: var(--mountain-meadow);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--zomp);
+}
+
+/* Responsive adjustments for tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .login-bg {
+        padding: 2rem;
+    }
+
+    .btn-primary {
+        padding: 14px 28px;
+        font-size: 1.1rem;
+    }
+
+    .max-w-sm {
+        max-width: 20rem;
+    }
+}
