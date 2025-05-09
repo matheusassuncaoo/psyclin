@@ -11,7 +11,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.Column;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
@@ -20,12 +19,11 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 @Table(name = "profissional")
 @Getter
 @Setter
-
 public class Profissional {
-    public interface CreateUser {
+    public interface CreateProfissional {
     }
 
-    public interface UpdateUser {
+    public interface UpdateProfissional {
     }
 
     public static final String TABLE_NAME = "Profissional";
@@ -35,9 +33,9 @@ public class Profissional {
     private Long id;
 
     @Column(name = "cod_prof", nullable = false, length = 5)
-    @NotNull(groups = CreateUser.class)
-    @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 5, max = 5)
+    @NotNull(groups = CreateProfissional.class)
+    @NotEmpty(groups = CreateProfissional.class)
+    @Size(groups = CreateProfissional.class, min = 5, max = 5)
     private String codProf;
 
     @Column(name = "nome_prof", length = 100)
@@ -67,18 +65,20 @@ public class Profissional {
     @Column(name = "cons_prof", length = 10)
     @NotNull
     @NotEmpty
-    @Size(min = 5, max = 10)
+    @Size(max = 10)
     private String consProf; // Número do conselho profissional (ex.: CRP123456)
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @Column(name = "senha_prof", length = 10)
-    @NotNull(groups = { CreateUser.class, UpdateUser.class })
-    @NotEmpty(groups = { CreateUser.class, UpdateUser.class })
-    @Size(groups = { CreateUser.class, UpdateUser.class }, min = 6, max = 10)
+    @Column(name = "senha_prof", length = 70)
+    @NotNull(groups = { CreateProfissional.class, UpdateProfissional.class })
+    @NotEmpty(groups = { CreateProfissional.class, UpdateProfissional.class })
+    @Size(groups = { CreateProfissional.class, UpdateProfissional.class }, min = 6, max = 70)
     private String senhaProf;
 
-    // private List<Task> = new ArrayList<>(); // Lista de tarefas associadas ao
-    // profissional
+    // Método auxiliar para autenticação
+    public boolean authenticate(String codProf, String senhaProf) {
+        return this.codProf.equals(codProf) && this.senhaProf.equals(senhaProf) && this.statusProf == 1;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -110,5 +110,4 @@ public class Profissional {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
-
 }

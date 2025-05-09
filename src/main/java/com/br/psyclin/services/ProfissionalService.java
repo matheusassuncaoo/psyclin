@@ -1,5 +1,6 @@
 package com.br.psyclin.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class ProfissionalService {
-    private ProfissionalRepository profissionalRepository;
+    private final ProfissionalRepository profissionalRepository;
 
     public ProfissionalService(ProfissionalRepository profissionalRepository) {
         this.profissionalRepository = profissionalRepository;
@@ -23,28 +24,79 @@ public class ProfissionalService {
                 "Profissional não encontrado! ID: " + id + ", Tipo: " + Profissional.class.getName()));
     }
 
+    public Profissional findByCodProf(String codProf) {
+        Profissional profissional = this.profissionalRepository.findByCodProf(codProf);
+        if (profissional == null) {
+            throw new RuntimeException("Profissional não encontrado! Código: " + codProf);
+        }
+        return profissional;
+    }
+
+    public List<Profissional> findBySupProf(String supProf) {
+        List<Profissional> profissionais = this.profissionalRepository.findBySupProf(supProf);
+        if (profissionais.isEmpty()) {
+            throw new RuntimeException("Nenhum profissional encontrado com supervisor: " + supProf);
+        }
+        return profissionais;
+    }
+
+    public List<Profissional> findByTipoProf(Integer tipoProf) {
+        List<Profissional> profissionais = this.profissionalRepository.findByTipoProf(tipoProf);
+        if (profissionais.isEmpty()) {
+            throw new RuntimeException("Nenhum profissional encontrado com tipo: " + tipoProf);
+        }
+        return profissionais;
+    }
+
+    public Profissional authenticate(String codProf, String senhaProf) {
+        Profissional profissional = this.profissionalRepository.findByCodProf(codProf);
+        if (profissional == null || !profissional.authenticate(codProf, senhaProf)) {
+            throw new RuntimeException("Código ou senha inválidos!");
+        }
+        return profissional;
+    }
+
+    public List<Profissional> findByNomeProf(String nomeProf) {
+        List<Profissional> profissionais = this.profissionalRepository.findAll().stream()
+                .filter(p -> p.getNomeProf().equalsIgnoreCase(nomeProf))
+                .toList();
+        if (profissionais.isEmpty()) {
+            throw new RuntimeException("Nenhum profissional encontrado com nome: " + nomeProf);
+        }
+        return profissionais;
+    }
+
     @Transactional
     public Profissional create(Profissional obj) {
-        obj.setId(null);
-        obj = this.profissionalRepository.save(obj);
-        // retornar o task
-        return obj;
+        // Validar se codProf já existe
+        Profissional existing = this.profissionalRepository.findByCodProf(obj.getCodProf());
+        if (existing != null) {
+            throw new RuntimeException("Código de profissional já existe: " + obj.getCodProf());
+        }
+        obj.setId(null); // Garante que o ID será gerado automaticamente
+        return this.profissionalRepository.save(obj);
     }
 
     @Transactional
     public Profissional update(Profissional obj) {
-        Profissional newObj = findById(obj.getId());
-        newObj.setSenhaProf(obj.getSenhaProf());
-        return this.profissionalRepository.save(newObj);
+        Profissional existing = findById(obj.getId());
+        existing.setNomeProf(obj.getNomeProf());
+        existing.setSenhaProf(obj.getSenhaProf());
+        existing.setTipoProf(obj.getTipoProf());
+        existing.setSupProf(obj.getSupProf());
+        existing.setStatusProf(obj.getStatusProf());
+        existing.setConsProf(obj.getConsProf());
+        return this.profissionalRepository.save(existing);
     }
 
+    @Transactional
     public void delete(Long id) {
-        findById(id);
-        try{
+        Profissional profissional = findById(id);
+        try {
             this.profissionalRepository.deleteById(id);
         } catch (Exception e) {
-            throw new RuntimeException("Não é possível excluir o profissional com id: " + id + ", pois ele está associado a outras entidades.");
+            throw new RuntimeException("Não é possível excluir o profissional com ID: " + id +
+                    ". Ele pode estar associado a outras entidades (ex.: anamneses, consultas).");
         }
-       
     }
 }
