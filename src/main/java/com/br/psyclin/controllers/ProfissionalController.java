@@ -65,6 +65,13 @@ public class ProfissionalController {
         return ResponseEntity.ok().body(obj);
     }
 
+    // GET /profissional/status/{statusProf} - Buscar por statusProf
+    @GetMapping("/status/{statusProf}")
+    public ResponseEntity<List<Profissional>> findByStatusProf(@PathVariable Integer statusProf) {
+        List<Profissional> profissionais = this.profissionalService.findByStatusProf(statusProf);
+        return ResponseEntity.ok().body(profissionais);
+    }
+
     // POST /profissional/login - Autenticação
     @PostMapping("/login")
     public ResponseEntity<Profissional> login(@RequestParam String codProf, @RequestParam String senhaProf) {
