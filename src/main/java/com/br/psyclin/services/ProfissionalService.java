@@ -48,6 +48,14 @@ public class ProfissionalService {
         return profissionais;
     }
 
+    public List<Profissional> findByStatusProf(Integer statusProf) {
+        List<Profissional> profissionais = this.profissionalRepository.findByStatusProf(statusProf);
+        if (profissionais.isEmpty()) {
+            throw new RuntimeException("Nenhum profissional encontrado com status: " + statusProf);
+        }
+        return profissionalRepository.findByStatusProf(statusProf);
+    }
+
     public Profissional authenticate(String codProf, String senhaProf) {
         Profissional profissional = this.profissionalRepository.findByCodProf(codProf);
         if (profissional == null || !profissional.authenticate(codProf, senhaProf)) {
