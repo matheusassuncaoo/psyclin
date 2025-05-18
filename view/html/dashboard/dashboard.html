@@ -21,8 +21,7 @@
         <nav class="bg-[var(--zomp)] border-[var(--oxford-blue)]">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                 <!-- Botão Hambúrguer -->
-                <button id="menu-toggle"
-                    class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                <button id="menu-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
                     <i data-feather="menu"></i>
                 </button>
 
@@ -37,8 +36,7 @@
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i data-feather="search" class="text-gray-400"></i>
                         </div>
-                        <input type="text" placeholder="Estou procurando por..."
-                            class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
                     </div>
                 </div>
 
@@ -58,16 +56,14 @@
 
                     <!-- Avatar com Dropdown -->
                     <div class="relative">
-                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow"
-                            id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
                             <span class="sr-only">Abrir menu do usuário</span>
                             <img class="w-8 h-8 rounded-full"
                                 src="https://i.pinimg.com/736x/82/cc/ec/82ccec14bb719cf672d8ee43bb52e99b.jpg"
                                 alt="Foto do usuário">
                         </button>
                         <!-- Dropdown -->
-                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg"
-                            id="user-dropdown">
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
                             <div class="px-4 py-3">
                                 <span class="block text-sm text-prussian-blue">Usuário</span>
                                 <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
@@ -85,13 +81,11 @@
 
             <!-- Barra de Pesquisa Mobile -->
             <div id="mobile-search-bar" class="hidden sm:hidden p-4">
-                <input type="text" placeholder="Estou procurando por..."
-                    class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
             </div>
         </nav>
         <!-- Sidebar -->
-        <div id="sidebar"
-            class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
             <div class="mb-4">
                 <span class="text-lg font-bold">DASHBOARD</span>
             </div>
@@ -146,35 +140,35 @@
                         <i data-feather="user-plus" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Atender</h3>
                     </div>
-                    <p class="text-3xl font-bold">000</p>
+                    <p id="attend-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="file-text" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Anamnese</h3>
                     </div>
-                    <p class="text-3xl font-bold">000</p>
+                    <p id="anamnese-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="calendar" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Encontros</h3>
                     </div>
-                    <p class="text-3xl font-bold">000</p>
+                    <p id="encontros-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="file" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Relatórios</h3>
                     </div>
-                    <p class="text-3xl font-bold">000</p>
+                    <p id="relatorios-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="clock" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Histórico</h3>
                     </div>
-                    <p class="text-3xl font-bold">000</p>
+                    <p id="historico-count" class="text-3xl font-bold">000</p>
                 </div>
             </div>
             <div class="mt-6 bg-[var(--white)] p-4 rounded-lg shadow-md">

@@ -1,11 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psyclin - Consulta</title>
+    <title>Psyclin - Cadastro</title>
+    <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Importando Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Importando CSS da página -->
+    <link rel="stylesheet" href="/view/css/dashboard.css">
 </head>
+
 <body>
-    
+    <!-- Container principal-->
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-[var(--zomp)] border-[var(--oxford-blue)]">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <!-- Botão Hambúrguer -->
+                <button id="menu-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="menu"></i>
+                </button>
+
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
+                </a>
+
+                <!-- Barra de Pesquisa no Desktop -->
+                <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-feather="search" class="text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                    </div>
+                </div>
+
+                <!-- Botão Lupa (Mobile) -->
+                <button id="mobile-search-toggle" class="sm:hidden text-white">
+                    <i data-feather="search"></i>
+                </button>
+
+                <!-- Menu de Usuário -->
+                <div class="flex items-center space-x-4">
+                    <!-- Ícones no Desktop -->
+                    <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
+                        <button class="icon-btn" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
+                        <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
+                        <button class="icon-btn" aria-label="Configurações"><i data-feather="settings"></i></button>
+                    </div>
+
+                    <!-- Avatar com Dropdown -->
+                    <div class="relative">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://i.pinimg.com/736x/82/cc/ec/82ccec14bb719cf672d8ee43bb52e99b.jpg"
+                                alt="Foto do usuário">
+                        </button>
+                        <!-- Dropdown -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-prussian-blue">Usuário</span>
+                                <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
+                            </div>
+                            <ul class="py-2">
+                                <li><a href="#" class="dropdown-link">Dashboard</a></li>
+                                <li><a href="#" class="dropdown-link">Anamneses</a></li>
+                                <li><a href="#" class="dropdown-link">Configurações</a></li>
+                                <li><a href="#" class="dropdown-link">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Pesquisa Mobile -->
+            <div id="mobile-search-bar" class="hidden sm:hidden p-4">
+                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+            </div>
+        </nav>
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+            <div class="mb-4">
+                <span class="text-lg font-bold">DASHBOARD</span>
+            </div>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="grid"></i>
+                <span class="ml-2">DASHBOARD</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="users"></i>
+                <span class="ml-2">PACIENTES</span>
+            </a>
+            <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="database"></i>
+                <span class="ml-2">CADASTRAR</span>
+            </a>
+            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="file-text"></i>
+                <span class="ml-2">ANAMNESES</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="coffee"></i>
+                <span class="ml-2">CONSULTA</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="check-square"></i>
+                <span class="ml-2">APROVAÇÃO</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="upload"></i>
+                <span class="ml-2">EMITIR</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="settings"></i>
+                <span class="ml-2">CONFIGURAÇÕES</span>
+            </a>
+            <div class="mt-auto text-sm">psyclin.1.0A</div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
+
+
+            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            </div>
+        </div>
+
+        <!-- Importando JavaScript -->
+        <script src="/view/js/dashboard.js"></script>
 </body>
+
 </html>
