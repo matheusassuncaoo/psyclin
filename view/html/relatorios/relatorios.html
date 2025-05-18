@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psyclin - Cadastro</title>
+    <title>Asiclin - Lista de Pendências</title>
     <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
     <!-- Importando Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -12,6 +12,13 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
     <link rel="stylesheet" href="/view/css/dashboard.css">
+    <style>
+        :root {
+            --zomp: #1D8A70;
+            --oxford-blue: #14213D;
+            --white: #FFFFFF;
+        }
+    </style>
 </head>
 
 <body>
@@ -70,7 +77,7 @@
                             </div>
                             <ul class="py-2">
                                 <li><a href="#" class="dropdown-link">Dashboard</a></li>
-                                <li><a href="#" class="dropdown-link">Anamneses</a></li>
+                                <li><a href="#" class="dropdown-link">Aprovação</a></li>
                                 <li><a href="#" class="dropdown-link">Configurações</a></li>
                                 <li><a href="#" class="dropdown-link">Sair</a></li>
                             </ul>
@@ -84,56 +91,139 @@
                 <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
             </div>
         </nav>
-        <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
-            <div class="mb-4">
-                <span class="text-lg font-bold">DASHBOARD</span>
+
+        <!-- Container para Sidebar e Conteúdo Principal -->
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+                <div class="mb-4">
+                    <span class="text-lg font-bold">MENU</span>
+                </div>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="grid"></i>
+                    <span class="ml-2">DASHBOARD</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="users"></i>
+                    <span class="ml-2">PACIENTES</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="database"></i>
+                    <span class="ml-2">CADASTRAR</span>
+                </a>
+                <a href="#" class="flex items-center p-2 bg-teal-700 rounded">
+                    <i data-feather="file-text"></i>
+                    <span class="ml-2">Aprovação</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-7 rounded">
+                    <i data-feather="coffee"></i>
+                    <span class="ml-2">CONSULTA</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="check-square"></i>
+                    <span class="ml-2">APROVAÇÃO</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="upload"></i>
+                    <span class="ml-2">EMITIR</span>
+                </a>
+                <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                    <i data-feather="settings"></i>
+                    <span class="ml-2">CONFIGURAÇÕES</span>
+                </a>
+                <div class="mt-auto text-sm">asiclin.1.0A</div>
             </div>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="grid"></i>
-                <span class="ml-2">DASHBOARD</span>
-            </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="users"></i>
-                <span class="ml-2">PACIENTES</span>
-            </a>
-            <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="database"></i>
-                <span class="ml-2">CADASTRAR</span>
-            </a>
-            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="file-text"></i>
-                <span class="ml-2">ANAMNESES</span>
-            </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="coffee"></i>
-                <span class="ml-2">CONSULTA</span>
-            </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="check-square"></i>
-                <span class="ml-2">APROVAÇÃO</span>
-            </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="upload"></i>
-                <span class="ml-2">EMITIR</span>
-            </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-                <i data-feather="settings"></i>
-                <span class="ml-2">CONFIGURAÇÕES</span>
-            </a>
-            <div class="mt-auto text-sm">psyclin.1.0A</div>
-        </div>
 
-        <!-- Conteúdo Principal -->
-        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
-
-
-            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            <!-- Conteúdo Principal -->
+            <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h2 class="text-xl font-bold mb-4">05 Lista de Pendências, Detalhamento do Documento, Aprovação/Rejeição, Confirmação de Aprovação/Feedback Enviado</h2>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="p-2">Profissionais</th>
+                                <th class="p-2">Registro Acadêmico</th>
+                                <th class="p-2">Telefone</th>
+                                <th class="p-2">Status</th>
+                                <th class="p-2">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-2">Bárbara</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Matheus</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Erasmo</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Silva</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Yuri</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">João</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-green-200">Validação</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Reynaldo</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-yellow-200">Em processo</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Nulo</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-red-200">Reprovado</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2">Nulo</td>
+                                <td class="p-2">000000</td>
+                                <td class="p-2">String(000000-0000)</td>
+                                <td class="p-2 bg-red-200">Reprovado</td>
+                                <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- Importando JavaScript -->
+        <script>
+            feather.replace();
+        </script>
         <script src="/view/js/dashboard.js"></script>
+    </div>
 </body>
 
 </html>
