@@ -1,7 +1,5 @@
 const btnGroup = document.querySelector(".btn-group");
 
-if (grupopaciente) { click ,function (&gt;) {
-
 if (btnGroup) {
     btnGroup.addEventListener("click", function (e) {
         if (e.target.tagName === "BUTTON") {
