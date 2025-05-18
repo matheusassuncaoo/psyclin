@@ -10,10 +10,6 @@ public class PsyclinApplication {
 		SpringApplication.run(PsyclinApplication.class, args);
 
 
-	  
-
-		
-
 	}
 
 }
