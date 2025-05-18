@@ -8,6 +8,12 @@ public class PsyclinApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PsyclinApplication.class, args);
+
+
+	  
+
+		
+
 	}
 
 }
