@@ -1,0 +1,67 @@
+<!-- Navbar -->
+<nav id="navbar" class="navbar bg-[var(--zomp)] border-[var(--oxford-blue)]">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <!-- Botão Hambúrguer -->
+        <button id="menu-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="menu"></i>
+                </button>
+
+        <!-- Logo -->
+        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
+        </a>
+
+        <!-- Barra de Pesquisa no Desktop -->
+        <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <i data-feather="search" class="text-gray-400"></i>
+                </div>
+                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+            </div>
+        </div>
+
+        <!-- Botão Lupa (Mobile) -->
+        <button id="mobile-search-toggle" class="sm:hidden text-white">
+                    <i data-feather="search"></i>
+                </button>
+
+        <!-- Menu de Usuário -->
+        <div class="flex items-center space-x-4">
+            <!-- Ícones no Desktop -->
+            <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
+                <button class="icon-btn" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
+                <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
+                <button class="icon-btn" aria-label="Configurações"><i data-feather="settings"></i></button>
+            </div>
+
+            <!-- Avatar com Dropdown -->
+            <div class="relative">
+                <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://i.pinimg.com/736x/82/cc/ec/82ccec14bb719cf672d8ee43bb52e99b.jpg"
+                                alt="Foto do usuário">
+                        </button>
+                <!-- Dropdown -->
+                <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                    <div class="px-4 py-3">
+                        <span class="block text-sm text-prussian-blue">Usuário</span>
+                        <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
+                    </div>
+                    <ul class="py-2">
+                        <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a></li>
+                        <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
+                        <li><a href="/view/html/" class="dropdown-link">Configurações</a></li>
+                        <li><a href="#" class="dropdown-link">Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Pesquisa Mobile -->
+    <div id="mobile-search-bar" class="hidden sm:hidden p-4">
+        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+    </div>
+</nav>
