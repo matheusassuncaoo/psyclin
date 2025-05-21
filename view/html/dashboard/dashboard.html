@@ -52,14 +52,12 @@
 
                     <!-- Botões para Desktop -->
                     <div id="desktop-menu" class="hidden sm:flex items-center space-x-4">
-                        <button class="icon-btn button-help" aria-label="Ajuda"><i
-                                data-feather="help-circle"></i></button>
+                        <button class="icon-btn button-help" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
 
                         <!-- Botão de notificações com dropdown -->
                         <button class="icon-btn button-notification relative" aria-label="Notificações" id="button-notification" data-dropdown-toggle="notifications-dropdown">
                             <i data-feather="bell"></i>
-                            <span id="notification-badge"
-                                class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            <span id="notification-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                         </button>
 
                         <!-- Dropdown de notificações -->
@@ -70,17 +68,14 @@
                             </ul>
                         </div>
 
-                        <button class="icon-btn button-config" aria-label="Configurações"><i
-                                data-feather="settings"></i></button>
+                        <button class="icon-btn button-config" aria-label="Configurações"><i data-feather="settings"></i></button>
                     </div>
 
                     <!-- Avatar com Dropdown -->
                     <div class="relative">
                         <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
                             <span class="sr-only">Abrir menu do usuário</span>
-                            <img class="w-8 h-8 rounded-full"
-                                src="https://i.pinimg.com/736x/d7/a6/18/d7a618fcaa8804e0588ee8d0f02d9f99.jpg"
-                                alt="Foto do usuário">
+                            <img class="w-8 h-8 rounded-full" src="https://i.pinimg.com/736x/d7/a6/18/d7a618fcaa8804e0588ee8d0f02d9f99.jpg" alt="Foto do usuário">
                         </button>
                         <!-- Dropdown -->
                         <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
@@ -89,8 +84,7 @@
                                 <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
                             </div>
                             <ul class="py-2">
-                                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a>
-                                </li>
+                                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a></li>
                                 <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
                                 <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
                                 <li><a href="#" class="dropdown-link">Sair</a></li>
@@ -119,7 +113,7 @@
                 <i data-feather="users"></i>
                 <span class="ml-2">PACIENTES</span>
             </a>
-            <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/cadastro/cadastro.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="database"></i>
                 <span class="ml-2">CADASTRAR</span>
             </a>
@@ -250,7 +244,7 @@
                 </div>
             </div>
 
-            <div class="loader fixed inset-45 flex items-center justify-center bg-[var(--zomp)] hidden">
+            <div class="loader fixed inset-50 flex items-center justify-center bg-[var(--zomp)] hidden">
             </div>
 
         </div>

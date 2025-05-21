@@ -1,17 +1,36 @@
 @import url(/view/css/global.css);
 
-/* Ícones e botões */
+/* Estilização dos ícones e botões */
 
 .icon-btn {
     color: white;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
     position: relative;
     padding: 0.5rem;
+    cursor: pointer;
 }
 
 .icon-btn:hover {
     color: var(--mountain-meadow);
 }
+
+
+/* Estilização dos itens do dropdown */
+
+.dropdown-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--oxford-blue);
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-link:hover {
+    background-color: #f3f4f6;
+    color: var(--mountain-meadow);
+}
+
+
+/* Animação de carregamento */
 
 .loader {
     width: 50px;
@@ -25,4 +44,75 @@
     -webkit-mask-composite: source-out;
     mask-composite: subtract;
     animation: l3 1s infinite linear;
+}
+
+@keyframes l3 {
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+@keyframes rotacao {
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+
+/* Estilos específicos da sidebar */
+
+.barra-lateral {
+    transition: transform 0.3s ease-in-out;
+    z-index: 50;
+}
+
+
+/* Estilos para o conteúdo responsivo */
+
+.conteudo-principal {
+    transition: margin-left 0.3s ease;
+}
+
+
+/* Estilos dos cards do dashboard */
+
+.card-dashboard {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Estilização do calendário */
+
+.dia-calendario {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dia-calendario:hover {
+    background-color: #f3f4f6;
+}
+
+.dia-atual {
+    background-color: var(--mountain-meadow);
+    color: white;
+    border-radius: 50%;
+}
+
+
+/* Media queries para responsividade */
+
+@media (max-width: 640px) {
+    .barra-lateral {
+        width: 100%;
+    }
 }
