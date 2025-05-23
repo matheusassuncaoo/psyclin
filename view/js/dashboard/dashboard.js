@@ -54,7 +54,7 @@ function configurarBarraLateral(botao, sidebar, conteudo) {
     if (botao && sidebar && conteudo) {
         botao.addEventListener("click", () => {
             sidebar.classList.toggle("-translate-x-full");
-            sidebar.classList.toggle("translate-x-0");
+            //sidebar.classList.toggle("translate-x-0");
 
             // Ajustar margem do conteúdo principal apenas em telas maiores
             if (window.innerWidth >= 768) {
@@ -89,32 +89,44 @@ function configurarPesquisaMobile(botao, barraPesquisa) {
  * @param {HTMLElement} btnUsuario - Botão para abrir dropdown do usuário
  */
 function configurarDropdowns(dropdownNotificacoes, dropdownUsuario, btnNotificacao, btnUsuario) {
+    const btnNotificacaoMobile = document.getElementById("button-mobile-notification");
+    const dropdownNotificacoesMobile = document.getElementById("mobile-notifications-dropdown");
+
     // Fechar dropdowns ao clicar fora
     document.addEventListener("click", (evento) => {
-        // Verificar se os elementos existem antes de manipulá-los
-        if (dropdownNotificacoes &&
-            !evento.target.closest("#button-notification") &&
+        if (dropdownNotificacoes && !evento.target.closest("#button-notification") &&
             !evento.target.closest("#notifications-dropdown")) {
             dropdownNotificacoes.classList.add("hidden");
         }
 
-        if (dropdownUsuario &&
-            !evento.target.closest("#user-menu-button") &&
+        if (dropdownNotificacoesMobile && !evento.target.closest("#button-mobile-notification") &&
+            !evento.target.closest("#mobile-notifications-dropdown")) {
+            dropdownNotificacoesMobile.classList.add("hidden");
+        }
+
+        if (dropdownUsuario && !evento.target.closest("#user-menu-button") &&
             !evento.target.closest("#user-dropdown")) {
             dropdownUsuario.classList.add("hidden");
         }
     });
 
-    // Configurar botão de notificações
+    // Configurar botão de notificações desktop
     if (btnNotificacao && dropdownNotificacoes) {
         btnNotificacao.addEventListener("click", (evento) => {
+            evento.preventDefault();
             evento.stopPropagation();
             dropdownNotificacoes.classList.toggle("hidden");
+            if (dropdownUsuario) dropdownUsuario.classList.add("hidden");
+        });
+    }
 
-            // Fechar o outro dropdown se estiver aberto
-            if (dropdownUsuario && !dropdownUsuario.classList.contains("hidden")) {
-                dropdownUsuario.classList.add("hidden");
-            }
+    // Configurar botão de notificações mobile
+    if (btnNotificacaoMobile && dropdownNotificacoesMobile) {
+        btnNotificacaoMobile.addEventListener("click", (evento) => {
+            evento.preventDefault();
+            evento.stopPropagation();
+            dropdownNotificacoesMobile.classList.toggle("hidden");
+            if (dropdownUsuario) dropdownUsuario.classList.add("hidden");
         });
     }
 
@@ -123,11 +135,8 @@ function configurarDropdowns(dropdownNotificacoes, dropdownUsuario, btnNotificac
         btnUsuario.addEventListener("click", (evento) => {
             evento.stopPropagation();
             dropdownUsuario.classList.toggle("hidden");
-
-            // Fechar o outro dropdown se estiver aberto
-            if (dropdownNotificacoes && !dropdownNotificacoes.classList.contains("hidden")) {
-                dropdownNotificacoes.classList.add("hidden");
-            }
+            if (dropdownNotificacoes) dropdownNotificacoes.classList.add("hidden");
+            if (dropdownNotificacoesMobile) dropdownNotificacoesMobile.classList.add("hidden");
         });
     }
 }

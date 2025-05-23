@@ -107,4 +107,8 @@ public class ProfissionalService {
                     ". Ele pode estar associado a outras entidades (ex.: anamneses, consultas).");
         }
     }
+
+    public List<Profissional> findAll() {
+       return this.profissionalRepository.findAll();
+    }
 }
