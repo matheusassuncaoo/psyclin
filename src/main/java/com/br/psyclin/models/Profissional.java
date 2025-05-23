@@ -8,7 +8,10 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.Column;
 
@@ -17,8 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 @Table(name = "profissional")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Profissional {
     public interface CreateProfissional {
     }
@@ -78,36 +84,5 @@ public class Profissional {
     // Método auxiliar para autenticação
     public boolean authenticate(String codProf, String senhaProf) {
         return this.codProf.equals(codProf) && this.senhaProf.equals(senhaProf) && this.statusProf == 1;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof Profissional))
-            return false;
-        Profissional other = (Profissional) obj;
-        if (this.id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!this.id.equals(other.id))
-            return false;
-        return java.util.Objects.equals(this.id, other.id) && java.util.Objects.equals(this.codProf, other.codProf)
-                && java.util.Objects.equals(this.nomeProf, other.nomeProf)
-                && java.util.Objects.equals(this.tipoProf, other.tipoProf)
-                && java.util.Objects.equals(this.supProf, other.supProf)
-                && java.util.Objects.equals(this.statusProf, other.statusProf)
-                && java.util.Objects.equals(this.consProf, other.consProf)
-                && java.util.Objects.equals(this.senhaProf, other.senhaProf);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
     }
 }

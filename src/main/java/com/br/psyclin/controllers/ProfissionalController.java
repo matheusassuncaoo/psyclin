@@ -30,6 +30,22 @@ public class ProfissionalController {
     @Autowired
     private ProfissionalService profissionalService;
 
+    // GET /profissional - Listar todos os profissionais (com filtro opcional por statusProf)
+    @GetMapping
+    public ResponseEntity<List<Profissional>> findAll(@RequestParam(required = false) Integer statusProf) {
+      
+        List<Profissional> profissionais;
+        if (statusProf != null) {
+            
+            profissionais = profissionalService.findByStatusProf(statusProf);
+        } else {
+            
+            profissionais = profissionalService.findAll();
+        }
+       
+        return ResponseEntity.ok().body(profissionais);
+    }
+
     // GET /profissional/{id} - Buscar por ID
     @GetMapping("/{id}")
     public ResponseEntity<Profissional> findById(@PathVariable Long id) {
