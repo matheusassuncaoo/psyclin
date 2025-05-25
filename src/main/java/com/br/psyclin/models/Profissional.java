@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
@@ -40,44 +40,40 @@ public class Profissional {
 
     @Column(name = "cod_prof", nullable = false, length = 5)
     @NotNull(groups = CreateProfissional.class)
-    @NotEmpty(groups = CreateProfissional.class)
+    @NotBlank(groups = CreateProfissional.class)
     @Size(groups = CreateProfissional.class, min = 5, max = 5)
     private String codProf;
 
     @Column(name = "nome_prof", length = 100)
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 5, max = 100)
     private String nomeProf;
 
     @Column(name = "tipo_prof", length = 1)
     @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 1)
     private Integer tipoProf; // 1: administrativo, 2: técnico básico, 3: técnico superior, 4: master
 
     @Column(name = "sup_prof", length = 5)
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(min = 5, max = 5)
     private String supProf; // Código do supervisor (referência a outro profissional)
 
     @Column(name = "status_prof", length = 1)
     @NotNull
-    @NotEmpty
-    @Size(min = 1, max = 1)
     private Integer statusProf; // 1: ativo, 2: inativo, 3: suspenso
 
     @Column(name = "cons_prof", length = 10)
     @NotNull
-    @NotEmpty
+    @NotBlank
     @Size(max = 10)
     private String consProf; // Número do conselho profissional (ex.: CRP123456)
 
     @JsonProperty(access = Access.WRITE_ONLY)
     @Column(name = "senha_prof", length = 70)
     @NotNull(groups = { CreateProfissional.class, UpdateProfissional.class })
-    @NotEmpty(groups = { CreateProfissional.class, UpdateProfissional.class })
+    @NotBlank(groups = { CreateProfissional.class, UpdateProfissional.class })
     @Size(groups = { CreateProfissional.class, UpdateProfissional.class }, min = 6, max = 70)
     private String senhaProf;
 
