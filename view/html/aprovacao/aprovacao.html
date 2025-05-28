@@ -4,29 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psyclin Dashboard</title>
+    <title>Asiclin - Lista de Pendências</title>
     <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
     <!-- Importando Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Importando Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
-    <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+     <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+
 </head>
 
 <body>
-    <!-- Container principal -->
-    <div class="main-content flex flex-col h-screen">
+    <!-- Container principal-->
+    <div class="flex flex-col h-screen">
         <!-- Navbar -->
         <nav class="bg-[var(--zomp)] border-b-2 border-[var(--oxford-blue)] shadow-lg">
             <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
                 <!-- Botão Hambúrguer -->
-                <button id="btn-sidebar-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                <button id="btn-sidebar-toggle"
+                    class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
                     <i data-feather="menu"></i>
                 </button>
 
                 <!-- Logo -->
-                <a href="/view/html/dashboard/dashboard.html" class="hidden sm:flex items-center space-x-3 rtl:space-x-reverse">
+                <a href="/view/html/dashboard/dashboard.html"
+                    class="hidden sm:flex items-center space-x-3 rtl:space-x-reverse">
                     <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
                 </a>
 
@@ -36,7 +39,8 @@
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i data-feather="search" class="text-gray-400"></i>
                         </div>
-                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                        <input type="text" placeholder="Estou procurando por..."
+                            class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
                     </div>
                 </div>
 
@@ -48,13 +52,16 @@
                     </button>
                     <!-- Notificação (Mobile) -->
                     <div class="relative sm:hidden">
-                        <button class="icon-btn text-white" aria-label="Notificações" id="button-mobile-notification" data-dropdown-toggle="mobile-notifications-dropdown">
+                        <button class="icon-btn text-white" aria-label="Notificações" id="button-mobile-notification"
+                            data-dropdown-toggle="mobile-notifications-dropdown">
                             <i data-feather="bell"></i>
-                            <span id="mobile-notification-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            <span id="mobile-notification-badge"
+                                class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                         </button>
 
                         <!-- Dropdown de notificações mobile -->
-                        <div class="z-50 hidden absolute right-0 mt-2 w-[280px] -mr-4 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="mobile-notifications-dropdown">
+                        <div class="z-50 hidden absolute right-0 mt-2 w-[280px] -mr-4 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg"
+                            id="mobile-notifications-dropdown">
                             <div class="px-4 py-3 font-semibold text-sm">Notificações</div>
                             <ul class="py-2 max-h-[60vh] overflow-y-auto" id="mobile-notifications-list">
                                 <!-- Notificações serão adicionadas dinamicamente aqui -->
@@ -70,14 +77,16 @@
 
                         <!-- Botão de notificações com dropdown -->
                         <div class="relative">
-                            <button class="icon-btn button-notification" aria-label="Notificações" id="button-notification" data-dropdown-toggle="notifications-dropdown">
+                            <button class="icon-btn button-notification" aria-label="Notificações"
+                                id="button-notification" data-dropdown-toggle="notifications-dropdown">
                                 <i data-feather="bell"></i>
                                 <span id="notification-badge"
                                     class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                             </button>
 
                             <!-- Dropdown de notificações -->
-                            <div class="z-50 hidden absolute right-0 mt-2 w-64 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="notifications-dropdown">
+                            <div class="z-50 hidden absolute right-0 mt-2 w-64 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg"
+                                id="notifications-dropdown">
                                 <div class="px-4 py-3 font-semibold">Notificações</div>
                                 <ul class="py-2" id="notifications-list">
                                     <!-- Notificações serão adicionadas dinamicamente aqui -->
@@ -92,14 +101,16 @@
 
                     <!-- Avatar com Dropdown -->
                     <div class="relative">
-                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow"
+                            id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
                             <span class="sr-only">Abrir menu do usuário</span>
                             <img class="w-8 h-8 rounded-full"
                                 src="https://i.pinimg.com/736x/d7/a6/18/d7a618fcaa8804e0588ee8d0f02d9f99.jpg"
                                 alt="Foto do usuário">
                         </button>
                         <!-- Dropdown -->
-                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg"
+                            id="user-dropdown">
                             <div class="px-4 py-3">
                                 <span class="block text-sm text-prussian-blue">Usuário</span>
                                 <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
@@ -108,7 +119,8 @@
                                 <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a>
                                 </li>
                                 <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
-                                <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
+                                <li><a href="/view/html/configuracoes/configuracoes.html"
+                                        class="dropdown-link">Configurações</a></li>
                                 <li><a href="#" class="dropdown-link">Sair</a></li>
                             </ul>
                         </div>
@@ -118,32 +130,39 @@
 
             <!-- Barra de Pesquisa Mobile -->
             <div id="mobile-search-bar" class="hidden sm:hidden p-4">
-                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                <input type="text" placeholder="Estou procurando por..."
+                    class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
             </div>
         </nav>
 
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--oxford-blue)] w-64 p-4 space-y-4 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+        <div id="sidebar"
+            class="sidebar bg-[var(--zomp)] text-[var(--oxford-blue)] w-64 p-4 space-y-4 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
             <div class="mb-4">
                 <span class="text-lg font-bold">DASHBOARD</span>
             </div>
-            <a href="/view/html/dashboard/dashboard.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/dashboard/dashboard.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="grid"></i>
                 <span class="ml-2">DASHBOARD</span>
             </a>
-            <a href="/view/html/paciente/paciente.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/paciente/paciente.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="users"></i>
                 <span class="ml-2">PACIENTES</span>
             </a>
-            <a href="/view/html/cadastro/cadastro.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/cadastro/cadastro.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="database"></i>
                 <span class="ml-2">CADASTRAR</span>
             </a>
-            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/anamnese/anamnese.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="file-text"></i>
                 <span class="ml-2">ANAMNESES</span>
             </a>
-            <a href="/view/html/consulta/consulta.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/consulta/consulta.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="coffee"></i>
                 <span class="ml-2">CONSULTA</span>
             </a>
@@ -151,7 +170,8 @@
                 <i data-feather="check-square"></i>
                 <span class="ml-2">APROVAÇÃO</span>
             </a>
-            <a href="/view/html/relatorios/relatorios.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/relatorios/relatorios.html"
+                class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="upload"></i>
                 <span class="ml-2">EMITIR</span>
             </a>
@@ -163,9 +183,10 @@
         </div>
 
         <!-- Conteúdo Principal -->
-        <div class="flex-1 p-6 bg-gray-100" style="transition: margin-left 0.3s ease;">
+        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
             <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold mb-4">05 Lista de Pendências, Detalhamento do Documento, Aprovação/Rejeição, Confirmação de Aprovação/Feedback Enviado</h2>
+                <h2 class="text-xl font-bold mb-4">05 Lista de Pendências, Detalhamento do Documento,
+                    Aprovação/Rejeição, Confirmação de Aprovação/Feedback Enviado</h2>
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-gray-200">
@@ -246,13 +267,8 @@
         </div>
     </div>
 
-    <div class="loader fixed inset-50 flex items-center justify-center bg-[var(--zomp)] hidden">
-    </div>
-
-    </div>
-    <!-- Importando JavaScript -->
+    
     <script src="/view/js/dashboard/dashboard.js"></script>
-    <!-- Importando Global.js -->
     <script src="/view/js/global.js"></script>
     </div>
 </body>
