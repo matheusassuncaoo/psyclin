@@ -1,84 +1,97 @@
 package com.br.psyclin.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
-@Table(name = "profissional")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Table(name = "PROFISSIONAL")
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Profissional {
-    public interface CreateProfissional {
-    }
-
-    public interface UpdateProfissional {
-    }
-
-    public static final String TABLE_NAME = "Profissional";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "IDPROFISSIO")
+    @EqualsAndHashCode.Include
+    private Integer idProfissio;
 
-    @Column(name = "cod_prof", nullable = false, length = 5)
-    @NotNull(groups = CreateProfissional.class)
-    @NotBlank(groups = CreateProfissional.class)
-    @Size(groups = CreateProfissional.class, min = 5, max = 5)
-    private String codProf;
+    // Relacionamento com PessoaFis (um para um, chave estrangeira aqui)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PESSOAFIS", referencedColumnName = "IDPESSOAFIS", nullable = false, unique = true)
+    @NotNull(message = "Referência à Pessoa Física não pode ser nula")
+    private PessoaFis pessoaFis;
 
-    @Column(name = "nome_prof", length = 100)
-    @NotNull
-    @NotBlank
-    @Size(min = 5, max = 100)
-    private String nomeProf;
+    @NotNull(message = "Tipo de profissional não pode ser nulo")
+    @Enumerated(EnumType.STRING) // Enum '1', '2', '3', '4'
+    @Column(name = "TIPOPROFI", nullable = false, length = 1)
+    private TipoProfissional tipoProfissional;
 
-    @Column(name = "tipo_prof", length = 1)
-    @NotNull
-    private Integer tipoProf; // 1: administrativo, 2: técnico básico, 3: técnico superior, 4: master
+    // Relacionamento de auto-referência para supervisor
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_SUPPROFI", referencedColumnName = "IDPROFISSIO")
+    private Profissional supervisor; // Mapeia ID_SUPPROFI
 
-    @Column(name = "sup_prof", length = 5)
-    @NotNull
-    @NotBlank
-    @Size(min = 5, max = 5)
-    private String supProf; // Código do supervisor (referência a outro profissional)
+    @Enumerated(EnumType.STRING) // Enum '1', '2', '3'
+    @Column(name = "STATUSPROFI", length = 1)
+    private StatusProfissional statusProfissional;
 
-    @Column(name = "status_prof", length = 1)
-    @NotNull
-    private Integer statusProf; // 1: ativo, 2: inativo, 3: suspenso
+    @NotNull(message = "Conselho profissional não pode ser nulo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_CONSEPROFI", referencedColumnName = "IDCONSEPROFI", nullable = false)
+    private Conseprofi conseprofi;
 
-    @Column(name = "cons_prof", length = 10)
-    @NotNull
-    @NotBlank
-    @Size(max = 10)
-    private String consProf; // Número do conselho profissional (ex.: CRP123456)
+    // Relacionamento inverso com Usuario (se necessário)
+    @OneToOne(mappedBy = "profissional", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    private Usuario usuario;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
-    @Column(name = "senha_prof", length = 70)
-    @NotNull(groups = { CreateProfissional.class, UpdateProfissional.class })
-    @NotBlank(groups = { CreateProfissional.class, UpdateProfissional.class })
-    @Size(groups = { CreateProfissional.class, UpdateProfissional.class }, min = 6, max = 70)
-    private String senhaProf;
+    // Relacionamento inverso com Agenda (se necessário)
+    // @OneToMany(mappedBy = "profissional")
+    // private List<Agenda> agendas;
 
-    // Método auxiliar para autenticação
-    public boolean authenticate(String codProf, String senhaProf) {
-        return this.codProf.equals(codProf) && this.senhaProf.equals(senhaProf) && this.statusProf == 1;
+    // Enum para TipoProfissional
+    public enum TipoProfissional {
+        _1, // Representa '1'
+        _2, // Representa '2'
+        _3, // Representa '3'
+        _4 // Representa '4'
+        // Adicionar mapeamento para valores reais se necessário
     }
+
+    // Enum para StatusProfissional
+    public enum StatusProfissional {
+        _1, // Representa '1' (e.g., Ativo)
+        _2, // Representa '2' (e.g., Inativo)
+        _3 // Representa '3' (e.g., Licença)
+        // Adicionar mapeamento para valores reais se necessário
+    }
+
+    // Métodos utilitários, se necessário
+    public String getNomeProfissional() {
+        return this.pessoaFis != null ? this.pessoaFis.getNomePessoa() : null;
+    }
+
 }

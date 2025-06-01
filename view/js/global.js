@@ -362,7 +362,7 @@ function criarLinhaTabela(item, campos, index) {
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0 h-10 w-10">
-                                    <img class="h-10 w-10 rounded-full" src="https://i.pravatar.cc/40?img=${index + 1}" alt="Avatar">
+                                    <img class="h-10 w-10 rounded-full" src='https://static-00.iconduck.com/assets.00/avatar-icon-512x512-gu21ei4u.png${index + 1}' alt="Avatar">
                                 </div>
                                 <div class="ml-4">
                                     <div class="text-sm font-medium text-gray-900">${valor || '-'}</div>

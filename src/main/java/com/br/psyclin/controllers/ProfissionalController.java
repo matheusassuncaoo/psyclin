@@ -18,108 +18,141 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.br.psyclin.models.Profissional;
-import com.br.psyclin.models.Profissional.CreateProfissional;
-import com.br.psyclin.models.Profissional.UpdateProfissional;
+
 import com.br.psyclin.services.ProfissionalService;
 
 @RestController
-@RequestMapping("/profissional")
+@RequestMapping("/api/profissionais")
 @Validated
 public class ProfissionalController {
 
-    @Autowired
+      @Autowired
     private ProfissionalService profissionalService;
 
-    // GET /profissional - Listar todos os profissionais (com filtro opcional por statusProf)
+    // GET /api/profissionais - Listar todos os profissionais (com filtro opcional por status)
     @GetMapping
-    public ResponseEntity<List<Profissional>> findAll(@RequestParam(required = false) Integer statusProf) {
-      
+    public ResponseEntity<List<Profissional>> buscarTodos(@RequestParam(required = false) Profissional.StatusProfissional status) {
         List<Profissional> profissionais;
-        if (statusProf != null) {
-            
-            profissionais = profissionalService.findByStatusProf(statusProf);
+        if (status != null) {
+            profissionais = profissionalService.buscarPorStatus(status);
         } else {
-            
-            profissionais = profissionalService.findAll();
+            profissionais = profissionalService.buscarTodos();
         }
-       
-        return ResponseEntity.ok().body(profissionais);
+        return ResponseEntity.ok(profissionais);
     }
 
-    // GET /profissional/{id} - Buscar por ID
+    // GET /api/profissionais/{id} - Buscar por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Profissional> findById(@PathVariable Long id) {
-        Profissional obj = this.profissionalService.findById(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<Profissional> buscarPorId(@PathVariable Integer id) {
+        return profissionalService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /profissional/cod/{codProf} - Buscar por codProf
-    @GetMapping("/cod/{codProf}")
-    public ResponseEntity<Profissional> findByCodProf(@PathVariable String codProf) {
-        Profissional obj = this.profissionalService.findByCodProf(codProf);
-        return ResponseEntity.ok().body(obj);
+    // GET /api/profissionais/nome/{nome} - Buscar por nome
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<List<Profissional>> buscarPorNome(@PathVariable String nome) {
+        List<Profissional> profissionais = profissionalService.buscarPorNome(nome);
+        return ResponseEntity.ok(profissionais);
     }
 
-    // GET /profissional/nome/{nomeProf} - Buscar por nomeProf
-    @GetMapping("/nome/{nomeProf}")
-    public ResponseEntity<List<Profissional>> findByNomeProf(@PathVariable String nomeProf) {
-        List<Profissional> obj = this.profissionalService.findByNomeProf(nomeProf);
-        return ResponseEntity.ok().body(obj);
+    // GET /api/profissionais/cpf/{cpf} - Buscar por CPF
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<Profissional> buscarPorCpf(@PathVariable String cpf) {
+        return profissionalService.buscarPorCpf(cpf)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // GET /profissional/supervisor/{supProf} - Buscar por supProf
-    @GetMapping("/supervisor/{supProf}")
-    public ResponseEntity<List<Profissional>> findBySupProf(@PathVariable String supProf) {
-        List<Profissional> obj = this.profissionalService.findBySupProf(supProf);
-        return ResponseEntity.ok().body(obj);
+    // GET /api/profissionais/tipo/{tipo} - Buscar por tipo
+    @GetMapping("/tipo/{tipo}")
+    public ResponseEntity<List<Profissional>> buscarPorTipo(@PathVariable Profissional.TipoProfissional tipo) {
+        List<Profissional> profissionais = profissionalService.buscarPorTipo(tipo);
+        return ResponseEntity.ok(profissionais);
     }
 
-    // GET /profissional/tipo/{tipoProf} - Buscar por tipoProf
-    @GetMapping("/tipo/{tipoProf}")
-    public ResponseEntity<List<Profissional>> findByTipoProf(@PathVariable Integer tipoProf) {
-        List<Profissional> obj = this.profissionalService.findByTipoProf(tipoProf);
-        return ResponseEntity.ok().body(obj);
+    // GET /api/profissionais/supervisor/{idSupervisor} - Buscar por supervisor
+    @GetMapping("/supervisor/{idSupervisor}")
+    public ResponseEntity<List<Profissional>> buscarPorSupervisor(@PathVariable Integer idSupervisor) {
+        try {
+            List<Profissional> profissionais = profissionalService.buscarPorSupervisor(idSupervisor);
+            return ResponseEntity.ok(profissionais);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // GET /profissional/status/{statusProf} - Buscar por statusProf
-    @GetMapping("/status/{statusProf}")
-    public ResponseEntity<List<Profissional>> findByStatusProf(@PathVariable Integer statusProf) {
-        List<Profissional> profissionais = this.profissionalService.findByStatusProf(statusProf);
-        return ResponseEntity.ok().body(profissionais);
+    // GET /api/profissionais/sem-supervisor - Buscar sem supervisor
+    @GetMapping("/sem-supervisor")
+    public ResponseEntity<List<Profissional>> buscarSemSupervisor() {
+        List<Profissional> profissionais = profissionalService.buscarSemSupervisor();
+        return ResponseEntity.ok(profissionais);
     }
 
-    // POST /profissional/login - Autenticação
-    @PostMapping("/login")
-    public ResponseEntity<Profissional> login(@RequestParam String codProf, @RequestParam String senhaProf) {
-        Profissional obj = this.profissionalService.authenticate(codProf, senhaProf);
-        return ResponseEntity.ok().body(obj);
-    }
-
-    // POST /profissional - Criar profissional
+    // POST /api/profissionais - Criar profissional
     @PostMapping
-    @Validated(CreateProfissional.class)
-    public ResponseEntity<Void> create(@Validated @RequestBody Profissional obj) {
-        Profissional created = this.profissionalService.create(obj);
+    public ResponseEntity<Profissional> criar(@Validated @RequestBody Profissional profissional) {
+        Profissional novoProfissional = profissionalService.salvar(profissional);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(created.getId())
+                .buildAndExpand(novoProfissional.getIdProfissio())
                 .toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(novoProfissional);
     }
 
-    // PUT /profissional/{id} - Atualizar profissional
+    // PUT /api/profissionais/{id} - Atualizar profissional
     @PutMapping("/{id}")
-    @Validated(UpdateProfissional.class)
-    public ResponseEntity<Void> update(@Validated @RequestBody Profissional obj, @PathVariable Long id) {
-        obj.setId(id);
-        this.profissionalService.update(obj);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Profissional> atualizar(@PathVariable Integer id, @Validated @RequestBody Profissional profissional) {
+        return profissionalService.buscarPorId(id)
+                .map(profissionalExistente -> {
+                    profissional.setIdProfissio(id);
+                    Profissional profissionalAtualizado = profissionalService.salvar(profissional);
+                    return ResponseEntity.ok(profissionalAtualizado);
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE /profissional/{id} - Deletar profissional
+    // PATCH /api/profissionais/{id}/status - Atualizar status
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Profissional> atualizarStatus(@PathVariable Integer id, @RequestParam Profissional.StatusProfissional status) {
+        try {
+            Profissional profissionalAtualizado = profissionalService.atualizarStatus(id, status);
+            return ResponseEntity.ok(profissionalAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // PATCH /api/profissionais/{id}/supervisor - Atribuir supervisor
+    @PutMapping("/{id}/supervisor")
+    public ResponseEntity<Profissional> atribuirSupervisor(@PathVariable Integer id, @RequestParam Integer idSupervisor) {
+        try {
+            Profissional profissionalAtualizado = profissionalService.atribuirSupervisor(id, idSupervisor);
+            return ResponseEntity.ok(profissionalAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // PATCH /api/profissionais/{id}/remover-supervisor - Remover supervisor
+    @PutMapping("/{id}/remover-supervisor")
+    public ResponseEntity<Profissional> removerSupervisor(@PathVariable Integer id) {
+        try {
+            Profissional profissionalAtualizado = profissionalService.removerSupervisor(id);
+            return ResponseEntity.ok(profissionalAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // DELETE /api/profissionais/{id} - Excluir profissional
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        this.profissionalService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> excluir(@PathVariable Integer id) {
+        try {
+            profissionalService.excluir(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
