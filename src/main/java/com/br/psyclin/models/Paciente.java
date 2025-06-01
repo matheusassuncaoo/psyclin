@@ -2,89 +2,81 @@ package com.br.psyclin.models;
 
 import java.time.LocalDate;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 @Entity
-@Table(name = "paciente")
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Table(name = "PACIENTE")
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Paciente {
-
-    public interface CreatePaciente {}
-    public interface UpdatePaciente {}
-
-    public static final String TABLE_NAME = "Paciente";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "IDPACIENTE")
+    @EqualsAndHashCode.Include
+    private Integer idPaciente;
 
-    @Column(name = "cpf_pac",nullable = false, length = 11)
-    @NotNull(groups = CreatePaciente.class)
-    @NotBlank(groups = CreatePaciente.class)
-    @Size(groups = CreatePaciente.class, min = 11, max = 11)
-    private String cpfPac;
+    // Relacionamento com PessoaFis (um para um, chave estrangeira aqui)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PESSOAFIS", referencedColumnName = "IDPESSOAFIS", nullable = false, unique = true)
+    @NotNull(message = "Referência à Pessoa Física não pode ser nula")
+    private PessoaFis pessoaFis;
 
-    @Column(name = "cod_pac", length = 10)
-    @NotNull
-    @NotBlank
-    @Size(min = 10, max = 10)
-    private String codPac;
+    @NotBlank(message = "RG não pode ser vazio")
+    @Size(max = 15, message = "RG deve ter no máximo 15 caracteres")
+    @Column(name = "RGPACIENTE", length = 15, nullable = false, unique = true)
+    private String rgPaciente;
 
-    @Column(name = "nome_pac", length = 100)
-    @NotNull
-    @NotBlank
-    @Size(min = 50, max = 100)
-    private String nomePac;
+    // Mapeando o ENUM do estado do RG
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ESTDORGPAC", length = 2) // Tamanho 2 conforme ENUM no SQL
+    private EstadoRg estdoRgPac; // Enum EstadoRg
 
-    @Column(name = "tel_pac", length = 11)
-    @NotNull
-    @NotBlank
-    @Size(min = 11, max = 11)
-    private String telPac;
+    @NotNull(message = "Status do paciente não pode ser nulo")
+    @Column(name = "STATUSPAC", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean statusPac = true; // Valor padrão definido na entidade
 
-    @Column(name = "data_nasc_pac")
-    @NotNull
-    private LocalDate dataNascPac;
+     // Relacionamento inverso com Prontuario (se necessário)
+    // @OneToMany(mappedBy = "paciente")
+    // private List<Prontuario> prontuarios;
 
-    @Column(name = "rg_pac", length = 12)
-    @NotNull
-    @NotBlank
-    @Size(min = 12, max = 12)
-    private String rgPac;
+    // Relacionamento inverso com Anamnese (se necessário)
+    // @OneToMany(mappedBy = "paciente")
+    // private List<Anamnese> anamneses;
 
-    @Column(name = "est_rg_pac", length = 2)
-    @NotNull
-    @NotBlank
-    @Size(min = 2, max = 2)
-    private String estRgPac;
+    // Enum para EstadoRg (precisa ser criado ou definido aqui)
+    public enum EstadoRg {
+        AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO
+    }
 
-    @Column(name = "nome_mae_pac", length = 100)
-    @NotNull
-    @NotBlank
-    @Size(min = 50, max = 100)
-    private String nomeMaePac;
+    // Métodos utilitários, se necessário
+    // Exemplo: obter nome do paciente através de pessoaFis
+    public String getNomePaciente() {
+        return this.pessoaFis != null ? this.pessoaFis.getNomePessoa() : null;
+    }
 
-    @Column(name = "status_pac", length = 1)
-    @NotNull
-    @Size(min = 1, max = 1)
-    private Integer statusPac; // 1: ativo, 2: inativo, 3: suspenso
+     // Exemplo: obter CPF do paciente através de pessoaFis
+    public String getCpfPaciente() {
+        return this.pessoaFis != null ? this.pessoaFis.getCpfPessoa() : null;
+    }
+
+   
 }
