@@ -11,16 +11,16 @@ const CONFIG_API = {
     baseURL: "http://localhost:8080",
     endpoints: {
         dashboard: {
-            profissionais: "/profissional/status/1",
-            atender: "/consulta/status/1",
-            anamnese: "/paciente/status/1",
-            encontros: "/atendimento/status/1",
-            relatorios: "/relatorio/status/1",
-            historico: "/historico/status/1"
+            profissionais: "/api/profissionais",
+            atender: "/api/consultas/ativas",
+            anamnese: "/api/pacientes/ativos",
+            encontros: "/api/atendimentos/ativos",
+            relatorios: "/api/relatorios/ativos",
+            historico: "/api/historico"
         },
         cadastro: {
             doutor: {
-                path: "/profissional",
+                path: "/api/profissionais",
                 fields: ['nomeProf', 'codProf', 'consProf', 'supProf', 'statusProf', 'tipoProf'],
                 filter: item => [1, 2, 3].includes(item.tipoProf),
                 mapping: {
@@ -156,11 +156,10 @@ async function carregarDados(tipo, url) {
 
         console.log(`Carregando dados de ${tipo} de: ${url}`);
 
-        if (AppState.dadosCarregados[tipo].length === 0) {
-            const dados = await buscarDadosAPI(url);
-            // Formata os dados de acordo com o tipo
-            AppState.dadosCarregados[tipo] = formatarDados(tipo, dados);
-        }
+        // Sempre busca do backend, não usa cache local
+        const dados = await buscarDadosAPI(url);
+        // Formata os dados de acordo com o tipo
+        AppState.dadosCarregados[tipo] = formatarDados(tipo, dados);
 
         exibirTabelaDados(tipo, AppState.dadosCarregados[tipo]);
 
@@ -299,29 +298,58 @@ function criarEstruturaTabela(tipo, dados) {
         return wrapper;
     }
 
-    wrapper.innerHTML = `
-        <div class="p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">${config.titulo}</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full table-auto">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            ${config.colunas.map(coluna => 
-                                `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${coluna}</th>`
-                            ).join('')}
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        ${dados.length === 0 ? 
-                            `<tr><td colspan="${config.colunas.length}" class="px-6 py-4 text-center text-gray-500">Nenhum registro encontrado</td></tr>` :
-                            dados.map((item, index) => criarLinhaTabela(item, config.campos, index)).join('')
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    `;
+    // Detecta mobile
+    const isMobile = window.innerWidth < 640;
 
+    if (isMobile) {
+        // Cards para mobile
+        wrapper.innerHTML = `
+            <div class="flex flex-col gap-4">
+                ${dados.length === 0 ? 
+                    `<div class="text-center text-gray-500">Nenhum registro encontrado</div>` :
+                    dados.map((item, index) => `
+                        <div class="bg-white rounded-lg shadow p-4 flex flex-col gap-2">
+                            ${config.campos.map((campo, i) => `
+                                <div>
+                                    <span class="font-bold">${config.colunas[i]}:</span>
+                                    <span>${item[campo] || '-'}</span>
+                                </div>
+                            `).join('')}
+                            <div class="flex gap-2 mt-2">
+                                <!-- Botões de ação -->
+                                <button onclick="editarItem('${tipo}', ${index})"><i data-feather="edit-2"></i></button>
+                                <button onclick="excluirItem('${tipo}', ${index})"><i data-feather="trash-2"></i></button>
+                                <button onclick="visualizarItem('${tipo}', ${index})"><i data-feather="eye"></i></button>
+                            </div>
+                        </div>
+                    `).join('')}
+            </div>
+        `;
+    } else {
+        // Tabela tradicional para desktop
+        wrapper.innerHTML = `
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">${config.titulo}</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                ${config.colunas.map(coluna => 
+                                    `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${coluna}</th>`
+                                ).join('')}
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${dados.length === 0 ? 
+                                `<tr><td colspan="${config.colunas.length}" class="px-6 py-4 text-center text-gray-500">Nenhum registro encontrado</td></tr>` :
+                                dados.map((item, index) => criarLinhaTabela(item, config.campos, index)).join('')
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
     return wrapper;
 }
 

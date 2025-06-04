@@ -12,24 +12,58 @@ import java.util.Optional;
 @Repository
 public interface ProfissionalRepository extends JpaRepository<Profissional, Integer> {
 
-    // Buscar por tipo de profissional
+    /**
+     * Busca profissionais pelo tipo de profissional.
+     *
+     * @param tipoProfissional Tipo do profissional
+     * @return Lista de profissionais do tipo informado
+     */
     List<Profissional> findByTipoProfissional(Profissional.TipoProfissional tipoProfissional);
     
-    // Buscar por status
+    /**
+     * Busca profissionais pelo status.
+     *
+     * @param statusProfissional Status do profissional
+     * @return Lista de profissionais com o status informado
+     */
     List<Profissional> findByStatusProfissional(Profissional.StatusProfissional statusProfissional);
     
-    // Buscar por supervisor
+    /**
+     * Busca profissionais pelo supervisor.
+     *
+     * @param profissional Supervisor do profissional
+     * @return Lista de profissionais supervisionados pelo profissional informado
+     */
     List<Profissional> findBySupervisor(Profissional profissional);
     
-    // Buscar profissionais sem supervisor
+    /**
+     * Busca profissionais que não possuem supervisor.
+     *
+     * @return Lista de profissionais sem supervisor
+     */
     List<Profissional> findBySupervisorIsNull();
     
-    // Buscar por nome do profissional (usando relacionamento com PessoaFis)
+    /**
+     * Busca profissionais pelo nome, ignorando maiúsculas/minúsculas.
+     *
+     * @param nomePessoa Nome (ou parte do nome) do profissional
+     * @return Lista de profissionais cujo nome contenha o valor informado
+     */
     List<Profissional> findByPessoaFisNomePessoaContainingIgnoreCase(String nomePessoa);
     
-    // Buscar por CPF (usando relacionamento com PessoaFis)
+    /**
+     * Busca um profissional pelo CPF.
+     *
+     * @param cpfPessoa CPF do profissional
+     * @return Optional contendo o profissional, se encontrado
+     */
     Optional<Profissional> findByPessoaFisCpfPessoa(String cpfPessoa);
     
-    // Buscar por conselho profissional
+    /**
+     * Busca profissionais pelo conselho profissional.
+     *
+     * @param idConseprofi ID do conselho profissional
+     * @return Lista de profissionais vinculados ao conselho informado
+     */
     List<Profissional> findByConseprofiIdConseprofi(Integer idConseprofi);
 }
