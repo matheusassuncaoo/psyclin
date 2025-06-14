@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psyclin - Cadastro de Paciente</title>
+    <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Importando Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Importando CSS da página -->
+    <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+</head>
+
+<body>
+    <!-- Container principal-->
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-[var(--zomp)] border-b-2 border-[var(--oxford-blue)] shadow-lg">
+            <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+                <!-- Botão Hambúrguer -->
+                <button id="btn-sidebar-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="menu"></i>
+                </button>
+
+                <!-- Logo -->
+                <a href="/view/html/dashboard/dashboard.html" class="hidden sm:flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
+                </a>
+
+                <!-- Barra de Pesquisa no Desktop -->
+                <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-feather="search" class="text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                    </div>
+                </div>
+
+                <!-- Menu de Usuário -->
+                <div class="flex items-center space-x-4">
+                    <!-- Botão Lupa (Mobile) -->
+                    <button id="button-mobile-search" class="icon-btn sm:hidden text-white">
+                        <i data-feather="search"></i>
+                    </button>
+                    <!-- Notificação (Mobile) -->
+                    <div class="relative sm:hidden">
+                        <button class="icon-btn text-white" aria-label="Notificações" id="button-mobile-notification" data-dropdown-toggle="mobile-notifications-dropdown">
+                            <i data-feather="bell"></i>
+                            <span id="mobile-notification-badge"
+                                class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+
+                        <!-- Dropdown de notificações mobile -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-[280px] -mr-4 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="mobile-notifications-dropdown">
+                            <div class="px-4 py-3 font-semibold text-sm">Notificações</div>
+                            <ul class="py-2 max-h-[60vh] overflow-y-auto" id="mobile-notifications-list">
+                                <!-- Notificações serão adicionadas dinamicamente aqui -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Botões para Desktop -->
+                    <div id="desktop-menu" class="hidden sm:flex items-center space-x-4">
+                        <button class="icon-btn button-help" aria-label="Ajuda">
+                            <i data-feather="help-circle"></i>
+                        </button>
+
+                        <!-- Botão de notificações com dropdown -->
+                        <div class="relative">
+                            <button class="icon-btn button-notification" aria-label="Notificações" id="button-notification" data-dropdown-toggle="notifications-dropdown">
+                                <i data-feather="bell"></i>
+                                <span id="notification-badge"
+                                    class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+
+                            <!-- Dropdown de notificações -->
+                            <div class="z-50 hidden absolute right-0 mt-2 w-64 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="notifications-dropdown">
+                                <div class="px-4 py-3 font-semibold">Notificações</div>
+                                <ul class="py-2" id="notifications-list">
+                                    <!-- Notificações serão adicionadas dinamicamente aqui -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <button class="icon-btn button-config" aria-label="Configurações">
+                            <i data-feather="settings"></i>
+                        </button>
+                    </div>
+
+                    <!-- Avatar com Dropdown -->
+                    <div class="relative">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://i.pinimg.com/736x/d7/a6/18/d7a618fcaa8804e0588ee8d0f02d9f99.jpg"
+                                alt="Foto do usuário">
+                        </button>
+                        <!-- Dropdown -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-prussian-blue">Usuário</span>
+                                <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
+                            </div>
+                            <ul class="py-2">
+                                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a></li>
+                                <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
+                                <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
+                                <li><a href="#" class="dropdown-link">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Pesquisa Mobile -->
+            <div id="mobile-search-bar" class="hidden sm:hidden p-4">
+                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+            </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--oxford-blue)] w-64 p-4 space-y-4 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+            <div class="mb-4">
+                <span class="text-lg font-bold">DASHBOARD</span>
+            </div>
+            <a href="/view/html/dashboard/dashboard.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="grid"></i>
+                <span class="ml-2">DASHBOARD</span>
+            </a>
+            <a href="/view/html/paciente/paciente.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="users"></i>
+                <span class="ml-2">PACIENTES</span>
+            </a>
+            <a href="/view/html/cadastro/cadastro.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="database"></i>
+                <span class="ml-2">CADASTRAR</span>
+            </a>
+            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="file-text"></i>
+                <span class="ml-2">ANAMNESES</span>
+            </a>
+            <a href="/view/html/consulta/consulta.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="coffee"></i>
+                <span class="ml-2">CONSULTA</span>
+            </a>
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="check-square"></i>
+                <span class="ml-2">APROVAÇÃO</span>
+            </a>
+            <a href="/view/html/relatorios/relatorios.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="upload"></i>
+                <span class="ml-2">EMITIR</span>
+            </a>
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="settings"></i>
+                <span class="ml-2">CONFIGURAÇÕES</span>
+            </a>
+            <div class="mt-auto text-sm">psyclin.1.1A</div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="content-wrapper flex-1 p-4 sm:p-6 bg-gray-100 pt-16 sm:pt-20">
+            <!-- Botão Voltar -->
+            <div class="max-w-4xl mx-auto mb-4">
+                <a href="/view/html/cadastro/cadastro.html" class="inline-flex items-center text-[var(--zomp)] hover:text-[var(--oxford-blue)] transition">
+                    <i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>
+                    <span>Voltar</span>
+                </a>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Cabeçalho -->
+                <div class="text-center py-6 sm:py-8 px-4">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-[var(--zomp)] mb-2">Cadastro de Paciente</h2>
+                    <p class="text-sm text-gray-600">Preencha os dados do paciente</p>
+                </div>
+
+                <!-- Formulário -->
+                <form id="form-paciente" class="p-4 sm:p-8 space-y-6">
+                    <!-- Dados Pessoais -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-[var(--oxford-blue)]">Dados Pessoais</h3>
+                        
+                        <!-- Nome -->
+                        <div class="campo">
+                            <label for="nomePessoa" class="block text-sm font-medium text-gray-700 mb-1">Nome Completo *</label>
+                            <input type="text" id="nomePessoa" name="nomePessoa" required
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                placeholder="Digite o nome completo">
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+
+                        <!-- CPF e RG -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="campo">
+                                <label for="cpfPessoa" class="block text-sm font-medium text-gray-700 mb-1">CPF *</label>
+                                <input type="text" id="cpfPessoa" name="cpfPessoa" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="000.000.000-00">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+
+                            <div class="campo">
+                                <label for="rgPaciente" class="block text-sm font-medium text-gray-700 mb-1">RG *</label>
+                                <input type="text" id="rgPaciente" name="rgPaciente" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="Digite o RG">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- Estado do RG e Data de Nascimento -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="campo">
+                                <label for="estdoRgPac" class="block text-sm font-medium text-gray-700 mb-1">Estado do RG *</label>
+                                <select id="estdoRgPac" name="estdoRgPac" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                                    <option value="">Selecione o estado</option>
+                                    <!-- Estados serão preenchidos via JavaScript -->
+                                </select>
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+
+                            <div class="campo">
+                                <label for="dataNascPessoa" class="block text-sm font-medium text-gray-700 mb-1">Data de Nascimento *</label>
+                                <input type="date" id="dataNascPessoa" name="dataNascPessoa" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- Sexo -->
+                        <div class="campo">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Sexo *</label>
+                            <div class="flex gap-4">
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="sexoPessoa" value="M" required
+                                        class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]">
+                                    <span class="ml-2">Masculino</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="sexoPessoa" value="F" required
+                                        class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]">
+                                    <span class="ml-2">Feminino</span>
+                                </label>
+                            </div>
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Contatos -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-[var(--oxford-blue)]">Contatos</h3>
+                        
+                        <!-- Telefone -->
+                        <div class="campo">
+                            <label for="telefone" class="block text-sm font-medium text-gray-700 mb-1">Telefone *</label>
+                            <input type="tel" id="telefone" name="telefone" required
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                placeholder="(00) 00000-0000">
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="campo">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="email" name="email"
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                placeholder="email@exemplo.com">
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Endereço -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-[var(--oxford-blue)]">Endereço</h3>
+                        
+                        <!-- CEP -->
+                        <div class="campo">
+                            <label for="cep" class="block text-sm font-medium text-gray-700 mb-1">CEP *</label>
+                            <input type="text" id="cep" name="cep" required
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                placeholder="00000-000">
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+
+                        <!-- Logradouro e Número -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="campo sm:col-span-2">
+                                <label for="logradouro" class="block text-sm font-medium text-gray-700 mb-1">Logradouro *</label>
+                                <input type="text" id="logradouro" name="logradouro" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="Rua, Avenida, etc">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+
+                            <div class="campo">
+                                <label for="numero" class="block text-sm font-medium text-gray-700 mb-1">Número *</label>
+                                <input type="text" id="numero" name="numero" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="Nº">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+                        </div>
+
+                        <!-- Complemento -->
+                        <div class="campo">
+                            <label for="complemento" class="block text-sm font-medium text-gray-700 mb-1">Complemento</label>
+                            <input type="text" id="complemento" name="complemento"
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                placeholder="Apto, Bloco, etc">
+                            <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        </div>
+
+                        <!-- Bairro, Cidade e Estado -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="campo">
+                                <label for="bairro" class="block text-sm font-medium text-gray-700 mb-1">Bairro *</label>
+                                <input type="text" id="bairro" name="bairro" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="Bairro">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+
+                            <div class="campo">
+                                <label for="cidade" class="block text-sm font-medium text-gray-700 mb-1">Cidade *</label>
+                                <input type="text" id="cidade" name="cidade" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors"
+                                    placeholder="Cidade">
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+
+                            <div class="campo">
+                                <label for="estado" class="block text-sm font-medium text-gray-700 mb-1">Estado *</label>
+                                <select id="estado" name="estado" required
+                                    class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                                    <option value="">Selecione o estado</option>
+                                    <!-- Estados serão preenchidos via JavaScript -->
+                                </select>
+                                <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="flex justify-end space-x-4 pt-4">
+                        <button type="button" onclick="window.location.href='/view/html/cadastro/cadastro.html'"
+                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                            Cancelar
+                        </button>
+                        <button type="submit"
+                            class="px-6 py-2 bg-[var(--zomp)] text-white rounded-lg hover:bg-[var(--oxford-blue)] transition-colors">
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            </div>
+        </div>
+
+        <!-- Importando JavaScript -->
+        <script src="/view/js/dashboard/dashboard.js"></script>
+        <!-- Importando Global.js -->
+        <script src="/view/js/global.js"></script>
+        <!-- Importando CadastroPaciente.js -->
+        <script src="/view/js/cadastro/cadastropaciente.js"></script>
+    </div>
+</body>
+
+</html> 
