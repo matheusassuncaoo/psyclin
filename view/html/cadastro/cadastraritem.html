@@ -165,37 +165,99 @@
 
 
         <!-- Conteúdo Principal -->
-        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
-            <div class="flex flex-col sm:flex-row flex-wrap justify-end items-center gap-3 sm:gap-4">
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    PROFISSIONAIS
-                </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    ADMIN
-                </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    PACIENTE
-                </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    ANAMNESE
-                </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    RELATORIO
-                </button>
-                <a href="/view/html/cadastro/cadastraritem.html" class="main-button w-full sm:w-auto flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
-                    <i data-feather="plus-square" class="w-5 h-5"></i>
-                    ADICIONAR
+        <div class="content-wrapper flex-1 p-4 sm:p-6 bg-gray-100 pt-16 sm:pt-20">
+            <!-- Botão Voltar -->
+            <div class="max-w-4xl mx-auto mb-4">
+                <a href="/view/html/cadastro/cadastro.html" class="inline-flex items-center text-[var(--zomp)] hover:text-[var(--oxford-blue)] transition">
+                    <i data-feather="arrow-left" class="w-5 h-5 mr-2"></i>
+                    <span>Voltar</span>
                 </a>
+            </div>
+           
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+                <!-- Cabeçalho -->
+                <div class="text-center py-6 sm:py-8 px-4">
+                    <h2 class="text-xl sm:text-2xl font-semibold text-[var(--zomp)] mb-2">Bem-vindo à Fasiclin</h2>
+                    <p class="text-sm text-gray-600">Complete a sua inscrição para conhecermos melhor</p>
+                </div>
+            
+                <!-- Indicador de passos -->
+                <div class="flex justify-center items-center mb-6 sm:mb-8 px-4 sm:px-8">
+                    <div class="flex items-center justify-center w-full max-w-md">
+                        <!-- Passo 1 ativo -->
+                        <div class="flex items-center flex-1">
+                            <div class="w-6 h-6 rounded-full bg-[var(--zomp)] text-white flex items-center justify-center text-sm">1</div>
+                            <div class="flex-1 h-1 bg-[var(--zomp)] mx-2"></div>
+                        </div>
+                        <!-- Passo 2 -->
+                        <div class="flex items-center flex-1">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm">2</div>
+                            <div class="flex-1 h-1 bg-gray-200 mx-2"></div>
+                        </div>
+                        <!-- Passo 3 -->
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm">3</div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Título e descrição do passo -->
+                <div class="px-4 sm:px-8 mb-4 sm:mb-6">
+                    <h3 class="text-base sm:text-lg font-medium text-[var(--oxford-blue)] mb-2">Detalhes de contato</h3>
+                    <p class="text-sm text-gray-500">Que tipo de usuário você é no sistema?</p>
+                </div>
+            
+                <!-- Cards de seleção -->
+                <div class="px-4 sm:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <button
+                    class="tipo-card border-2 border-gray-200 bg-white rounded-lg py-4 sm:py-6 flex flex-col items-center justify-center hover:border-[var(--zomp)] hover:bg-[var(--zomp)] hover:text-white transition"
+                    data-tipo="PROFISSIONAL">
+                        <i data-feather="user" class="w-6 h-6 sm:w-8 sm:h-8 mb-2"></i>
+                        <span class="font-medium text-sm sm:text-base">Profissional</span>
+                    </button>
+            
+                    <button
+                        class="tipo-card border-2 border-gray-200 bg-white rounded-lg py-4 sm:py-6 flex flex-col items-center justify-center hover:border-[var(--zomp)] hover:bg-[var(--zomp)] hover:text-white transition"
+                        data-tipo="ANAMNESE">
+                        <i data-feather="file-text" class="w-6 h-6 sm:w-8 sm:h-8 mb-2"></i>
+                        <span class="font-medium text-sm sm:text-base">Anamnese</span>
+                    </button>
+            
+                    <button
+                        class="tipo-card border-2 border-gray-200 bg-white rounded-lg py-4 sm:py-6 flex flex-col items-center justify-center hover:border-[var(--zomp)] hover:bg-[var(--zomp)] hover:text-white transition"
+                        data-tipo="PACIENTE">
+                        <i data-feather="user-plus" class="w-6 h-6 sm:w-8 sm:h-8 mb-2"></i>
+                        <span class="font-medium text-sm sm:text-base">Paciente</span>
+                    </button>
+            
+                    <button
+                        class="tipo-card border-2 border-gray-200 bg-white rounded-lg py-4 sm:py-6 flex flex-col items-center justify-center hover:border-[var(--zomp)] hover:bg-[var(--zomp)] hover:text-white transition"
+                        data-tipo="ADMIN">
+                        <i data-feather="settings" class="w-6 h-6 sm:w-8 sm:h-8 mb-2"></i>
+                        <span class="font-medium text-sm sm:text-base">Admin</span>
+                    </button>
+                </div>
+            
+                <!-- Botão Próximo Passo -->
+                <div class="px-4 sm:px-8 pb-6 sm:pb-8 text-center">
+                    <button
+                        id="btn-proximo-passo"
+                        class="w-full sm:w-auto bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white font-bold py-2 sm:py-3 px-6 sm:px-8 rounded-full transition text-sm sm:text-base">
+                        Próximo Passo
+                    </button>
+                </div>
             </div>
 
             <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
             </div>
         </div>
 
-        <!-- Importando JavaScript -->
-        <script src="/view/js/dashboard/dashboard.js "></script>
-        <!-- Importando Global.js -->
-        <script src="/view/js/global.js "></script>
+         <!-- Importando JavaScript -->
+         <script src="/view/js/dashboard/dashboard.js "></script>
+         <!-- Importando Global.js -->
+         <script src="/view/js/global.js "></script>
+        <!-- Importando CadastroItem.js -->
+        <script src="/view/js/cadastro/cadastroitem.js"></script>
 </body>
 
 </html>
