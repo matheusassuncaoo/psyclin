@@ -1,11 +1,7 @@
 package com.br.psyclin.models;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,68 +11,76 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-
+@Data
 @Entity
 @Table(name = "PACIENTE")
-@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Paciente {
+    /**
+     * Grupos de validação para cenários de criação e atualização.
+     */
+    public interface CriarPaciente {
+    }
 
+    public interface AtualizarPaciente {
+    }
+
+    /**
+     * Nome da tabela no banco de dados.
+     */
+    public static final String TABLE_NAME = "PACIENTE";
+
+    /**
+     * Chave primária gerada automaticamente pelo banco.
+     * Coluna: IDPACIENTE
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDPACIENTE")
     @EqualsAndHashCode.Include
-    private Integer idPaciente;
+    @Column(name = "IDPACIENTE")
+    private Long idPaciente;
 
-    // Relacionamento com PessoaFis (um para um, chave estrangeira aqui)
+    /**
+     * Referência à pessoa física associada (ID_PESSOAFIS).
+     * Obrigatório em criação e atualização.
+     */
+    @NotNull(message = "Pessoa Física é obrigatória", groups = {CriarPaciente.class, AtualizarPaciente.class})
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PESSOAFIS", referencedColumnName = "IDPESSOAFIS", nullable = false, unique = true)
-    @NotNull(message = "Referência à Pessoa Física não pode ser nula")
+    @JoinColumn(name = "ID_PESSOAFIS", referencedColumnName = "IDPESSOAFIS")
     private PessoaFis pessoaFis;
 
-    @NotBlank(message = "RG não pode ser vazio")
-    @Size(max = 15, message = "RG deve ter no máximo 15 caracteres")
+    /**
+     * Registro geral do paciente.
+     * Deve ser único, não nulo e ter entre 5 e 15 caracteres.
+     * Coluna: RGPACIENTE
+     */
+    @NotBlank(message = "R.G. não pode ser vazio", groups = { CriarPaciente.class, AtualizarPaciente.class })
+    @Size(min = 5, max = 15, message = "R.G. deve ter entre 5 e 15 caracteres", groups = { CriarPaciente.class,
+            AtualizarPaciente.class })
     @Column(name = "RGPACIENTE", length = 15, nullable = false, unique = true)
     private String rgPaciente;
 
-    // Mapeando o ENUM do estado do RG
-    @Enumerated(EnumType.STRING)
-    @Column(name = "ESTDORGPAC", length = 2) // Tamanho 2 conforme ENUM no SQL
-    private EstadoRg estdoRgPac; // Enum EstadoRg
+    /**
+     * Estado de origem do registro.
+     * Opcional; se presente deve ter exatamente 2 caracteres.
+     * Coluna: ESTDORGPAC
+     */
+    @Size(min = 2, max = 2, message = "Estado deve ter 2 caracteres", groups = { CriarPaciente.class,
+            AtualizarPaciente.class })
+    @Column(name = "ESTDORGPAC", length = 2)
+    private String estdOrgPac;
 
-    @NotNull(message = "Status do paciente não pode ser nulo")
-    @Column(name = "STATUSPAC", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean statusPac = true; // Valor padrão definido na entidade
+    /**
+     * Indica se o paciente está ativo.
+     * Padrão no banco: TRUE.
+     * Coluna: STATUSPAC
+     */
+    @NotNull(message = "Status do paciente é obrigatório", groups = { CriarPaciente.class, AtualizarPaciente.class })
+    @Column(name = "STATUSPAC", nullable = false)
+    private Boolean statusPac;
 
-     // Relacionamento inverso com Prontuario (se necessário)
-    // @OneToMany(mappedBy = "paciente")
-    // private List<Prontuario> prontuarios;
-
-    // Relacionamento inverso com Anamnese (se necessário)
-    // @OneToMany(mappedBy = "paciente")
-    // private List<Anamnese> anamneses;
-
-    // Enum para EstadoRg (precisa ser criado ou definido aqui)
-    public enum EstadoRg {
-        AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO
-    }
-
-    // Métodos utilitários, se necessário
-    // Exemplo: obter nome do paciente através de pessoaFis
-    public String getNomePaciente() {
-        return this.pessoaFis != null ? this.pessoaFis.getNomePessoa() : null;
-    }
-
-     // Exemplo: obter CPF do paciente através de pessoaFis
-    public String getCpfPaciente() {
-        return this.pessoaFis != null ? this.pessoaFis.getCpfPessoa() : null;
-    }
-
-   
 }

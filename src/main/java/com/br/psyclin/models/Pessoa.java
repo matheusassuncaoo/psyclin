@@ -1,70 +1,47 @@
 package com.br.psyclin.models;
 
-import java.util.List;
-
-import jakarta.annotation.Generated;
-import jakarta.persistence.CascadeType;
+// Jakarta Persistence
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
+
+// Jakarta Validation
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
+// Lombok
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Representa a entidade PESSOA do sistema.
+ * Mapeado para a tabela PESSOA no banco de dados.
+ */
+@Data
 @Entity
 @Table(name = "PESSOA")
-@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Pessoa {
 
+    public interface CriarPessoa {}
+    public interface AtualizarPessoa {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDPESSOA")
     @EqualsAndHashCode.Include
-    private Integer idPessoa;
+    @Column(name = "IDPESSOA")
+    private Long idPessoa;
 
-    @NotNull(message = "Tipo de pessoa não pode ser nulo")
+    @NotNull(message = "Tipo de pessoa é obrigatório", groups = {CriarPessoa.class, AtualizarPessoa.class})
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPOPESSOA", nullable = false, length = 1)
-    private TipoPessoa tipoPessoa; // Enum 'F' ou 'J'
+    private TipoPessoa tipoPessoa;
 
-    // Relacionamento com PessoaFis (um para um)
-    // mappedBy indica que a chave estrangeira está na outra entidade (PessoaFis)
-    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    private PessoaFis pessoaFis;
-
-    // Relacionamento com PessoaJur (um para um) - Adicionar se necessário
-    // @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    // private PessoaJur pessoaJur;
-
-     // Relacionamento com Endereco (um para muitos)
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Endereco> enderecos;
-
-    // Relacionamento com Contato (um para muitos)
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Contato> contatos;
-
-    // Relacionamento com Email (um para muitos)
-    @ElementCollection
-    @Column(name = "EMAIL")
-    private List<@Email String> emails;
-
-    // Enum para TipoPessoa
-    public enum TipoPessoa {
-        F, // Física
-        J  // Jurídica
-    }
-
-}
-
+    public enum TipoPessoa { F, J }
+} 

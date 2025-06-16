@@ -1,6 +1,6 @@
 package com.br.psyclin.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,51 +11,78 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * Representa a entidade de USUARIO do sistema.
+ * Mapeado para a tabela USUARIO no banco de dados.
+ */
+@Data
 @Entity
 @Table(name = "USUARIO")
-@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Usuario {
-    
+
+    /**
+     * Grupos de validação para cenários de criação e atualização.
+     */
+    public interface CriarUsuario {}
+    public interface AtualizarUsuario {}
+
+    /**
+     * Nome da tabela no banco de dados.
+     */
+    public static final String TABLE_NAME = "USUARIO";
+
+    /**
+     * Chave primária gerada automaticamente pelo banco.
+     * Coluna: IDUSUARIO
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDUSUARIO")
     @EqualsAndHashCode.Include
-    private Integer idUsuario;
+    @Column(name = "IDUSUARIO")
+    private Long idUsuario;
 
-    // Relacionamento com Profissional (um para um, chave estrangeira aqui)
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PROFISSIO", referencedColumnName = "IDPROFISSIO", nullable = false, unique = true)
-    @NotNull(message = "Referência ao Profissional não pode ser nula")
-    private Profissional profissional;
+    /**
+     * Referência ao profissional associado a este usuário.
+     * Obrigatório em criação e atualização.
+     * Chave estrangeira para a tabela PROFISSIONAL (IDPROFISSIO).
+     */
+     @NotNull(message = "Profissional é obrigatório", groups = {CriarUsuario.class, AtualizarUsuario.class})
+     @OneToOne(fetch = FetchType.LAZY)
+     @JoinColumn(name = "ID_PROFISSIO", referencedColumnName = "IDPROFISSIO")
+     @JsonBackReference
+     private Profissional profissional;
 
-    @NotBlank(message = "Login do usuário não pode ser vazio")
-    @Size(max = 100, message = "Login deve ter no máximo 100 caracteres")
+    /**
+     * Nome de login usado para autenticação.
+     * Deve ser único, não nulo e ter entre 5 e 100 caracteres.
+     * Coluna: LOGUSUARIO
+     */
+    @NotBlank(message = "Login de usuário não pode ser vazio", groups = {CriarUsuario.class, AtualizarUsuario.class})
+    @Size(min = 5, max = 100, message = "Login deve ter entre 5 e 100 caracteres", groups = {CriarUsuario.class, AtualizarUsuario.class})
     @Column(name = "LOGUSUARIO", length = 100, nullable = false, unique = true)
     private String loginUsuario;
 
-    @NotBlank(message = "Senha não pode ser vazia")
-    @Size(max = 250, message = "Hash da senha deve ter no máximo 250 caracteres") // Tamanho para hash BCrypt
+    /**
+     * Senha do usuário (armazenar sempre criptografada).
+     * Obrigatória apenas na criação. Deve ter entre 8 e 250 caracteres.
+     * Coluna: SENHAUSUA
+     */
+    @NotBlank(message = "Senha de usuário não pode ser vazia", groups = {CriarUsuario.class})
+    @Size(min = 8, max = 250, message = "Senha deve ter entre 8 e 250 caracteres", groups = {CriarUsuario.class})
     @Column(name = "SENHAUSUA", length = 250, nullable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Não expor senha em respostas JSON
-    private String senhaUsuario; // Armazenará o hash da senha
+    private String senhaUsuario;
 
-    // Relacionamento inverso com PermiUsua (se necessário)
-    // @OneToMany(mappedBy = "usuario")
-    // private List<PermiUsua> permissoes;
-
-    // Relacionamento inverso com SoliOdonto (se necessário)
-    // @OneToMany(mappedBy = "usuario")
-    // private List<SoliOdonto> solicitacoesOdonto;
-
-    // Relacionamento inverso com SetorUsua (se necessário)
-    // @OneToMany(mappedBy = "usuario")
-    // private List<SetorUsua> setoresUsuario;
-
+    // Relacionamento opcional com Profissional:
+    // @OneToOne(fetch = FetchType.LAZY)
+    // @JoinColumn(name = "ID_PROFISSIO", referencedColumnName = "IDPROFISSIO", insertable = false, updatable = false)
+    // private Profissional profissional;
 }

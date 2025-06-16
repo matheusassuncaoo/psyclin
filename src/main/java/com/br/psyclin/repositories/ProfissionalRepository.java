@@ -1,69 +1,82 @@
 package com.br.psyclin.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-
-import com.br.psyclin.models.Profissional;
-
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.br.psyclin.models.Profissional;
+
+/**
+ * Repositório responsável pelas operações de persistência da entidade Profissional.
+ * Utiliza as convenções de nomenclatura do Spring Data JPA para gerar as consultas automaticamente.
+ */
 @Repository
-public interface ProfissionalRepository extends JpaRepository<Profissional, Integer> {
+@Transactional(readOnly = true)
+public interface ProfissionalRepository extends JpaRepository<Profissional, Long> {
+   
+    /**
+     * Busca um profissional pelo CPF da pessoa física associada.
+     * @param cpf CPF da pessoa física
+     * @return Optional contendo o profissional encontrado, se existir
+     */
+    Optional<Profissional> buscarPorPessoaFisCpfPessoa(String cpf);
 
     /**
-     * Busca profissionais pelo tipo de profissional.
-     *
-     * @param tipoProfissional Tipo do profissional
-     * @return Lista de profissionais do tipo informado
+     * Busca um profissional pelo RG.
+     * @param rg RG do profissional
+     * @return Optional contendo o profissional encontrado, se existir
      */
-    List<Profissional> findByTipoProfissional(Profissional.TipoProfissional tipoProfissional);
+    Optional<Profissional> buscarPorRgProfissional(String rg);
     
+    /**
+     * Busca um profissional pelo ID.
+     * @param id ID do profissional
+     * @return Optional contendo o profissional encontrado, se existir
+     */
+    Optional<Profissional> buscarPorId(Long id);
+
+    /**
+     * Busca profissionais pelo nome.
+     * @param nome Nome do profissional (busca parcial)
+     * @return Lista de profissionais encontrados
+     */
+    List<Profissional> buscarPorNome(String nome);
+
+    /**
+     * Busca um profissional pelo email.
+     * @param email Email do profissional
+     * @return Optional contendo o profissional encontrado, se existir
+     */
+    Optional<Profissional> buscarPorEmail(String email);
+
+    /**
+     * Busca os pacientes associados a um profissional específico.
+     * @param idProfissional ID do profissional
+     * @return Lista de profissionais que possuem pacientes associados
+     */
+    List<Profissional> buscarPacientesPorProfissional(Long idProfissional);
+
     /**
      * Busca profissionais pelo status.
-     *
-     * @param statusProfissional Status do profissional
-     * @return Lista de profissionais com o status informado
+     * @param status Status do profissional (ativo/inativo)
+     * @return Lista de profissionais encontrados
      */
-    List<Profissional> findByStatusProfissional(Profissional.StatusProfissional statusProfissional);
-    
+    List<Profissional> buscarPorStatusProf(Boolean status);
+
     /**
-     * Busca profissionais pelo supervisor.
-     *
-     * @param profissional Supervisor do profissional
-     * @return Lista de profissionais supervisionados pelo profissional informado
+     * Busca profissionais que possuem uma anamnese específica.
+     * @param anamnese Texto da anamnese
+     * @return Lista de profissionais encontrados
      */
-    List<Profissional> findBySupervisor(Profissional profissional);
-    
+    List<Profissional> buscarPorAnamnese(String anamnese);
+
     /**
-     * Busca profissionais que não possuem supervisor.
-     *
-     * @return Lista de profissionais sem supervisor
+     * Busca todas as anamneses associadas a um profissional específico.
+     * @param idProfissional ID do profissional
+     * @return Lista de profissionais com suas anamneses
      */
-    List<Profissional> findBySupervisorIsNull();
-    
-    /**
-     * Busca profissionais pelo nome, ignorando maiúsculas/minúsculas.
-     *
-     * @param nomePessoa Nome (ou parte do nome) do profissional
-     * @return Lista de profissionais cujo nome contenha o valor informado
-     */
-    List<Profissional> findByPessoaFisNomePessoaContainingIgnoreCase(String nomePessoa);
-    
-    /**
-     * Busca um profissional pelo CPF.
-     *
-     * @param cpfPessoa CPF do profissional
-     * @return Optional contendo o profissional, se encontrado
-     */
-    Optional<Profissional> findByPessoaFisCpfPessoa(String cpfPessoa);
-    
-    /**
-     * Busca profissionais pelo conselho profissional.
-     *
-     * @param idConseprofi ID do conselho profissional
-     * @return Lista de profissionais vinculados ao conselho informado
-     */
-    List<Profissional> findByConseprofiIdConseprofi(Integer idConseprofi);
+    List<Profissional> buscarPorAnamnesesProfissional(Long idProfissional);
 }

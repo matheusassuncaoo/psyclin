@@ -8,55 +8,38 @@ import org.springframework.stereotype.Repository;
 
 import com.br.psyclin.models.Paciente;
 
+/**
+ * Repositório responsável pelas operações de banco de dados relacionadas aos Pacientes.
+ * Fornece métodos para buscar, salvar e gerenciar registros de pacientes.
+ */
 @Repository
-public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
+public interface PacienteRepository extends JpaRepository<Paciente, Long> {
+
+    /**
+     * Busca um paciente pelo CPF através da pessoa física associada.
+     * @param cpf CPF do paciente
+     * @return Optional contendo o paciente encontrado
+     */
+    Optional<Paciente> findByPessoaFisCpfPessoa(String cpf);
 
     /**
      * Busca um paciente pelo RG.
-     * 
-     * @param rgPaciente RG do paciente
-     * @return Optional contendo o paciente, se encontrado
+     * @param rg RG do paciente
+     * @return Optional contendo o paciente encontrado
      */
-    Optional<Paciente> findByRgPaciente(String rgPaciente);
-    
+    Optional<Paciente> findByRgPaciente(String rg);
+
     /**
-     * Verifica se já existe um paciente com o RG informado.
-     * 
-     * @param rgPaciente RG do paciente
-     * @return true se existir, false caso contrário
+     * Busca pacientes pelo nome através da pessoa física associada.
+     * @param nome Nome ou parte do nome do paciente
+     * @return Lista de pacientes encontrados
      */
-    boolean existsByRgPaciente(String rgPaciente);
-    
+    List<Paciente> findByPessoaFisNomePessoaContaining(String nome);
+
     /**
-     * Busca todos os pacientes pelo status.
-     * 
-     * @param statusPac Status do paciente (ativo/inativo)
-     * @return Lista de pacientes com o status informado
+     * Busca pacientes pelo status.
+     * @param status Status do paciente (true para ativo, false para inativo)
+     * @return Lista de pacientes encontrados
      */
-    List<Paciente> findByStatusPac(Boolean statusPac);
-    
-    /**
-     * Busca todos os pacientes pelo estado do RG.
-     * 
-     * @param estadoRg Estado do RG do paciente
-     * @return Lista de pacientes do estado informado
-     */
-    List<Paciente> findByEstdoRgPac(Paciente.EstadoRg estadoRg);
-    
-    /**
-     * Busca pacientes pelo nome, ignorando maiúsculas/minúsculas.
-     * 
-     * @param nomePessoa Nome (ou parte do nome) do paciente
-     * @return Lista de pacientes cujo nome contenha o valor informado
-     */
-    List<Paciente> findByPessoaFisNomePessoaContainingIgnoreCase(String nomePessoa);
-    
-    /**
-     * Busca um paciente pelo CPF.
-     * 
-     * @param cpfPessoa CPF do paciente
-     * @return Optional contendo o paciente, se encontrado
-     */
-    Optional<Paciente> findByPessoaFisCpfPessoa(String cpfPessoa);
-    
+    List<Paciente> findByStatusPac(Boolean status);
 }
