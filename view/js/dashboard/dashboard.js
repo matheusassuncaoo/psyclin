@@ -1,19 +1,20 @@
 /**
  * @fileoverview Script principal para o Dashboard do Psyclin
  * Gerencia a interatividade da interface, incluindo sidebars, dropdowns e carregamento de dados da API
- * @version 1.1.0
+ * @version 1.2.0
  * @author Matheus Assunção
  */
+
+// Importar o serviço do dashboard
+// Nota: Certifique-se de incluir o script do serviço antes do dashboard.js no HTML
+// <script src="../services/dashboardService.js"></script>
 
 document.addEventListener("DOMContentLoaded", () => {
     // Inicializar componentes da interface
     inicializarInterface();
 
-    // Carregar dados da API
-    const urlProfissionais = "http://localhost:8080/profissional/status/1";
-    const urlPacientes = "http://localhost:8080/paciente/status/1";
-
-    buscarDadosAPI(urlProfissionais);
+    // Inicializar o dashboard
+    inicializarDashboard();
 });
 
 /**
@@ -153,65 +154,114 @@ function inicializarIcones() {
 }
 
 /**
- * Busca dados da API e atualiza a interface
- * @param {string} url - URL da API para buscar dados
+ * Inicializa o dashboard carregando os dados
  */
-async function buscarDadosAPI(url) {
-    mostrarCarregamento();
-
+async function inicializarDashboard() {
+    const dashboardService = new DashboardService();
+    
     try {
-        const resposta = await fetch(url, { method: 'GET' });
-
-        if (!resposta.ok) {
-            throw new Error(`Erro na requisição: ${resposta.status}`);
-        }
-
-        const dados = await resposta.json();
-        console.log("Dados recebidos da API:", dados);
-
-        // Atualizar elementos da interface com os dados
-        atualizarContadores(dados);
-
+        mostrarCarregamento();
+        const dados = await dashboardService.buscarDadosDashboard();
+        atualizarDashboard(dados);
     } catch (erro) {
-        console.error("Erro ao buscar dados da API:", erro);
-        mostrarErro("Não foi possível carregar os dados. Tente novamente mais tarde.");
+        console.error("Erro ao inicializar dashboard:", erro);
+        mostrarErro("Não foi possível carregar os dados do dashboard. Tente novamente mais tarde.");
     } finally {
         ocultarCarregamento();
     }
 }
 
 /**
- * Atualiza os contadores do dashboard com os dados recebidos
- * @param {Array} dados - Dados recebidos da API
+ * Atualiza todos os contadores do dashboard com os dados recebidos
+ * @param {Object} dados - Dados recebidos da API
  */
-function atualizarContadores(dados) {
-    // Contador de profissionais ativos
-    const elementoProfissionaisAtivos = document.getElementById("active-professionals-count");
-    if (elementoProfissionaisAtivos && Array.isArray(dados)) {
-        // Filtrar os profissionais com statusProf = 1
-        const profissionaisAtivos = dados.filter(profissional => profissional.statusProf === 1);
-        // Atualizar o contador com o número formatado
-        elementoProfissionaisAtivos.textContent = profissionaisAtivos.length.toString().padStart(3, '0');
-    }
+function atualizarDashboard(dados) {
+    // Atualizar contadores dinâmicos
+    atualizarContador("active-professionals-count", dados.profissionais.length);
+    atualizarContador("active-patients-count", dados.pacientes.length);
+    atualizarContador("attend-count", dados.atendimentos);
+    atualizarContador("anamnese-count", dados.anamneses);
+    atualizarContador("encontros-count", dados.encontros);
+    atualizarContador("relatorios-count", dados.relatorios);
 
-    // Outros contadores podem ser atualizados aqui
-    atualizarContadorSimples("attend-count", 5);
-    atualizarContadorSimples("anamnese-count", 12);
-    atualizarContadorSimples("encontros-count", 23);
-    atualizarContadorSimples("relatorios-count", 8);
-    atualizarContadorSimples("historico-count", 45);
+    // Atualizar cards com informações adicionais
+    atualizarCardsInformativos(dados);
 }
 
 /**
- * Atualiza um contador simples com um valor
+ * Atualiza um contador específico
  * @param {string} id - ID do elemento HTML
  * @param {number} valor - Valor a ser exibido
  */
-function atualizarContadorSimples(id, valor) {
+function atualizarContador(id, valor) {
     const elemento = document.getElementById(id);
     if (elemento) {
         elemento.textContent = valor.toString().padStart(3, '0');
+        
+        // Adicionar animação de atualização
+        elemento.classList.add('animate-pulse');
+        setTimeout(() => {
+            elemento.classList.remove('animate-pulse');
+        }, 1000);
     }
+}
+
+/**
+ * Atualiza os cards informativos com dados adicionais
+ * @param {Object} dados - Dados recebidos da API
+ */
+function atualizarCardsInformativos(dados) {
+    // Exemplo de atualização de cards informativos
+    const cardProfissionais = document.getElementById('card-profissionais');
+    const cardPacientes = document.getElementById('card-pacientes');
+    
+    if (cardProfissionais) {
+        const profissionaisPorTipo = agruparPorTipo(dados.profissionais);
+        cardProfissionais.innerHTML += `
+            <div class="mt-2 text-sm text-gray-600">
+                <p>Psicólogos: ${profissionaisPorTipo.PSICOLOGO || 0}</p>
+                <p>Estagiários: ${profissionaisPorTipo.ESTAGIARIO || 0}</p>
+            </div>
+        `;
+    }
+
+    if (cardPacientes) {
+        const pacientesPorEstado = agruparPorEstado(dados.pacientes);
+        cardPacientes.innerHTML += `
+            <div class="mt-2 text-sm text-gray-600">
+                <p>Pacientes por Estado:</p>
+                ${Object.entries(pacientesPorEstado)
+                    .map(([estado, quantidade]) => `<p>${estado}: ${quantidade}</p>`)
+                    .join('')}
+            </div>
+        `;
+    }
+}
+
+/**
+ * Agrupa profissionais por tipo
+ * @param {Array} profissionais - Lista de profissionais
+ * @returns {Object} Profissionais agrupados por tipo
+ */
+function agruparPorTipo(profissionais) {
+    return profissionais.reduce((acc, prof) => {
+        const tipo = prof.tipoProfissional || 'OUTRO';
+        acc[tipo] = (acc[tipo] || 0) + 1;
+        return acc;
+    }, {});
+}
+
+/**
+ * Agrupa pacientes por estado do RG
+ * @param {Array} pacientes - Lista de pacientes
+ * @returns {Object} Pacientes agrupados por estado
+ */
+function agruparPorEstado(pacientes) {
+    return pacientes.reduce((acc, pac) => {
+        const estado = pac.estdoRgPac || 'NÃO INFORMADO';
+        acc[estado] = (acc[estado] || 0) + 1;
+        return acc;
+    }, {});
 }
 
 /**
