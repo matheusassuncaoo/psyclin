@@ -1,70 +1,87 @@
 package com.br.psyclin.models;
 
-import java.util.List;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.List;
 
+/**
+ * Entidade que representa uma pessoa no sistema, podendo ser física ou jurídica.
+ * Esta é a entidade base que contém informações comuns a todos os tipos de pessoa.
+ * 
+ * <p>A entidade Pessoa serve como base para {@link PessoaFisica} e {@link PessoaJuridica},
+ * e possui relacionamentos com endereços, contatos e emails.</p>
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2024
+ */
 @Entity
 @Table(name = "PESSOA")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Pessoa {
 
+    /**
+     * Identificador único da pessoa.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDPESSOA")
-    @EqualsAndHashCode.Include
     private Integer idPessoa;
 
-    @NotNull(message = "Tipo de pessoa não pode ser nulo")
+    /**
+     * Tipo da pessoa: F (Física) ou J (Jurídica).
+     */
+    @Column(name = "TIPOPESSOA", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(name = "TIPOPESSOA", nullable = false, length = 1)
-    private TipoPessoa tipoPessoa; // Enum 'F' ou 'J'
+    private TipoPessoa tipoPessoa;
 
-    // Relacionamento com PessoaFis (um para um)
-    // mappedBy indica que a chave estrangeira está na outra entidade (PessoaFis)
-    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    private PessoaFis pessoaFis;
+    /**
+     * Relacionamento com pessoa física (se aplicável).
+     */
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private PessoaFisica pessoaFisica;
 
-    // Relacionamento com PessoaJur (um para um) - Adicionar se necessário
-    // @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    // private PessoaJur pessoaJur;
+    /**
+     * Relacionamento com pessoa jurídica (se aplicável).
+     */
+    @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private PessoaJuridica pessoaJuridica;
 
-     // Relacionamento com Endereco (um para muitos)
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    /**
+     * Lista de endereços da pessoa.
+     */
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Endereco> enderecos;
 
-    // Relacionamento com Contato (um para muitos)
-    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    /**
+     * Lista de contatos telefônicos da pessoa.
+     */
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
     private List<Contato> contatos;
 
-    // Relacionamento com Email (um para muitos)
-    @ElementCollection
-    @Column(name = "EMAIL")
-    private List<@Email String> emails;
+    /**
+     * Lista de emails da pessoa.
+     */
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Email> emails;
 
-    // Enum para TipoPessoa
+    /**
+     * Enum que define os tipos de pessoa no sistema.
+     */
     public enum TipoPessoa {
-        F, // Física
-        J  // Jurídica
+        /** Pessoa Física */
+        F,
+        /** Pessoa Jurídica */
+        J
     }
-
-}
-
+} 

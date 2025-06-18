@@ -1,62 +1,94 @@
 package com.br.psyclin.repositories;
 
+import com.br.psyclin.models.Paciente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import com.br.psyclin.models.Paciente;
-
+/**
+ * Repositório para operações relacionadas a Pacientes.
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2025
+ */
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
 
     /**
-     * Busca um paciente pelo RG.
+     * Busca um paciente por ID.
+     * 
+     * @param idPaciente ID do paciente
+     * @return Optional contendo o paciente se encontrado
+     */
+    Optional<Paciente> buscarPacientePorId(Integer idPaciente);
+
+    /**
+     * Busca um paciente por RG.
      * 
      * @param rgPaciente RG do paciente
-     * @return Optional contendo o paciente, se encontrado
+     * @return Optional contendo o paciente se encontrado
      */
-    Optional<Paciente> findByRgPaciente(String rgPaciente);
-    
+    Optional<Paciente> buscarPacientePorRg(String rgPaciente);
+
     /**
-     * Verifica se já existe um paciente com o RG informado.
+     * Busca pacientes por nome (contendo o texto).
+     * 
+     * @param nomePaciente Nome ou parte do nome do paciente
+     * @return Lista de pacientes que contêm o nome
+     */
+    @Query("SELECT p FROM Paciente p WHERE p.pessoaFisica.nomePessoa LIKE %:nomePaciente%")
+    List<Paciente> buscarPacientesPorNome(@Param("nomePaciente") String nomePaciente);
+
+    /**
+     * Busca pacientes por CPF.
+     * 
+     * @param cpfPaciente CPF do paciente
+     * @return Optional contendo o paciente se encontrado
+     */
+    @Query("SELECT p FROM Paciente p WHERE p.pessoaFisica.cpfPessoa = :cpfPaciente")
+    Optional<Paciente> buscarPacientePorCpf(@Param("cpfPaciente") String cpfPaciente);
+
+    /**
+     * Busca pacientes ativos.
+     * 
+     * @return Lista de pacientes com status ativo
+     */
+    List<Paciente> buscarPacientesAtivos();
+
+    /**
+     * Busca pacientes por status.
+     * 
+     * @param statusPaciente Status do paciente (true = ativo, false = inativo)
+     * @return Lista de pacientes com o status especificado
+     */
+    List<Paciente> buscarPacientesPorStatus(Boolean statusPaciente);
+
+    /**
+     * Verifica se existe um paciente com o RG informado.
      * 
      * @param rgPaciente RG do paciente
      * @return true se existir, false caso contrário
      */
-    boolean existsByRgPaciente(String rgPaciente);
-    
+    boolean existePacientePorRg(String rgPaciente);
+
     /**
-     * Busca todos os pacientes pelo status.
+     * Verifica se existe um paciente com o CPF informado.
      * 
-     * @param statusPac Status do paciente (ativo/inativo)
-     * @return Lista de pacientes com o status informado
+     * @param cpfPaciente CPF do paciente
+     * @return true se existir, false caso contrário
      */
-    List<Paciente> findByStatusPac(Boolean statusPac);
-    
+    @Query("SELECT COUNT(p) > 0 FROM Paciente p WHERE p.pessoaFisica.cpfPessoa = :cpfPaciente")
+    boolean existePacientePorCpf(@Param("cpfPaciente") String cpfPaciente);
+
     /**
-     * Busca todos os pacientes pelo estado do RG.
+     * Busca pacientes por estado emissor do RG.
      * 
-     * @param estadoRg Estado do RG do paciente
-     * @return Lista de pacientes do estado informado
+     * @param estadoRg Estado emissor do RG
+     * @return Lista de pacientes do estado especificado
      */
-    List<Paciente> findByEstdoRgPac(Paciente.EstadoRg estadoRg);
-    
-    /**
-     * Busca pacientes pelo nome, ignorando maiúsculas/minúsculas.
-     * 
-     * @param nomePessoa Nome (ou parte do nome) do paciente
-     * @return Lista de pacientes cujo nome contenha o valor informado
-     */
-    List<Paciente> findByPessoaFisNomePessoaContainingIgnoreCase(String nomePessoa);
-    
-    /**
-     * Busca um paciente pelo CPF.
-     * 
-     * @param cpfPessoa CPF do paciente
-     * @return Optional contendo o paciente, se encontrado
-     */
-    Optional<Paciente> findByPessoaFisCpfPessoa(String cpfPessoa);
-    
-}
+    List<Paciente> buscarPacientesPorEstadoRg(Paciente.EstadoRg estadoRg);
+} 

@@ -5,35 +5,49 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import java.util.List;
 
+/**
+ * Entidade que representa uma cidade no sistema.
+ * Contém informações sobre cidades e seus respectivos estados.
+ * 
+ * <p>Esta entidade está relacionada com {@link Endereco}.</p>
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2025
+ */
 @Entity
 @Table(name = "CIDADE")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Cidade {
-    
+
+    /**
+     * Identificador único da cidade.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDCIDADE")
-    @EqualsAndHashCode.Include
     private Integer idCidade;
 
-    @NotBlank(message = "Nome da cidade não pode ser vazio")
-    @Size(max = 100, message = "Nome da cidade deve ter no máximo 100 caracteres")
-    @Column(name = "CIDADE", length = 100, nullable = false)
-    private String nomeCidade;
+    /**
+     * Nome da cidade.
+     */
+    @Column(name = "CIDADE", nullable = false, length = 100)
+    private String cidade;
 
-    @NotBlank(message = "Estado não pode ser vazio")
-    @Size(min = 2, max = 2, message = "Estado deve ter 2 caracteres")
-    @Column(name = "ESTADO", length = 2, nullable = false)
+    /**
+     * Sigla do estado (2 caracteres).
+     */
+    @Column(name = "ESTADO", nullable = false, length = 2)
     private String estado;
 
-    // Relacionamento inverso com Endereco (se necessário)
-    // @OneToMany(mappedBy = "cidade")
-    // private List<Endereco> enderecos;
-}
+    /**
+     * Lista de endereços localizados nesta cidade.
+     */
+    @OneToMany(mappedBy = "cidade")
+    private List<Endereco> enderecos;
+} 

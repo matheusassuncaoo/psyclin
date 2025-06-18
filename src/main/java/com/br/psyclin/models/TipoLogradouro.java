@@ -11,38 +11,38 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * Entidade que representa os tipos de contato no sistema.
- * Contém informações sobre os diferentes tipos de contato telefônico
- * como Celular, Fixo, WhatsApp, etc.
+ * Entidade que representa os tipos de logradouro no sistema.
+ * Contém informações sobre os diferentes tipos de vias públicas
+ * como Rua, Avenida, Travessa, etc.
  * 
- * <p>Esta entidade está relacionada com {@link Contato}.</p>
+ * <p>Esta entidade está relacionada com {@link Endereco}.</p>
  * 
  * @author Sistema Psyclin
  * @version 1.0
  * @since 2024
  */
 @Entity
-@Table(name = "TIPOCONTATO")
+@Table(name = "TIPOLOGRADO")
 @Data
-public class TipoContato {
+public class TipoLogradouro {
 
     /**
-     * Identificador único do tipo de contato.
+     * Identificador único do tipo de logradouro.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IDTIPOCONTATO")
-    private Integer idTipoContato;
+    @Column(name = "IDTIPOLOGRA")
+    private Integer idTipoLogradouro;
 
     /**
-     * Nome do tipo de contato (ex: Celular, Fixo, WhatsApp).
+     * Nome do tipo de logradouro (ex: Rua, Avenida, Travessa).
      */
     @Column(name = "TIPO", nullable = false, unique = true, length = 20)
     private String tipo;
 
     /**
-     * Lista de contatos que utilizam este tipo.
+     * Lista de endereços que utilizam este tipo de logradouro.
      */
-    @OneToMany(mappedBy = "tipoContato")
-    private List<Contato> contatos;
+    @OneToMany(mappedBy = "tipoLogradouro")
+    private List<Endereco> enderecos;
 } 

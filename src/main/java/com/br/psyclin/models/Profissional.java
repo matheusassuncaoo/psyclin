@@ -1,97 +1,122 @@
 package com.br.psyclin.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-import lombok.EqualsAndHashCode;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import lombok.Data;
+import java.util.List;
 
+/**
+ * Entidade que representa um profissional de saúde no sistema.
+ * Contém informações sobre tipo, status, supervisor e conselho profissional.
+ * 
+ * <p>Esta entidade está relacionada com {@link PessoaFisica} e possui
+ * relacionamentos com {@link ConselhoProfissional} e {@link Especialidade}.</p>
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2024
+ */
 @Entity
 @Table(name = "PROFISSIONAL")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Profissional {
 
+    /**
+     * Identificador único do profissional.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDPROFISSIO")
-    @EqualsAndHashCode.Include
-    private Integer idProfissio;
+    private Integer idProfissional;
 
-    // Relacionamento com PessoaFis (um para um, chave estrangeira aqui)
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PESSOAFIS", referencedColumnName = "IDPESSOAFIS", nullable = false, unique = true)
-    @NotNull(message = "Referência à Pessoa Física não pode ser nula")
-    private PessoaFis pessoaFis;
+    /**
+     * Relacionamento com pessoa física.
+     */
+    @OneToOne
+    @JoinColumn(name = "ID_PESSOAFIS", nullable = false, unique = true)
+    private PessoaFisica pessoaFisica;
 
-    @NotNull(message = "Tipo de profissional não pode ser nulo")
-    @Enumerated(EnumType.STRING) // Enum '1', '2', '3', '4'
-    @Column(name = "TIPOPROFI", nullable = false, length = 1)
+    /**
+     * Tipo do profissional.
+     */
+    @Column(name = "TIPOPROFI", nullable = false)
+    @Enumerated(EnumType.STRING)
     private TipoProfissional tipoProfissional;
 
-    // Relacionamento de auto-referência para supervisor
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_SUPPROFI", referencedColumnName = "IDPROFISSIO")
-    private Profissional supervisor; // Mapeia ID_SUPPROFI
+    /**
+     * Profissional supervisor (se aplicável).
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_SUPPROFI")
+    private Profissional supervisor;
 
-    @Enumerated(EnumType.STRING) // Enum '1', '2', '3'
-    @Column(name = "STATUSPROFI", length = 1)
+    /**
+     * Status do profissional.
+     */
+    @Column(name = "STATUSPROFI")
+    @Enumerated(EnumType.STRING)
     private StatusProfissional statusProfissional;
 
-    @NotNull(message = "Conselho profissional não pode ser nulo")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_CONSEPROFI", referencedColumnName = "IDCONSEPROFI", nullable = false)
-    private Conseprofi conseprofi;
+    /**
+     * Conselho profissional.
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_CONSEPROFI", nullable = false)
+    private ConselhoProfissional conselhoProfissional;
 
-    // Relacionamento inverso com Usuario (se necessário)
-    @OneToOne(mappedBy = "profissional", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    private Usuario usuario;
+    /**
+     * Lista de especialidades do profissional.
+     */
+    @ManyToMany
+    @JoinTable(
+        name = "PROFI_ESPEC",
+        joinColumns = @JoinColumn(name = "ID_PROFISSIO"),
+        inverseJoinColumns = @JoinColumn(name = "ID_ESPEC")
+    )
+    private List<Especialidade> especialidades;
 
-    // Relacionamento inverso com Agenda (se necessário)
-    // @OneToMany(mappedBy = "profissional")
-    // private List<Agenda> agendas;
+    /**
+     * Lista de profissionais subordinados.
+     */
+    @OneToMany(mappedBy = "supervisor")
+    private List<Profissional> subordinados;
 
-    // Enum para TipoProfissional
+    /**
+     * Enum para o tipo de profissional.
+     */
     public enum TipoProfissional {
-        _1, // Representa '1'
-        _2, // Representa '2'
-        _3, // Representa '3'
-        _4 // Representa '4'
-        // Adicionar mapeamento para valores reais se necessário
+        /** Tipo 1 */
+        _1,
+        /** Tipo 2 */
+        _2,
+        /** Tipo 3 */
+        _3,
+        /** Tipo 4 */
+        _4
     }
 
-    // Enum para StatusProfissional
+    /**
+     * Enum para o status do profissional.
+     */
     public enum StatusProfissional {
-        _1, // Representa '1' (e.g., Ativo)
-        _2, // Representa '2' (e.g., Inativo)
-        _3 // Representa '3' (e.g., Licença)
-        // Adicionar mapeamento para valores reais se necessário
+        /** Status 1 */
+        _1,
+        /** Status 2 */
+        _2,
+        /** Status 3 */
+        _3
     }
-
-    // Métodos utilitários, se necessário
-    public String getNomeProfissional() {
-        return this.pessoaFis != null ? this.pessoaFis.getNomePessoa() : null;
-    }
-
 }

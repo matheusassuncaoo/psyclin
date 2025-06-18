@@ -4,88 +4,104 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+/**
+ * Entidade que representa um endereço no sistema.
+ * Contém informações completas de localização como logradouro, número,
+ * bairro, CEP, cidade e tipo de endereço.
+ * 
+ * <p>Esta entidade está relacionada com {@link Pessoa}, {@link TipoLogradouro}
+ * e {@link Cidade}.</p>
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2025
+ */
 @Entity
 @Table(name = "ENDERECO")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Endereco {
 
+    /**
+     * Identificador único do endereço.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDENDERECO")
-    @EqualsAndHashCode.Include
     private Integer idEndereco;
 
-    @NotNull(message = "Tipo de endereço não pode ser nulo")
+    /**
+     * Tipo do endereço (comercial ou residencial).
+     */
+    @Column(name = "TIPOENDER", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Column(name = "TIPOENDER", nullable = false, length = 3)
-    private TipoEndereco tipoEndereco; // Enum COM ou RES
+    private TipoEndereco tipoEndereco;
 
-    @NotNull(message = "Tipo de logradouro não pode ser nulo")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_TIPOLOGRA", referencedColumnName = "IDTIPOLOGRA", nullable = false)
-    private TipoLogrado tipoLogrado;
+    /**
+     * Tipo de logradouro (Rua, Avenida, etc.).
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_TIPOLOGRA", nullable = false)
+    private TipoLogradouro tipoLogradouro;
 
-    @NotBlank(message = "Logradouro não pode ser vazio")
-    @Size(max = 100, message = "Logradouro deve ter no máximo 100 caracteres")
-    @Column(name = "LOGRADOURO", length = 100, nullable = false)
+    /**
+     * Nome do logradouro.
+     */
+    @Column(name = "LOGRADOURO", nullable = false, length = 100)
     private String logradouro;
 
-    @NotBlank(message = "Número não pode ser vazio")
-    @Size(max = 10, message = "Número deve ter no máximo 10 caracteres")
-    @Column(name = "NUMEENDER", length = 10, nullable = false)
-    private String numeroEndereco;
+    /**
+     * Número do endereço.
+     */
+    @Column(name = "NUMEENDER", nullable = false, length = 10)
+    private String numero;
 
-    @Size(max = 100, message = "Complemento deve ter no máximo 100 caracteres")
+    /**
+     * Complemento do endereço (apartamento, sala, etc.).
+     */
     @Column(name = "COMPLEMENTO", length = 100)
     private String complemento;
 
-    @NotBlank(message = "Bairro não pode ser vazio")
-    @Size(max = 100, message = "Bairro deve ter no máximo 100 caracteres")
-    @Column(name = "BAIRRO", length = 100, nullable = false)
+    /**
+     * Bairro do endereço.
+     */
+    @Column(name = "BAIRRO", nullable = false, length = 100)
     private String bairro;
 
-    @NotBlank(message = "CEP não pode ser vazio")
-    @Pattern(regexp = "\\d{8}", message = "CEP deve conter 8 dígitos")
-    @Column(name = "CEP", length = 8, nullable = false)
+    /**
+     * CEP do endereço (8 dígitos).
+     */
+    @Column(name = "CEP", nullable = false, length = 8)
     private String cep;
 
-    @NotNull(message = "Cidade não pode ser nula")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_CIDADE", referencedColumnName = "IDCIDADE", nullable = false)
+    /**
+     * Cidade do endereço.
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_CIDADE", nullable = false)
     private Cidade cidade;
 
-    @NotNull(message = "Pessoa não pode ser nula")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PESSOA", referencedColumnName = "IDPESSOA", nullable = false)
+    /**
+     * Pessoa proprietária do endereço.
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_PESSOA", nullable = false)
     private Pessoa pessoa;
 
-    // Enum para TipoEndereco
+    /**
+     * Enum que define os tipos de endereço.
+     */
     public enum TipoEndereco {
-        COM, // Comercial
-        RES  // Residencial
+        /** Endereço Comercial */
+        COM,
+        /** Endereço Residencial */
+        RES
     }
-
-
-
-
-
-
-
-
-
-}
+} 

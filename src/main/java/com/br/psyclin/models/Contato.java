@@ -1,43 +1,48 @@
 package com.br.psyclin.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+/**
+ * Entidade que representa um contato telefônico no sistema.
+ * Contém informações sobre números de telefone das pessoas.
+ * 
+ * <p>Esta entidade está relacionada com {@link Pessoa} e {@link TipoContato}.</p>
+ * 
+ * @author Sistema Psyclin
+ * @version 1.0
+ * @since 2025
+ */
 @Entity
 @Table(name = "CONTATO")
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Contato {
 
+    /**
+     * Identificador único do contato.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDCONTATO")
-    @EqualsAndHashCode.Include
     private Integer idContato;
 
-    @NotNull(message = "Tipo de contato não pode ser nulo")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_TIPOCONTATO", referencedColumnName = "IDTIPOCONTATO", nullable = false)
+    /**
+     * Tipo do contato (celular, fixo, etc.).
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_TIPOCONTATO", nullable = false)
     private TipoContato tipoContato;
 
-    @Size(max = 12, message = "Número deve ter no máximo 12 caracteres")
+    /**
+     * Número do telefone.
+     */
     @Column(name = "NUMERO", length = 12)
     private String numero;
 
-    @NotNull(message = "Pessoa não pode ser nula")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PESSOA", referencedColumnName = "IDPESSOA", nullable = false)
+    /**
+     * Pessoa proprietária do contato.
+     */
+    @ManyToOne
+    @JoinColumn(name = "ID_PESSOA", nullable = false)
     private Pessoa pessoa;
-    
-}
+} 
