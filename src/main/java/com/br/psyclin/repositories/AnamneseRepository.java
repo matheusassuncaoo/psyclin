@@ -26,7 +26,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param idAnamnese ID da anamnese
      * @return Optional contendo a anamnese se encontrada
      */
-    Optional<Anamnese> buscarAnamnesePorId(Integer idAnamnese);
+    Optional<Anamnese> findByIdAnamnese(Integer idAnamnese);
 
     /**
      * Busca anamneses por paciente.
@@ -34,8 +34,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param idPaciente ID do paciente
      * @return Lista de anamneses do paciente
      */
-    @Query("SELECT a FROM Anamnese a WHERE a.paciente.idPaciente = :idPaciente ORDER BY a.dataAnamnese DESC")
-    List<Anamnese> buscarAnamnesesPorPaciente(@Param("idPaciente") Integer idPaciente);
+    List<Anamnese> findByPaciente_IdPaciente(Integer idPaciente);
 
     /**
      * Busca anamneses por profissional.
@@ -43,8 +42,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param idProfissional ID do profissional
      * @return Lista de anamneses realizadas pelo profissional
      */
-    @Query("SELECT a FROM Anamnese a WHERE a.profissional.idProfissional = :idProfissional ORDER BY a.dataAnamnese DESC")
-    List<Anamnese> buscarAnamnesesPorProfissional(@Param("idProfissional") Integer idProfissional);
+    List<Anamnese> findByProfissional_IdProfissional(Integer idProfissional);
 
     /**
      * Busca anamneses por status (APROVADO, REPROVADO, CANCELADO).
@@ -52,7 +50,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param statusAnamnese Status da anamnese
      * @return Lista de anamneses com o status especificado
      */
-    List<Anamnese> buscarAnamnesesPorStatus(Anamnese.StatusAnamnese statusAnamnese);
+    List<Anamnese> findByStatusAnamnese(Anamnese.StatusAnamnese statusAnamnese);
 
     /**
      * Busca anamneses pendentes de aprovação (REPROVADO).
@@ -69,6 +67,21 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      */
     @Query("SELECT a FROM Anamnese a WHERE a.statusAnamnese = 'APROVADO' ORDER BY a.dataAnamnese DESC")
     List<Anamnese> buscarAnamnesesAprovadas();
+
+    /**
+     * Busca anamneses ativas (statusFuncional = true).
+     * 
+     * @return Lista de anamneses ativas
+     */
+    List<Anamnese> findByStatusFuncionalTrue();
+
+    /**
+     * Conta anamneses ativas para dashboard.
+     * 
+     * @return Número de anamneses ativas
+     */
+    @Query("SELECT COUNT(a) FROM Anamnese a WHERE a.statusFuncional = true")
+    Long countByStatusFuncionalTrue();
 
     /**
      * Busca anamneses canceladas.
@@ -133,7 +146,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @return true se existir, false caso contrário
      */
     @Query("SELECT COUNT(a) > 0 FROM Anamnese a WHERE a.paciente.idPaciente = :idPaciente")
-    boolean existeAnamnesePorPaciente(@Param("idPaciente") Integer idPaciente);
+    boolean existsByPaciente_IdPaciente(@Param("idPaciente") Integer idPaciente);
 
     /**
      * Conta anamneses por status.
@@ -141,7 +154,7 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param statusAnamnese Status da anamnese
      * @return Número de anamneses com o status especificado
      */
-    long contarAnamnesesPorStatus(Anamnese.StatusAnamnese statusAnamnese);
+    long countByStatusAnamnese(Anamnese.StatusAnamnese statusAnamnese);
 
     /**
      * Busca anamneses com autorização de visualização.
@@ -149,5 +162,5 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @param autorizacaoVisualizacao Status da autorização
      * @return Lista de anamneses com a autorização especificada
      */
-    List<Anamnese> buscarAnamnesesPorAutorizacaoVisualizacao(Boolean autorizacaoVisualizacao);
+    List<Anamnese> findByAutorizacaoVisualizacao(Boolean autorizacaoVisualizacao);
 } 

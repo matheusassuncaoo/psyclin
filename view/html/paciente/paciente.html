@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psyclin - Pacientes</title>
+    <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Importando Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Importando CSS da página -->
+    <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+</head>
+
+<body>
+    <!-- Container principal -->
+    <div class="main-content flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-[var(--zomp)] border-b-2 border-[var(--oxford-blue)] shadow-lg">
+            <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+                <!-- Botão Hambúrguer -->
+                <button id="btn-sidebar-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="menu"></i>
+                </button>
+
+                <!-- Logo -->
+                <a href="/view/html/dashboard/dashboard.html" class="hidden sm:flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
+                </a>
+
+                <!-- Barra de Pesquisa no Desktop -->
+                <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-feather="search" class="text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Pesquisar pacientes..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                    </div>
+                </div>
+
+                <!-- Menu de Usuário -->
+                <div class="flex items-center space-x-4">
+                    <!-- Botão Lupa (Mobile) -->
+                    <button id="button-mobile-search" class="icon-btn sm:hidden text-white">
+                        <i data-feather="search"></i>
+                    </button>
+                    <!-- Notificação (Mobile) -->
+                    <div class="relative sm:hidden">
+                        <button class="icon-btn text-white" aria-label="Notificações" id="button-mobile-notification" data-dropdown-toggle="mobile-notifications-dropdown">
+                            <i data-feather="bell"></i>
+                            <span id="mobile-notification-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+
+                        <!-- Dropdown de notificações mobile -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-[280px] -mr-4 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="mobile-notifications-dropdown">
+                            <div class="px-4 py-3 font-semibold text-sm">Notificações</div>
+                            <ul class="py-2 max-h-[60vh] overflow-y-auto" id="mobile-notifications-list">
+                                <!-- Notificações serão adicionadas dinamicamente aqui -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Botões para Desktop -->
+                    <div id="desktop-menu" class="hidden sm:flex items-center space-x-4">
+                        <button class="icon-btn button-help" aria-label="Ajuda">
+                            <i data-feather="help-circle"></i>
+                        </button>
+
+                        <!-- Botão de notificações com dropdown -->
+                        <div class="relative">
+                            <button class="icon-btn button-notification" aria-label="Notificações" id="button-notification" data-dropdown-toggle="notifications-dropdown">
+                                <i data-feather="bell"></i>
+                                <span id="notification-badge"
+                                    class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+
+                            <!-- Dropdown de notificações -->
+                            <div class="z-50 hidden absolute right-0 mt-2 w-64 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="notifications-dropdown">
+                                <div class="px-4 py-3 font-semibold">Notificações</div>
+                                <ul class="py-2" id="notifications-list">
+                                    <!-- Notificações serão adicionadas dinamicamente aqui -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <button class="icon-btn button-config" aria-label="Configurações">
+                            <i data-feather="settings"></i>
+                        </button>
+                    </div>
+
+                    <!-- Avatar com Dropdown -->
+                    <div class="relative">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://i.pinimg.com/736x/d7/a6/18/d7a618fcaa8804e0588ee8d0f02d9f99.jpg"
+                                alt="Foto do usuário">
+                        </button>
+                        <!-- Dropdown -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-prussian-blue">Usuário</span>
+                                <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
+                            </div>
+                            <ul class="py-2">
+                                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a>
+                                </li>
+                                <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
+                                <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
+                                <li><a href="#" class="dropdown-link">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra de Pesquisa Mobile -->
+            <div id="mobile-search-bar" class="hidden sm:hidden p-4">
+                <input type="text" placeholder="Pesquisar pacientes..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+            </div>
+        </nav>
+
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--oxford-blue)] w-64 p-4 space-y-4 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+            <div class="mb-4">
+                <span class="text-lg font-bold">DASHBOARD</span>
+            </div>
+            <a href="/view/html/dashboard/dashboard.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="grid"></i>
+                <span class="ml-2">DASHBOARD</span>
+            </a>
+            <a href="/view/html/paciente/paciente.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded bg-teal-600">
+                <i data-feather="users"></i>
+                <span class="ml-2">PACIENTES</span>
+            </a>
+            <a href="/view/html/cadastro/cadastro.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="database"></i>
+                <span class="ml-2">CADASTRAR</span>
+            </a>
+            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="file-text"></i>
+                <span class="ml-2">ANAMNESES</span>
+            </a>
+            <a href="/view/html/consulta/consulta.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="coffee"></i>
+                <span class="ml-2">CONSULTA</span>
+            </a>
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="check-square"></i>
+                <span class="ml-2">APROVAÇÃO</span>
+            </a>
+            <a href="/view/html/relatorios/relatorios.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="upload"></i>
+                <span class="ml-2">EMITIR</span>
+            </a>
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+                <i data-feather="settings"></i>
+                <span class="ml-2">CONFIGURAÇÕES</span>
+            </a>
+            <div class="mt-auto text-sm">psyclin.1.1A</div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="flex-1 p-6 bg-gray-100" style="transition: margin-left 0.3s ease;">
+            <!-- Header da página -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-[var(--oxford-blue)]">Gerenciar Pacientes</h1>
+                        <p class="text-gray-600 mt-1">Visualize e gerencie todos os pacientes cadastrados</p>
+                    </div>
+                    <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-6 py-2 rounded-lg flex items-center gap-2 transition duration-300">
+                        <i data-feather="plus"></i>
+                        Novo Paciente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filtros e Estatísticas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="users" class="text-[var(--zomp)] mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Total</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-[var(--zomp)]">156</p>
+                    <p class="text-sm text-gray-500">Pacientes cadastrados</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="activity" class="text-green-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Ativos</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-green-500">142</p>
+                    <p class="text-sm text-gray-500">Em tratamento</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="calendar" class="text-blue-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Consultas Hoje</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-500">8</p>
+                    <p class="text-sm text-gray-500">Agendadas</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="clock" class="text-orange-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Pendentes</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-orange-500">12</p>
+                    <p class="text-sm text-gray-500">Aguardando avaliação</p>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Buscar por nome</label>
+                        <input type="text" placeholder="Digite o nome do paciente..." class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                            <option value="">Todos</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="inativo">Inativo</option>
+                            <option value="pendente">Pendente</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ordenar por</label>
+                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                            <option value="nome">Nome</option>
+                            <option value="data">Data de cadastro</option>
+                            <option value="ultima_consulta">Última consulta</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-4 py-2 rounded-lg transition duration-300">
+                            <i data-feather="search"></i>
+                        </button>
+                        <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                            <i data-feather="x"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Pacientes -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-[var(--zomp)] text-white">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Paciente</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Idade</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Telefone</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Última Consulta</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Exemplo de linha de paciente -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-[var(--mountain-meadow)] flex items-center justify-center text-white font-semibold">
+                                                MF
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Maria Fernanda Silva</div>
+                                            <div class="text-sm text-gray-500">maria.silva@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">28 anos</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">(11) 99999-9999</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Ativo
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15/06/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-900" title="Visualizar">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                        <button class="text-green-600 hover:text-green-900" title="Editar">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900" title="Histórico">
+                                            <i data-feather="clock"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900" title="Excluir">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Mais linhas de exemplo -->
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-[var(--oxford-blue)] flex items-center justify-center text-white font-semibold">
+                                                JS
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">João Santos</div>
+                                            <div class="text-sm text-gray-500">joao.santos@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">35 anos</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">(11) 88888-8888</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Pendente
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10/06/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-900" title="Visualizar">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                        <button class="text-green-600 hover:text-green-900" title="Editar">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900" title="Histórico">
+                                            <i data-feather="clock"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900" title="Excluir">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="h-10 w-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-semibold">
+                                                AM
+                                            </div>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Ana Maria Costa</div>
+                                            <div class="text-sm text-gray-500">ana.costa@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">42 anos</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">(11) 77777-7777</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Ativo
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">20/06/2025</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-900" title="Visualizar">
+                                            <i data-feather="eye"></i>
+                                        </button>
+                                        <button class="text-green-600 hover:text-green-900" title="Editar">
+                                            <i data-feather="edit"></i>
+                                        </button>
+                                        <button class="text-purple-600 hover:text-purple-900" title="Histórico">
+                                            <i data-feather="clock"></i>
+                                        </button>
+                                        <button class="text-red-600 hover:text-red-900" title="Excluir">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginação -->
+                <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Anterior
+                            </button>
+                            <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                Próximo
+                            </button>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Mostrando <span class="font-medium">1</span> a <span class="font-medium">10</span> de <span class="font-medium">156</span> resultados
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                    <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i data-feather="chevron-left"></i>
+                                    </button>
+                                    <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">1</button>
+                                    <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-[var(--zomp)] text-sm font-medium text-white">2</button>
+                                    <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</button>
+                                    <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i data-feather="chevron-right"></i>
+                                    </button>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div class="loader fixed inset-50 flex items-center justify-center bg-[var(--zomp)] hidden">
+            </div>
+        </div>
+
+        <!-- Importando JavaScript -->
+        <script src="/view/js/dashboard/dashboard.js"></script>
+        <!-- Importando Global.js -->
+        <script src="/view/js/global.js"></script>
+    </div>
+</body>
+
+</html>

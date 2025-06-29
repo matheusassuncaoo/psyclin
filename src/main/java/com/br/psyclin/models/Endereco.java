@@ -10,7 +10,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Entidade que representa um endereço no sistema.
@@ -26,6 +28,8 @@ import lombok.Data;
  */
 @Entity
 @Table(name = "ENDERECO")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Endereco {
 
@@ -99,9 +103,6 @@ public class Endereco {
      * Enum que define os tipos de endereço.
      */
     public enum TipoEndereco {
-        /** Endereço Comercial */
-        COM,
-        /** Endereço Residencial */
-        RES
+        COM, RES;
     }
 } 

@@ -24,16 +24,15 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
      * @param idProfissional ID do profissional
      * @return Optional contendo o profissional se encontrado
      */
-    Optional<Profissional> buscarProfissionalPorId(Integer idProfissional);
+    Optional<Profissional> findByIdProfissional(Integer idProfissional);
 
     /**
      * Busca um profissional por CPF.
      * 
-     * @param cpfProfissional CPF do profissional
+     * @param cpfPessoa CPF do profissional
      * @return Optional contendo o profissional se encontrado
      */
-    @Query("SELECT p FROM Profissional p WHERE p.pessoaFisica.cpfPessoa = :cpfProfissional")
-    Optional<Profissional> buscarProfissionalPorCpf(@Param("cpfProfissional") String cpfProfissional);
+    Optional<Profissional> findByPessoaFisica_CpfPessoa(String cpfPessoa);
 
     /**
      * Busca profissionais por nome (contendo o texto).
@@ -50,7 +49,7 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
      * @param tipoProfissional Tipo do profissional
      * @return Lista de profissionais do tipo especificado
      */
-    List<Profissional> buscarProfissionaisPorTipo(Profissional.TipoProfissional tipoProfissional);
+    List<Profissional> findByTipoProfissional(Profissional.TipoProfissional tipoProfissional);
 
     /**
      * Busca profissionais por status.
@@ -58,7 +57,23 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
      * @param statusProfissional Status do profissional
      * @return Lista de profissionais com o status especificado
      */
-    List<Profissional> buscarProfissionaisPorStatus(Profissional.StatusProfissional statusProfissional);
+    List<Profissional> findByStatusProfissional(Profissional.StatusProfissional statusProfissional);
+
+    /**
+     * Busca apenas profissionais ativos (status = _1).
+     * 
+     * @return Lista de profissionais ativos
+     */
+    @Query("SELECT p FROM Profissional p WHERE p.statusProfissional = com.br.psyclin.models.Profissional$StatusProfissional._1")
+    List<Profissional> findByStatusProfissionalAtivo();
+
+    /**
+     * Conta profissionais ativos para otimização de performance.
+     * 
+     * @return Número de profissionais ativos
+     */
+    @Query("SELECT COUNT(p) FROM Profissional p WHERE p.statusProfissional = com.br.psyclin.models.Profissional$StatusProfissional._1")
+    Long countByStatusProfissionalAtivo();
 
     /**
      * Busca profissionais por conselho.
@@ -98,11 +113,10 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
     /**
      * Verifica se existe um profissional com o CPF informado.
      * 
-     * @param cpfProfissional CPF do profissional
+     * @param cpfPessoa CPF do profissional
      * @return true se existir, false caso contrário
      */
-    @Query("SELECT COUNT(p) > 0 FROM Profissional p WHERE p.pessoaFisica.cpfPessoa = :cpfProfissional")
-    boolean existeProfissionalPorCpf(@Param("cpfProfissional") String cpfProfissional);
+    boolean existsByPessoaFisica_CpfPessoa(String cpfPessoa);
 
     /**
      * Busca profissionais ativos por especialidade.
@@ -110,6 +124,6 @@ public interface ProfissionalRepository extends JpaRepository<Profissional, Inte
      * @param idEspecialidade ID da especialidade
      * @return Lista de profissionais ativos da especialidade especificada
      */
-    @Query("SELECT p FROM Profissional p JOIN p.especialidades e WHERE e.idEspecialidade = :idEspecialidade AND p.statusProfissional = '1'")
+    @Query("SELECT p FROM Profissional p JOIN p.especialidades e WHERE e.idEspecialidade = :idEspecialidade AND p.statusProfissional = '_1'")
     List<Profissional> buscarProfissionaisAtivosPorEspecialidade(@Param("idEspecialidade") Integer idEspecialidade);
 } 

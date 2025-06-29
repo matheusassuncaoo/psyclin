@@ -12,7 +12,9 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
@@ -23,10 +25,12 @@ import java.util.List;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "PERGUNTA")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Pergunta {
 
@@ -72,11 +76,6 @@ public class Pergunta {
      * Enum que define os tipos de pergunta.
      */
     public enum TipoPergunta {
-        /** Pergunta Objetiva */
-        O,
-        /** Pergunta Subjetiva */
-        S,
-        /** Pergunta com ambas as características */
-        A
+        O, S, A;
     }
 } 

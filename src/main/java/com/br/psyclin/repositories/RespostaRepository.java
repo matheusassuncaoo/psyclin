@@ -24,7 +24,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param idResposta ID da resposta
      * @return Optional contendo a resposta se encontrada
      */
-    Optional<Resposta> buscarRespostaPorId(Integer idResposta);
+    Optional<Resposta> findByIdResposta(Integer idResposta);
 
     /**
      * Busca respostas por anamnese.
@@ -32,8 +32,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param idAnamnese ID da anamnese
      * @return Lista de respostas da anamnese
      */
-    @Query("SELECT r FROM Resposta r WHERE r.anamnese.idAnamnese = :idAnamnese")
-    List<Resposta> buscarRespostasPorAnamnese(@Param("idAnamnese") Integer idAnamnese);
+    List<Resposta> findByAnamnese_IdAnamnese(Integer idAnamnese);
 
     /**
      * Busca respostas por pergunta.
@@ -41,8 +40,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param idPergunta ID da pergunta
      * @return Lista de respostas para a pergunta
      */
-    @Query("SELECT r FROM Resposta r WHERE r.pergunta.idPergunta = :idPergunta")
-    List<Resposta> buscarRespostasPorPergunta(@Param("idPergunta") Integer idPergunta);
+    List<Resposta> findByPergunta_IdPergunta(Integer idPergunta);
 
     /**
      * Busca respostas por anamnese e pergunta.
@@ -51,8 +49,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param idPergunta ID da pergunta
      * @return Lista de respostas da anamnese para a pergunta específica
      */
-    @Query("SELECT r FROM Resposta r WHERE r.anamnese.idAnamnese = :idAnamnese AND r.pergunta.idPergunta = :idPergunta")
-    List<Resposta> buscarRespostasPorAnamneseEPergunta(@Param("idAnamnese") Integer idAnamnese, @Param("idPergunta") Integer idPergunta);
+    List<Resposta> findByAnamnese_IdAnamneseAndPergunta_IdPergunta(Integer idAnamnese, Integer idPergunta);
 
     /**
      * Busca respostas objetivas (sim/não).
@@ -60,7 +57,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param respostaObjetiva Valor da resposta objetiva
      * @return Lista de respostas objetivas com o valor especificado
      */
-    List<Resposta> buscarRespostasObjetivas(Boolean respostaObjetiva);
+    List<Resposta> findByRespostaObjetiva(Boolean respostaObjetiva);
 
     /**
      * Busca respostas subjetivas que contêm o texto.
@@ -96,8 +93,7 @@ public interface RespostaRepository extends JpaRepository<Resposta, Integer> {
      * @param idPergunta ID da pergunta
      * @return true se existir, false caso contrário
      */
-    @Query("SELECT COUNT(r) > 0 FROM Resposta r WHERE r.anamnese.idAnamnese = :idAnamnese AND r.pergunta.idPergunta = :idPergunta")
-    boolean existeRespostaPorAnamneseEPergunta(@Param("idAnamnese") Integer idAnamnese, @Param("idPergunta") Integer idPergunta);
+    boolean existsByAnamnese_IdAnamneseAndPergunta_IdPergunta(Integer idAnamnese, Integer idPergunta);
 
     /**
      * Conta respostas por anamnese.

@@ -1,5 +1,7 @@
 package com.br.psyclin.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,7 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -23,10 +27,12 @@ import java.time.LocalDateTime;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "PESSOAFIS")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class PessoaFisica {
 
@@ -43,6 +49,7 @@ public class PessoaFisica {
      */
     @OneToOne
     @JoinColumn(name = "ID_PESSOA", nullable = false, unique = true)
+    @JsonBackReference
     private Pessoa pessoa;
 
     /**
@@ -80,21 +87,20 @@ public class PessoaFisica {
      * Relacionamento com paciente (se aplicável).
      */
     @OneToOne(mappedBy = "pessoaFisica")
+    @JsonIgnore
     private Paciente paciente;
 
     /**
      * Relacionamento com profissional (se aplicável).
      */
     @OneToOne(mappedBy = "pessoaFisica")
+    @JsonIgnore
     private Profissional profissional;
 
     /**
      * Enum que define os sexos disponíveis.
      */
     public enum Sexo {
-        /** Masculino */
-        M,
-        /** Feminino */
-        F
+        M, F;
     }
 } 

@@ -1,5 +1,7 @@
 package com.br.psyclin.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,8 +13,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.OneToMany;
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 /**
@@ -24,10 +28,12 @@ import java.util.List;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "PACIENTE")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Paciente {
 
@@ -43,7 +49,8 @@ public class Paciente {
      * Relacionamento com pessoa física.
      */
     @OneToOne
-    @JoinColumn(name = "IDPESSOAFIS", nullable = false, unique = true)
+    @JoinColumn(name = "ID_PESSOAFIS", nullable = false, unique = true)
+    @JsonBackReference
     private PessoaFisica pessoaFisica;
 
     /**
@@ -69,71 +76,20 @@ public class Paciente {
      * Lista de anamneses do paciente.
      */
     @OneToMany(mappedBy = "paciente")
+    @JsonIgnore
     private List<Anamnese> anamneses;
 
     /**
      * Lista de prontuários do paciente.
      */
     @OneToMany(mappedBy = "paciente")
+    @JsonIgnore
     private List<Prontuario> prontuarios;
 
     /**
      * Enum para os estados emissores do RG no Brasil.
      */
     public enum EstadoRg {
-        /** Acre */
-        AC,
-        /** Alagoas */
-        AL,
-        /** Amapá */
-        AP,
-        /** Amazonas */
-        AM,
-        /** Bahia */
-        BA,
-        /** Ceará */
-        CE,
-        /** Distrito Federal */
-        DF,
-        /** Espírito Santo */
-        ES,
-        /** Goiás */
-        GO,
-        /** Maranhão */
-        MA,
-        /** Mato Grosso */
-        MT,
-        /** Mato Grosso do Sul */
-        MS,
-        /** Minas Gerais */
-        MG,
-        /** Pará */
-        PA,
-        /** Paraíba */
-        PB,
-        /** Paraná */
-        PR,
-        /** Pernambuco */
-        PE,
-        /** Piauí */
-        PI,
-        /** Rio de Janeiro */
-        RJ,
-        /** Rio Grande do Norte */
-        RN,
-        /** Rio Grande do Sul */
-        RS,
-        /** Rondônia */
-        RO,
-        /** Roraima */
-        RR,
-        /** Santa Catarina */
-        SC,
-        /** São Paulo */
-        SP,
-        /** Sergipe */
-        SE,
-        /** Tocantins */
-        TO
+        AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO;
     }
 }

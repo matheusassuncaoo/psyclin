@@ -24,10 +24,10 @@ public interface PerguntaRepository extends JpaRepository<Pergunta, Integer> {
      * @param idPergunta ID da pergunta
      * @return Optional contendo a pergunta se encontrada
      */
-    Optional<Pergunta> buscarPerguntaPorId(Integer idPergunta);
+    Optional<Pergunta> findByIdPergunta(Integer idPergunta);
 
     /**
-     * Busca perguntas por texto (contendo).
+     * Busca uma pergunta por texto (contendo).
      * 
      * @param textoPergunta Texto ou parte do texto da pergunta
      * @return Lista de perguntas que contêm o texto
@@ -41,7 +41,7 @@ public interface PerguntaRepository extends JpaRepository<Pergunta, Integer> {
      * @param tipoPergunta Tipo da pergunta
      * @return Lista de perguntas do tipo especificado
      */
-    List<Pergunta> buscarPerguntasPorTipo(Pergunta.TipoPergunta tipoPergunta);
+    List<Pergunta> findByTipo(Pergunta.TipoPergunta tipoPergunta);
 
     /**
      * Busca perguntas por módulo.
@@ -68,7 +68,7 @@ public interface PerguntaRepository extends JpaRepository<Pergunta, Integer> {
      * @param pergunta Texto da pergunta
      * @return true se existir, false caso contrário
      */
-    boolean existePerguntaPorTexto(String pergunta);
+    boolean existsByPergunta(String pergunta);
 
     /**
      * Busca perguntas objetivas.

@@ -1,14 +1,24 @@
 package com.br.psyclin.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
  * Entidade que representa um conselho profissional no sistema.
  * Contém informações sobre conselhos como CRM, CRP, CRO, etc.
  * 
- * <p>Esta entidade está relacionada com {@link Profissional}.</p>
+ * <p>
+ * Esta entidade está relacionada com {@link Profissional}.
+ * </p>
  * 
  * @author Sistema Psyclin
  * @version 1.0
@@ -16,6 +26,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CONSEPROFI")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class ConselhoProfissional {
 
@@ -44,4 +56,4 @@ public class ConselhoProfissional {
      */
     @OneToMany(mappedBy = "conselhoProfissional")
     private List<Profissional> profissionais;
-} 
+}

@@ -1,7 +1,15 @@
 package com.br.psyclin.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToMany;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
@@ -12,10 +20,12 @@ import java.util.List;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "ESPECIALIDADE")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Especialidade {
 

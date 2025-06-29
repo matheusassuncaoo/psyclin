@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
@@ -18,10 +20,12 @@ import java.util.List;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "MODULO")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Modulo {
 

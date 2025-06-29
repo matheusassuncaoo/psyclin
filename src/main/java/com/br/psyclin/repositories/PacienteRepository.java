@@ -24,7 +24,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param idPaciente ID do paciente
      * @return Optional contendo o paciente se encontrado
      */
-    Optional<Paciente> buscarPacientePorId(Integer idPaciente);
+    Optional<Paciente> findByIdPaciente(Integer idPaciente);
 
     /**
      * Busca um paciente por RG.
@@ -32,7 +32,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param rgPaciente RG do paciente
      * @return Optional contendo o paciente se encontrado
      */
-    Optional<Paciente> buscarPacientePorRg(String rgPaciente);
+    Optional<Paciente> findByRgPaciente(String rgPaciente);
 
     /**
      * Busca pacientes por nome (contendo o texto).
@@ -49,15 +49,14 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param cpfPaciente CPF do paciente
      * @return Optional contendo o paciente se encontrado
      */
-    @Query("SELECT p FROM Paciente p WHERE p.pessoaFisica.cpfPessoa = :cpfPaciente")
-    Optional<Paciente> buscarPacientePorCpf(@Param("cpfPaciente") String cpfPaciente);
+    Optional<Paciente> findByPessoaFisica_CpfPessoa(String cpfPessoa);
 
     /**
      * Busca pacientes ativos.
      * 
      * @return Lista de pacientes com status ativo
      */
-    List<Paciente> buscarPacientesAtivos();
+    List<Paciente> findByStatusPacienteTrue();
 
     /**
      * Busca pacientes por status.
@@ -65,7 +64,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param statusPaciente Status do paciente (true = ativo, false = inativo)
      * @return Lista de pacientes com o status especificado
      */
-    List<Paciente> buscarPacientesPorStatus(Boolean statusPaciente);
+    List<Paciente> findByStatusPaciente(Boolean statusPaciente);
 
     /**
      * Verifica se existe um paciente com o RG informado.
@@ -73,7 +72,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param rgPaciente RG do paciente
      * @return true se existir, false caso contrário
      */
-    boolean existePacientePorRg(String rgPaciente);
+    boolean existsByRgPaciente(String rgPaciente);
 
     /**
      * Verifica se existe um paciente com o CPF informado.
@@ -81,8 +80,7 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param cpfPaciente CPF do paciente
      * @return true se existir, false caso contrário
      */
-    @Query("SELECT COUNT(p) > 0 FROM Paciente p WHERE p.pessoaFisica.cpfPessoa = :cpfPaciente")
-    boolean existePacientePorCpf(@Param("cpfPaciente") String cpfPaciente);
+    boolean existsByPessoaFisica_CpfPessoa(String cpfPessoa);
 
     /**
      * Busca pacientes por estado emissor do RG.
@@ -90,5 +88,5 @@ public interface PacienteRepository extends JpaRepository<Paciente, Integer> {
      * @param estadoRg Estado emissor do RG
      * @return Lista de pacientes do estado especificado
      */
-    List<Paciente> buscarPacientesPorEstadoRg(Paciente.EstadoRg estadoRg);
+    List<Paciente> findByEstadoRg(Paciente.EstadoRg estadoRg);
 } 

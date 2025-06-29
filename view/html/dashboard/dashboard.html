@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Psyclin Dashboard</title>
     <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
-    <!-- Importando Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Tailwind CSS via CDN (for development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Importando Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
@@ -159,7 +159,7 @@
                 <i data-feather="settings"></i>
                 <span class="ml-2">CONFIGURAÇÕES</span>
             </a>
-            <div class="mt-auto text-sm">psyclin.1.1A</div>
+            <div class="mt-auto text-sm">psyclin.1.5A</div>
         </div>
 
         <!-- Conteúdo Principal -->
@@ -175,30 +175,30 @@
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="user-plus" class="mr-2"></i>
-                        <h3 class="text-lg font-semibold">Atender</h3>
+                        <h3 class="text-lg font-semibold">Pacientes</h3>
                     </div>
-                    <p id="attend-count" class="text-3xl font-bold">000</p>
+                    <p id="active-patients-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="file-text" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Anamnese</h3>
                     </div>
-                    <p id="anamnese-count" class="text-3xl font-bold">000</p>
+                    <p id="active-anamneses-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="calendar" class="mr-2"></i>
                         <h3 class="text-lg font-semibold">Encontros</h3>
                     </div>
-                    <p id="encontros-count" class="text-3xl font-bold">000</p>
+                    <p id="active-encounters-today-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
                         <i data-feather="file" class="mr-2"></i>
-                        <h3 class="text-lg font-semibold">Relatórios</h3>
+                        <h3 class="text-lg font-semibold">Procedimentos</h3>
                     </div>
-                    <p id="relatorios-count" class="text-3xl font-bold">000</p>
+                    <p id="active-procedures-count" class="text-3xl font-bold">000</p>
                 </div>
                 <div class="bg-[var(--zomp)] text-white p-4 rounded-lg shadow-md">
                     <div class="flex items-center">
@@ -272,8 +272,7 @@
         </div>
         <!-- Importando JavaScript -->
         <script src="/view/js/dashboard/dashboard.js"></script>
-        <!-- Importando Global.js -->
-        <script src="/view/js/global.js"></script>
+        <script type="module" src="/view/js/dashboard/dashboardManager.js"></script>
     </div>
 </body>
 

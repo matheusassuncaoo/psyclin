@@ -24,15 +24,15 @@ public interface ModuloRepository extends JpaRepository<Modulo, Integer> {
      * @param idModulo ID do módulo
      * @return Optional contendo o módulo se encontrado
      */
-    Optional<Modulo> buscarModuloPorId(Integer idModulo);
+    Optional<Modulo> findByIdModulo(Integer idModulo);
 
     /**
      * Busca um módulo por nome.
      * 
-     * @param nomeModulo Nome do módulo
+     * @param modulo Nome do módulo
      * @return Optional contendo o módulo se encontrado
      */
-    Optional<Modulo> buscarModuloPorNome(String nomeModulo);
+    Optional<Modulo> findByModulo(String modulo);
 
     /**
      * Busca módulos por nome (contendo o texto).
@@ -46,10 +46,10 @@ public interface ModuloRepository extends JpaRepository<Modulo, Integer> {
     /**
      * Verifica se existe um módulo com o nome informado.
      * 
-     * @param nomeModulo Nome do módulo
+     * @param modulo Nome do módulo
      * @return true se existir, false caso contrário
      */
-    boolean existeModuloPorNome(String nomeModulo);
+    boolean existsByModulo(String modulo);
 
     /**
      * Busca módulos que contêm perguntas.

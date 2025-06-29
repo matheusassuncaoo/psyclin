@@ -7,14 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
  * Entidade que representa uma cidade no sistema.
  * Contém informações sobre cidades e seus respectivos estados.
  * 
- * <p>Esta entidade está relacionada com {@link Endereco}.</p>
+ * <p>
+ * Esta entidade está relacionada com {@link Endereco}.
+ * </p>
  * 
  * @author Sistema Psyclin
  * @version 1.0
@@ -22,6 +26,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CIDADE")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Cidade {
 
@@ -50,4 +56,4 @@ public class Cidade {
      */
     @OneToMany(mappedBy = "cidade")
     private List<Endereco> enderecos;
-} 
+}

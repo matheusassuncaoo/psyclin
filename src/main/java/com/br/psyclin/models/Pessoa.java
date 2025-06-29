@@ -1,5 +1,6 @@
 package com.br.psyclin.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +12,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
@@ -23,10 +26,12 @@ import java.util.List;
  * 
  * @author Sistema Psyclin
  * @version 1.0
- * @since 2024
+ * @since 2025
  */
 @Entity
 @Table(name = "PESSOA")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Pessoa {
 
@@ -49,39 +54,41 @@ public class Pessoa {
      * Relacionamento com pessoa física (se aplicável).
      */
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private PessoaFisica pessoaFisica;
 
     /**
      * Relacionamento com pessoa jurídica (se aplicável).
      */
     @OneToOne(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private PessoaJuridica pessoaJuridica;
 
     /**
      * Lista de endereços da pessoa.
      */
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Endereco> enderecos;
 
     /**
      * Lista de contatos telefônicos da pessoa.
      */
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Contato> contatos;
 
     /**
      * Lista de emails da pessoa.
      */
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Email> emails;
 
     /**
      * Enum que define os tipos de pessoa no sistema.
      */
     public enum TipoPessoa {
-        /** Pessoa Física */
-        F,
-        /** Pessoa Jurídica */
-        J
+        F, J;
     }
 } 

@@ -5,16 +5,14 @@
  * @author Matheus Assunção
  */
 
-// Importar o serviço do dashboard
-// Nota: Certifique-se de incluir o script do serviço antes do dashboard.js no HTML
-// <script src="../services/dashboardService.js"></script>
+// Importar o gerenciador do dashboard
+// Nota: O dashboardManager.js é carregado como módulo no HTML
+// <script type="module" src="../dashboard/dashboardManager.js"></script>
 
 document.addEventListener("DOMContentLoaded", () => {
     // Inicializar componentes da interface
     inicializarInterface();
 
-    // Inicializar o dashboard
-    inicializarDashboard();
 });
 
 /**
@@ -153,40 +151,6 @@ function inicializarIcones() {
     }
 }
 
-/**
- * Inicializa o dashboard carregando os dados
- */
-async function inicializarDashboard() {
-    const dashboardService = new DashboardService();
-    
-    try {
-        mostrarCarregamento();
-        const dados = await dashboardService.buscarDadosDashboard();
-        atualizarDashboard(dados);
-    } catch (erro) {
-        console.error("Erro ao inicializar dashboard:", erro);
-        mostrarErro("Não foi possível carregar os dados do dashboard. Tente novamente mais tarde.");
-    } finally {
-        ocultarCarregamento();
-    }
-}
-
-/**
- * Atualiza todos os contadores do dashboard com os dados recebidos
- * @param {Object} dados - Dados recebidos da API
- */
-function atualizarDashboard(dados) {
-    // Atualizar contadores dinâmicos
-    atualizarContador("active-professionals-count", dados.profissionais.length);
-    atualizarContador("active-patients-count", dados.pacientes.length);
-    atualizarContador("attend-count", dados.atendimentos);
-    atualizarContador("anamnese-count", dados.anamneses);
-    atualizarContador("encontros-count", dados.encontros);
-    atualizarContador("relatorios-count", dados.relatorios);
-
-    // Atualizar cards com informações adicionais
-    atualizarCardsInformativos(dados);
-}
 
 /**
  * Atualiza um contador específico

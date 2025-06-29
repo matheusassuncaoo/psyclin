@@ -1,7 +1,21 @@
 package com.br.psyclin.models;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +33,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ANAMNESE")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Anamnese {
 
@@ -35,6 +51,7 @@ public class Anamnese {
      */
     @ManyToOne
     @JoinColumn(name = "ID_PACIENTE", nullable = false)
+    @JsonBackReference
     private Paciente paciente;
 
     /**
@@ -42,6 +59,7 @@ public class Anamnese {
      */
     @ManyToOne
     @JoinColumn(name = "ID_PROFISSIO", nullable = false)
+    @JsonBackReference
     private Profissional profissional;
 
     /**
@@ -91,23 +109,20 @@ public class Anamnese {
      * Lista de respostas da anamnese.
      */
     @OneToMany(mappedBy = "anamnese")
+    @JsonIgnore
     private List<Resposta> respostas;
 
     /**
      * Lista de procedimentos prescritos na anamnese.
      */
     @OneToMany(mappedBy = "anamnese")
+    @JsonIgnore
     private List<ProcPresc> procedimentosPrescritos;
 
     /**
      * Enum para o status da anamnese.
      */
     public enum StatusAnamnese {
-        /** Anamnese aprovada */
-        APROVADO,
-        /** Anamnese reprovada */
-        REPROVADO,
-        /** Anamnese cancelada */
-        CANCELADO
+        APROVADO, REPROVADO, CANCELADO;
     }
 } 

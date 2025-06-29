@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
     <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+    <link rel="stylesheet" href="/view/css/cadastro/cadastro.css">
 </head>
 
 <body>
@@ -188,14 +189,25 @@
                 </a>
             </div>
 
-            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            <div class="loader fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
             </div>
+
+            <div id="grid-container" class="mt-8"></div>
         </div>
 
         <!-- Importando JavaScript -->
-        <script src="/view/js/dashboard/dashboard.js "></script>
-        <!-- Importando Global.js -->
-        <script src="/view/js/global.js "></script>
-</body>
+        <script type="module" src="/view/js/services/apiManager.js"></script>
+        <script type="module" src="/view/js/cadastro/cadastroManager.js"></script>
+        <script type="module" src="/view/js/dashboard/dashboard.js"></script>
+        
+        <!-- Inicialização após carregamento -->
+        <script>
+            // Inicializa ícones Feather após carregamento da página
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
+            });
+        </script></body>
 
 </html>

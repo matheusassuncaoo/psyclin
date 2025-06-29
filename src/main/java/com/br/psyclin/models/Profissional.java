@@ -1,5 +1,7 @@
 package com.br.psyclin.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +16,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Convert;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
@@ -31,6 +36,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PROFISSIONAL")
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Profissional {
 
@@ -47,13 +54,14 @@ public class Profissional {
      */
     @OneToOne
     @JoinColumn(name = "ID_PESSOAFIS", nullable = false, unique = true)
+    @JsonBackReference
     private PessoaFisica pessoaFisica;
 
     /**
      * Tipo do profissional.
      */
     @Column(name = "TIPOPROFI", nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = TipoProfissionalConverter.class)
     private TipoProfissional tipoProfissional;
 
     /**
@@ -61,13 +69,14 @@ public class Profissional {
      */
     @ManyToOne
     @JoinColumn(name = "ID_SUPPROFI")
+    @JsonIgnore
     private Profissional supervisor;
 
     /**
      * Status do profissional.
      */
     @Column(name = "STATUSPROFI")
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = StatusProfissionalConverter.class)
     private StatusProfissional statusProfissional;
 
     /**
@@ -86,37 +95,65 @@ public class Profissional {
         joinColumns = @JoinColumn(name = "ID_PROFISSIO"),
         inverseJoinColumns = @JoinColumn(name = "ID_ESPEC")
     )
+    @JsonIgnore
     private List<Especialidade> especialidades;
 
     /**
      * Lista de profissionais subordinados.
      */
     @OneToMany(mappedBy = "supervisor")
+    @JsonIgnore
     private List<Profissional> subordinados;
 
     /**
      * Enum para o tipo de profissional.
      */
     public enum TipoProfissional {
-        /** Tipo 1 */
-        _1,
-        /** Tipo 2 */
-        _2,
-        /** Tipo 3 */
-        _3,
-        /** Tipo 4 */
-        _4
+        _1("1"), _2("2"), _3("3"), _4("4");
+        
+        private final String value;
+        
+        TipoProfissional(String value) {
+            this.value = value;
+        }
+        
+        public String getValue() {
+            return value;
+        }
+        
+        public static TipoProfissional fromValue(String value) {
+            for (TipoProfissional tipo : values()) {
+                if (tipo.value.equals(value)) {
+                    return tipo;
+                }
+            }
+            throw new IllegalArgumentException("Tipo de profissional inválido: " + value);
+        }
     }
 
     /**
      * Enum para o status do profissional.
      */
     public enum StatusProfissional {
-        /** Status 1 */
-        _1,
-        /** Status 2 */
-        _2,
-        /** Status 3 */
-        _3
+        _1("1"), _2("2"), _3("3");
+        
+        private final String value;
+        
+        StatusProfissional(String value) {
+            this.value = value;
+        }
+        
+        public String getValue() {
+            return value;
+        }
+        
+        public static StatusProfissional fromValue(String value) {
+            for (StatusProfissional status : values()) {
+                if (status.value.equals(value)) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Status de profissional inválido: " + value);
+        }
     }
 }
