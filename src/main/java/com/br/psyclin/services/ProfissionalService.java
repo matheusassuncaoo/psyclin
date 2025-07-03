@@ -1,12 +1,14 @@
 package com.br.psyclin.services;
 
 import com.br.psyclin.models.Profissional;
+import com.br.psyclin.dto.response.ProfissionalResponseDTO;
 import com.br.psyclin.repositories.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service para operações de negócio relacionadas a Profissionais.
@@ -183,4 +185,61 @@ public class ProfissionalService {
             throw new RuntimeException("Erro ao contar profissionais ativos: " + e.getMessage(), e);
         }
     }
-} 
+
+    /**
+     * Converte lista de profissionais para DTOs de resposta
+     * @param profissionais Lista de profissionais
+     * @return Lista de DTOs
+     */
+    public List<ProfissionalResponseDTO> converterParaDTO(List<Profissional> profissionais) {
+        return profissionais.stream()
+                .map(this::converterParaDTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Converte profissional para DTO de resposta
+     * @param profissional Profissional a ser convertido
+     * @return DTO de resposta
+     */
+    public ProfissionalResponseDTO converterParaDTO(Profissional profissional) {
+        if (profissional == null) {
+            return null;
+        }
+
+        ProfissionalResponseDTO dto = new ProfissionalResponseDTO();
+        dto.setIdProfissional(profissional.getIdProfissional());
+        
+        // Dados da pessoa física (nome)
+        if (profissional.getPessoaFisica() != null) {
+            dto.setNomePessoa(profissional.getPessoaFisica().getNomePessoa());
+            // Campos telefone e email podem não existir, deixaremos como null por enquanto
+            dto.setTelefone("N/A");
+            dto.setEmail("N/A");
+        }
+
+        // Código profissional - usar ID como fallback se não houver campo específico
+        dto.setCodigoProfissional("PROF" + profissional.getIdProfissional());
+
+        // Conselho profissional
+        if (profissional.getConselhoProfissional() != null) {
+            // Assumindo que há um campo nome ou sigla no ConselhoProfissional
+            dto.setConselhoProfissional("CRP"); // Placeholder, ajustar conforme o campo correto
+        }
+
+        // Tipo profissional
+        if (profissional.getTipoProfissional() != null) {
+            dto.setTipoProfissional(profissional.getTipoProfissional().getValue());
+        }
+
+        // Status profissional
+        if (profissional.getStatusProfissional() != null) {
+            dto.setStatusProfissional(profissional.getStatusProfissional().getValue());
+        }
+
+        // Especialidades - deixar como N/A por enquanto
+        dto.setEspecialidade("N/A");
+
+        return dto;
+    }
+}

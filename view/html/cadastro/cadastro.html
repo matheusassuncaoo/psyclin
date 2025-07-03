@@ -168,19 +168,19 @@
         <!-- Conteúdo Principal -->
         <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
             <div class="flex flex-col sm:flex-row flex-wrap justify-end items-center gap-3 sm:gap-4">
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
+                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200" data-type="PROFISSIONAIS">
                     PROFISSIONAIS
                 </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
+                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200" data-type="ADMIN">
                     ADMIN
                 </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
+                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200" data-type="PACIENTE">
                     PACIENTE
                 </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
+                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200" data-type="ANAMNESE">
                     ANAMNESE
                 </button>
-                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
+                <button class="main-button w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200" data-type="RELATORIO">
                     RELATORIO
                 </button>
                 <a href="/view/html/cadastro/cadastraritem.html" class="main-button w-full sm:w-auto flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-base font-semibold px-6 py-4 rounded-lg shadow-md transition duration-200">
@@ -199,6 +199,10 @@
         <script type="module" src="/view/js/services/apiManager.js"></script>
         <script type="module" src="/view/js/cadastro/cadastroManager.js"></script>
         <script type="module" src="/view/js/dashboard/dashboard.js"></script>
+        
+        <!-- Chat Widget -->
+        <link rel="stylesheet" href="/view/css/components/chat-widget.css">
+        <script src="/view/js/components/chat-widget.js"></script>
         
         <!-- Inicialização após carregamento -->
         <script>

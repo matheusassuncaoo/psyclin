@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste ADMIN Filter</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Teste - Filtro ADMIN</h1>
+    
+    <div class="test-section">
+        <h2>Dados dos Profissionais</h2>
+        <button onclick="testarProfissionais()">Buscar Profissionais</button>
+        <div id="resultados-profissionais"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Filtro ADMIN (tipoProfissional = "4")</h2>
+        <button onclick="testarFiltroAdmin()">Aplicar Filtro ADMIN</button>
+        <div id="resultados-admin"></div>
+    </div>
+
+    <script src="/view/js/config/apiConfig.js"></script>
+    <script src="/view/js/services/apiManager.js"></script>
+    
+    <script>
+        let dadosProfissionais = [];
+        
+        async function testarProfissionais() {
+            try {
+                console.log('🔄 Testando busca de profissionais...');
+                const dados = await pegarProfissionais();
+                dadosProfissionais = dados;
+                
+                document.getElementById('resultados-profissionais').innerHTML = `
+                    <h3>✅ ${dados.length} profissionais encontrados</h3>
+                    <pre>${JSON.stringify(dados, null, 2)}</pre>
+                `;
+                
+                // Log dos tipos encontrados
+                const tipos = dados.map(p => p.tipoProfissional);
+                console.log('Tipos encontrados:', [...new Set(tipos)]);
+                
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                document.getElementById('resultados-profissionais').innerHTML = `
+                    <h3>❌ Erro ao buscar profissionais</h3>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+        
+        async function testarFiltroAdmin() {
+            if (dadosProfissionais.length === 0) {
+                alert('Execute primeiro a busca de profissionais!');
+                return;
+            }
+            
+            const admins = dadosProfissionais.filter(item => 
+                item.tipoProfissional === "4" || item.tipoProfissional === 4
+            );
+            
+            document.getElementById('resultados-admin').innerHTML = `
+                <h3>🔧 ${admins.length} administradores encontrados</h3>
+                <pre>${JSON.stringify(admins, null, 2)}</pre>
+            `;
+            
+            console.log('Administradores filtrados:', admins);
+        }
+    </script>
+</body>
+</html>

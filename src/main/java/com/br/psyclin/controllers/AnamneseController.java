@@ -1,5 +1,7 @@
 package com.br.psyclin.controllers;
 
+import com.br.psyclin.dto.response.ApiResponseDTO;
+import com.br.psyclin.dto.response.AnamneseResponseDTO;
 import com.br.psyclin.models.Anamnese;
 import com.br.psyclin.services.AnamneseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -24,6 +27,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/anamnese")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Validated
 public class AnamneseController {
 
@@ -34,18 +38,45 @@ public class AnamneseController {
      * Lista todas as anamneses.
      */
     @GetMapping
-    public ResponseEntity<List<Anamnese>> listarTodos() {
-        List<Anamnese> anamneses = anamneseService.listarTodos();
-        return ResponseEntity.ok().body(anamneses);
+    public ResponseEntity<ApiResponseDTO<List<AnamneseResponseDTO>>> listarTodos() {
+        try {
+            List<Anamnese> anamneses = anamneseService.listarTodos();
+            List<AnamneseResponseDTO> anamnesesDTO = anamneseService.converterParaDTO(anamneses);
+            return ResponseEntity.ok(ApiResponseDTO.success("Anamneses listadas com sucesso", anamnesesDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao listar anamneses", e.getMessage()));
+        }
+    }
+
+    /**
+     * Lista apenas anamneses ativas.
+     */
+    @GetMapping("/ativas")
+    public ResponseEntity<ApiResponseDTO<List<AnamneseResponseDTO>>> listarAtivas() {
+        try {
+            List<Anamnese> anamnesesAtivas = anamneseService.listarAtivas();
+            List<AnamneseResponseDTO> anamnesesDTO = anamneseService.converterParaDTO(anamnesesAtivas);
+            return ResponseEntity.ok(ApiResponseDTO.success("Anamneses ativas listadas", anamnesesDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao listar anamneses ativas", e.getMessage()));
+        }
     }
 
     /**
      * Busca uma anamnese por id.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Anamnese> buscarPorId(@PathVariable Integer id) {
-        Anamnese anamnese = anamneseService.buscarAnamnesePorId(id);
-        return ResponseEntity.ok().body(anamnese);
+    public ResponseEntity<ApiResponseDTO<AnamneseResponseDTO>> buscarPorId(@PathVariable Integer id) {
+        try {
+            Anamnese anamnese = anamneseService.buscarAnamnesePorId(id);
+            AnamneseResponseDTO anamneseDTO = anamneseService.converterParaDTO(anamnese);
+            return ResponseEntity.ok(ApiResponseDTO.success("Anamnese encontrada", anamneseDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao buscar anamnese", e.getMessage()));
+        }
     }
 
     /**
@@ -78,16 +109,6 @@ public class AnamneseController {
     public ResponseEntity<Void> excluir(@PathVariable Integer id) {
         anamneseService.excluirAnamnese(id);
         return ResponseEntity.noContent().build();
-    }
-    
-    /**
-     * Lista apenas anamneses ativas (statusFuncional = true).
-     * Endpoint seguro que não expõe dados sensíveis.
-     */
-    @GetMapping("/ativas")
-    public ResponseEntity<List<Anamnese>> listarAtivas() {
-        List<Anamnese> anamnesesAtivas = anamneseService.listarAtivas();
-        return ResponseEntity.ok().body(anamnesesAtivas);
     }
     
     /**

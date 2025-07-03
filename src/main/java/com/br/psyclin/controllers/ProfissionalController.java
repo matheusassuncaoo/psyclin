@@ -1,5 +1,8 @@
 package com.br.psyclin.controllers;
 
+import com.br.psyclin.dto.response.ApiResponseDTO;
+import com.br.psyclin.dto.response.ProfissionalResponseDTO;
+import com.br.psyclin.dto.request.ProfissionalUpdateDTO;
 import com.br.psyclin.models.Profissional;
 import com.br.psyclin.services.ProfissionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -36,18 +37,30 @@ public class ProfissionalController {
      * Lista todos os profissionais.
      */
     @GetMapping
-    public ResponseEntity<List<Profissional>> listarTodos() {
-        List<Profissional> profissionais = profissionalService.listarTodos();
-        return ResponseEntity.ok().body(profissionais);
+    public ResponseEntity<ApiResponseDTO<List<ProfissionalResponseDTO>>> listarTodos() {
+        try {
+            List<Profissional> profissionais = profissionalService.listarTodos();
+            List<ProfissionalResponseDTO> profissionaisDTO = profissionalService.converterParaDTO(profissionais);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissionais listados com sucesso", profissionaisDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao listar profissionais", e.getMessage()));
+        }
     }
 
     /**
      * Lista apenas profissionais ativos.
      */
     @GetMapping("/ativos")
-    public ResponseEntity<List<Profissional>> listarAtivos() {
-        List<Profissional> profissionaisAtivos = profissionalService.listarAtivos();
-        return ResponseEntity.ok().body(profissionaisAtivos);
+    public ResponseEntity<ApiResponseDTO<List<ProfissionalResponseDTO>>> listarAtivos() {
+        try {
+            List<Profissional> profissionaisAtivos = profissionalService.listarAtivos();
+            List<ProfissionalResponseDTO> profissionaisDTO = profissionalService.converterParaDTO(profissionaisAtivos);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissionais ativos listados", profissionaisDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao listar profissionais ativos", e.getMessage()));
+        }
     }
 
     /**
@@ -63,9 +76,15 @@ public class ProfissionalController {
      * Busca um profissional por id.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Profissional> buscarPorId(@PathVariable Integer id) {
-        Profissional profissional = profissionalService.buscarProfissionalPorId(id);
-        return ResponseEntity.ok().body(profissional);
+    public ResponseEntity<ApiResponseDTO<ProfissionalResponseDTO>> buscarPorId(@PathVariable Integer id) {
+        try {
+            Profissional profissional = profissionalService.buscarProfissionalPorId(id);
+            ProfissionalResponseDTO profissionalDTO = profissionalService.converterParaDTO(profissional);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissional encontrado", profissionalDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao buscar profissional", e.getMessage()));
+        }
     }
 
     /**
@@ -73,11 +92,14 @@ public class ProfissionalController {
      */
     @PostMapping
     @Validated
-    public ResponseEntity<Void> cadastrar(@Valid @RequestBody Profissional profissional) {
-        Profissional salvo = profissionalService.cadastrarProfissional(profissional);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(salvo.getIdProfissional()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<ApiResponseDTO<Profissional>> cadastrar(@Valid @RequestBody Profissional profissional) {
+        try {
+            Profissional salvo = profissionalService.cadastrarProfissional(profissional);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissional cadastrado com sucesso", salvo));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponseDTO.error("Erro ao cadastrar profissional", e.getMessage()));
+        }
     }
 
     /**
@@ -85,18 +107,28 @@ public class ProfissionalController {
      */
     @PutMapping("/{id}")
     @Validated
-    public ResponseEntity<Void> atualizar(@Valid @RequestBody Profissional profissional, @PathVariable Integer id) {
-        profissional.setIdProfissional(id);
-        profissionalService.atualizarProfissional(id, profissional);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseDTO<Profissional>> atualizar(@Valid @RequestBody Profissional profissional, @PathVariable Integer id) {
+        try {
+            profissional.setIdProfissional(id);
+            Profissional atualizado = profissionalService.atualizarProfissional(id, profissional);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissional atualizado com sucesso", atualizado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponseDTO.error("Erro ao atualizar profissional", e.getMessage()));
+        }
     }
 
     /**
-     * Inativa (exclui logicamente) um profissional.
+     * Inativa (soft delete) um profissional.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable Integer id) {
-        profissionalService.excluirProfissional(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponseDTO<String>> excluir(@PathVariable Integer id) {
+        try {
+            profissionalService.excluirProfissional(id);
+            return ResponseEntity.ok(ApiResponseDTO.success("Profissional inativado com sucesso", "ID: " + id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponseDTO.error("Erro ao inativar profissional", e.getMessage()));
+        }
     }
 } 

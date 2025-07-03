@@ -172,4 +172,58 @@ public class AnamneseService {
             throw new RuntimeException("Erro ao contar anamneses ativas: " + e.getMessage(), e);
         }
     }
+
+    /**
+     * Converte lista de anamneses para DTOs de resposta
+     * @param anamneses Lista de anamneses
+     * @return Lista de DTOs
+     */
+    public List<com.br.psyclin.dto.response.AnamneseResponseDTO> converterParaDTO(List<Anamnese> anamneses) {
+        return anamneses.stream()
+                .map(this::converterParaDTO)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Converte anamnese para DTO de resposta
+     * @param anamnese Anamnese a ser convertida
+     * @return DTO de resposta
+     */
+    public com.br.psyclin.dto.response.AnamneseResponseDTO converterParaDTO(Anamnese anamnese) {
+        if (anamnese == null) {
+            return null;
+        }
+
+        com.br.psyclin.dto.response.AnamneseResponseDTO dto = new com.br.psyclin.dto.response.AnamneseResponseDTO();
+        dto.setIdAnamnese(anamnese.getIdAnamnese());
+        
+        // Nome do paciente
+        if (anamnese.getPaciente() != null && anamnese.getPaciente().getPessoaFisica() != null) {
+            dto.setNomePaciente(anamnese.getPaciente().getPessoaFisica().getNomePessoa());
+        }
+        
+        // Nome do profissional
+        if (anamnese.getProfissional() != null && anamnese.getProfissional().getPessoaFisica() != null) {
+            dto.setNomeProfissional(anamnese.getProfissional().getPessoaFisica().getNomePessoa());
+        }
+        
+        // Data formatada
+        if (anamnese.getDataAnamnese() != null) {
+            java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            dto.setDataAplicacao(anamnese.getDataAnamnese().format(formatter));
+        }
+        
+        // Status
+        if (anamnese.getStatusAnamnese() != null) {
+            dto.setStatusAnamnese(anamnese.getStatusAnamnese().toString());
+        }
+        
+        // Dados do responsável
+        dto.setNomeResponsavel(anamnese.getNomeResponsavel());
+        dto.setCpfResponsavel(anamnese.getCpfResponsavel());
+        dto.setAutorizacaoVisualizacao(anamnese.getAutorizacaoVisualizacao());
+        dto.setObservacoes(anamnese.getObservacoes());
+
+        return dto;
+    }
 }

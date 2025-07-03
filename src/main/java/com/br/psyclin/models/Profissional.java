@@ -1,7 +1,7 @@
 package com.br.psyclin.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,6 +39,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Profissional {
 
     /**
@@ -54,7 +55,7 @@ public class Profissional {
      */
     @OneToOne
     @JoinColumn(name = "ID_PESSOAFIS", nullable = false, unique = true)
-    @JsonBackReference
+    @JsonIgnore
     private PessoaFisica pessoaFisica;
 
     /**

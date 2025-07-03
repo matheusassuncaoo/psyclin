@@ -41,9 +41,15 @@ async function pegarPacientes(){
             }
         }
 
-        const pacientes = await response.json();
-        console.log('✅ Pacientes carregados com sucesso:', pacientes.length, 'pacientes encontrados');
-        return pacientes;
+        const apiResponse = await response.json();
+        console.log('📡 Resposta da API:', apiResponse);
+        
+        if (apiResponse.success && apiResponse.data) {
+            console.log('✅ Pacientes carregados com sucesso:', apiResponse.data.length, 'pacientes encontrados');
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro desconhecido ao buscar pacientes');
+        }
     } catch (error) {
         // Tratamento específico para erro de rede
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -83,9 +89,15 @@ async function pegarPacientesAtivos(){
             }
         }
 
-        const pacientesAtivos = await response.json();
-        console.log('✅ Pacientes ativos carregados com sucesso:', pacientesAtivos.length, 'pacientes encontrados');
-        return pacientesAtivos;
+        const apiResponse = await response.json();
+        console.log('📡 Resposta da API:', apiResponse);
+        
+        if (apiResponse.success && apiResponse.data) {
+            console.log('✅ Pacientes ativos carregados com sucesso:', apiResponse.data.length, 'pacientes encontrados');
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro desconhecido ao buscar pacientes ativos');
+        }
     } catch (error) {
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
             console.error('🌐 Erro de conexão: Servidor Spring Boot pode estar offline');
@@ -142,9 +154,15 @@ async function pegarProfissionais(){
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        const profissionais = await response.json();
-        console.log('✅ Profissionais carregados com sucesso:', profissionais.length, 'profissionais encontrados');
-        return profissionais;
+        const apiResponse = await response.json();
+        console.log('📡 Resposta da API:', apiResponse);
+        
+        if (apiResponse.success && apiResponse.data) {
+            console.log('✅ Profissionais carregados com sucesso:', apiResponse.data.length, 'profissionais encontrados');
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro desconhecido ao buscar profissionais');
+        }
     } catch (error) {
         console.error('💥 Erro ao buscar profissionais:', error);
         throw error;
@@ -221,9 +239,13 @@ async function pegarAnamneses(){
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        const anamneses = await response.json();
-        console.log('✅ Anamneses carregadas com sucesso:', anamneses.length, 'anamneses encontradas');
-        return anamneses;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Anamneses carregadas com sucesso:', apiResponse.data.length, 'anamneses encontradas');
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao carregar anamneses');
+        }
     } catch (error) {
         console.error('💥 Erro ao buscar anamneses:', error);
         throw error;
@@ -246,9 +268,13 @@ async function pegarAnamnesesAtivas(){
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        const anamnesesAtivas = await response.json();
-        console.log('✅ Anamneses ativas carregadas com sucesso:', anamnesesAtivas.length, 'anamneses encontradas');
-        return anamnesesAtivas;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Anamneses ativas carregadas com sucesso:', apiResponse.data.length, 'anamneses encontradas');
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao carregar anamneses ativas');
+        }
     } catch (error) {
         console.error('💥 Erro ao buscar anamneses ativas:', error);
         throw error;
@@ -538,6 +564,38 @@ async function pegarUltimosProntuarios(limite = 10){
 // ==================== FUNÇÕES DE EDIÇÃO E EXCLUSÃO ====================
 
 /**
+ * Cadastra um novo profissional
+ */
+async function cadastrarProfissional(dadosProfissional) {
+    try {
+        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PROFISSIONAIS);
+        console.log('📝 Cadastrando novo profissional:', dadosProfissional);
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: API_CONFIG.DEFAULT_HEADERS,
+            mode: 'cors',
+            body: JSON.stringify(dadosProfissional)
+        });
+
+        if (!response.ok) {
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Profissional cadastrado com sucesso:', apiResponse.message);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao cadastrar profissional');
+        }
+    } catch (error) {
+        console.error('💥 Erro ao cadastrar profissional:', error);
+        throw error;
+    }
+}
+
+/**
  * Atualiza um profissional
  */
 async function atualizarProfissional(id, dadosProfissional) {
@@ -556,8 +614,13 @@ async function atualizarProfissional(id, dadosProfissional) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        console.log('✅ Profissional atualizado com sucesso');
-        return true;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Profissional atualizado com sucesso:', apiResponse.message);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao atualizar profissional');
+        }
     } catch (error) {
         console.error('💥 Erro ao atualizar profissional:', error);
         throw error;
@@ -582,10 +645,47 @@ async function excluirProfissional(id) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        console.log('✅ Profissional excluído com sucesso');
-        return true;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Profissional excluído com sucesso:', apiResponse.message);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao excluir profissional');
+        }
     } catch (error) {
         console.error('💥 Erro ao excluir profissional:', error);
+        throw error;
+    }
+}
+
+/**
+ * Cadastra um novo paciente
+ */
+async function cadastrarPaciente(dadosPaciente) {
+    try {
+        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PACIENTES);
+        console.log('📝 Cadastrando novo paciente:', dadosPaciente);
+
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: API_CONFIG.DEFAULT_HEADERS,
+            mode: 'cors',
+            body: JSON.stringify(dadosPaciente)
+        });
+
+        if (!response.ok) {
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Paciente cadastrado com sucesso:', apiResponse.message);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao cadastrar paciente');
+        }
+    } catch (error) {
+        console.error('💥 Erro ao cadastrar paciente:', error);
         throw error;
     }
 }
@@ -609,8 +709,13 @@ async function atualizarPaciente(id, dadosPaciente) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        console.log('✅ Paciente atualizado com sucesso');
-        return true;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Paciente atualizado com sucesso:', apiResponse.message);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao atualizar paciente');
+        }
     } catch (error) {
         console.error('💥 Erro ao atualizar paciente:', error);
         throw error;
@@ -635,8 +740,13 @@ async function excluirPaciente(id) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        console.log('✅ Paciente excluído com sucesso');
-        return true;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Paciente excluído com sucesso:', apiResponse.message);
+            return true;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao excluir paciente');
+        }
     } catch (error) {
         console.error('💥 Erro ao excluir paciente:', error);
         throw error;
@@ -661,9 +771,13 @@ async function buscarProfissionalPorId(id) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        const profissional = await response.json();
-        console.log('✅ Profissional encontrado:', profissional);
-        return profissional;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Profissional encontrado:', apiResponse.data);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao buscar profissional');
+        }
     } catch (error) {
         console.error('💥 Erro ao buscar profissional:', error);
         throw error;
@@ -688,9 +802,13 @@ async function buscarPacientePorId(id) {
             throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
         }
 
-        const paciente = await response.json();
-        console.log('✅ Paciente encontrado:', paciente);
-        return paciente;
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Paciente encontrado:', apiResponse.data);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao buscar paciente');
+        }
     } catch (error) {
         console.error('💥 Erro ao buscar paciente:', error);
         throw error;
@@ -841,16 +959,15 @@ export {
     contarProntuarios,
     contarProntuariosHoje,
     pegarUltimosProntuarios,
+    cadastrarProfissional,
     atualizarProfissional,
     excluirProfissional,
+    cadastrarPaciente,
     atualizarPaciente,
     excluirPaciente,
     buscarProfissionalPorId,
     buscarPacientePorId,
     solicitarExclusao,
-    obterStatusConexoes,
-    executarLimpezaConexoes,
-    executarLimpezaEmergencia,
     obterStatusConexoes,
     executarLimpezaConexoes,
     executarLimpezaEmergencia

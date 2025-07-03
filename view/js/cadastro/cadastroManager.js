@@ -10,8 +10,10 @@ import {
     pegarProfissionais,
     pegarAnamneses,
     pegarProntuarios,
+    cadastrarProfissional,
     atualizarProfissional,
     excluirProfissional,
+    cadastrarPaciente,
     atualizarPaciente,
     excluirPaciente,
     buscarProfissionalPorId,
@@ -44,13 +46,13 @@ const dataConfigs = {
     ADMIN: {
         endpoint: 'profissionais',
         apiFunction: pegarProfissionais,
-        title: 'Administradores',
+        title: 'Administradores Master',
         icon: 'shield',
-        columns: ['ID', 'Nome', 'Registro', 'Permissões', 'Status', 'Ações'],
+        columns: ['ID', 'Nome', 'Registro', 'Conselho', 'Status', 'Ações'],
         columnsMinimal: ['Nome', 'Status', 'Ações'],
-        fields: ['idProfissional', 'nomePessoa', 'codigoProfissional', 'tipoProfissional', 'statusProfissional', 'actions'],
+        fields: ['idProfissional', 'nomePessoa', 'codigoProfissional', 'conselhoProfissional', 'statusProfissional', 'actions'],
         fieldsMinimal: ['nomePessoa', 'statusProfissional', 'actions'],
-        filter: (item) => item.tipoProfissional === 1, // Apenas administradores
+        filter: (item) => item.tipoProfissional === "4" || item.tipoProfissional === 4, // Apenas administradores master
         editableFields: ['nomePessoa', 'codigoProfissional'],
         searchField: 'nomePessoa'
     },
@@ -63,7 +65,7 @@ const dataConfigs = {
         columnsMinimal: ['Nome', 'Status', 'Ações'],
         fields: ['idPaciente', 'nomePessoa', 'cpfPessoa', 'telefone', 'email', 'statusPaciente', 'actions'],
         fieldsMinimal: ['nomePessoa', 'statusPaciente', 'actions'],
-        editableFields: ['nomePessoa', 'telefone', 'email'],
+        editableFields: ['nomePessoa', 'telefone', 'email', 'rgPaciente', 'estadoRg'],
         searchField: 'nomePessoa'
     },
     ANAMNESE: {
@@ -73,10 +75,10 @@ const dataConfigs = {
         icon: 'file-text',
         columns: ['ID', 'Paciente', 'Profissional', 'Data', 'Status', 'Ações'],
         columnsMinimal: ['Paciente', 'Status', 'Ações'],
-        fields: ['idAnamnese', 'nomeResponsavel', 'nomeProfissional', 'dataAplicacao', 'statusAnamnese', 'actions'],
-        fieldsMinimal: ['nomeResponsavel', 'statusAnamnese', 'actions'],
+        fields: ['idAnamnese', 'nomePaciente', 'nomeProfissional', 'dataAplicacao', 'statusAnamnese', 'actions'],
+        fieldsMinimal: ['nomePaciente', 'statusAnamnese', 'actions'],
         editableFields: [],
-        searchField: 'nomeResponsavel'
+        searchField: 'nomePaciente'
     },
     RELATORIO: {
         endpoint: 'prontuarios',
@@ -142,8 +144,13 @@ async function loadDataType(type) {
             btn.classList.remove('!bg-emerald-700', 'ring-2', 'ring-emerald-300');
         });
         
-        // Adiciona seleção no botão atual
-        event.target.classList.add('!bg-emerald-700', 'ring-2', 'ring-emerald-300');
+        // Adiciona seleção no botão atual (busca pelo data-type ou fallback para event.target)
+        const targetButton = document.querySelector(`[data-type="${type}"]`) || 
+                           (typeof event !== 'undefined' && event.target);
+        
+        if (targetButton) {
+            targetButton.classList.add('!bg-emerald-700', 'ring-2', 'ring-emerald-300');
+        }
         
         const config = dataConfigs[type];
         cadastroState.currentType = type;
@@ -357,7 +364,37 @@ function renderTableRow(item, index, config) {
         }
         
         if (field.includes('status') || field.includes('Status')) {
-            const isActive = value === 1 || value === 'ATIVO' || value === true || value === 'Ativo' || value === 'APROVADO';
+            // Formatação específica para status de anamnese
+            if (field === 'statusAnamnese') {
+                let statusText, statusClass;
+                switch (value) {
+                    case 'APROVADO':
+                        statusText = 'Aprovado';
+                        statusClass = 'bg-green-100 text-green-700';
+                        break;
+                    case 'REPROVADO':
+                        statusText = 'Reprovado';
+                        statusClass = 'bg-red-100 text-red-700';
+                        break;
+                    case 'CANCELADO':
+                        statusText = 'Cancelado';
+                        statusClass = 'bg-gray-100 text-gray-700';
+                        break;
+                    default:
+                        statusText = 'Indefinido';
+                        statusClass = 'bg-yellow-100 text-yellow-700';
+                }
+                return `
+                    <td class="px-4 py-3 whitespace-nowrap">
+                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                `;
+            }
+            
+            // Formatação padrão para outros status
+            const isActive = value === 1 || value === 'ATIVO' || value === true || value === 'Ativo' || value === 'APROVADO' || value === '1';
             return `
                 <td class="px-4 py-3 whitespace-nowrap">
                     <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full ${
@@ -816,11 +853,33 @@ async function saveEditedItem(modal, item, config) {
             throw new Error('ID do item não encontrado');
         }
         
-        // Mantém os dados originais e aplica apenas as alterações
-        const dadosCompletos = { ...item, ...dadosAtualizados };
+        // Prepara dados específicos para cada tipo de entidade
+        let dadosParaEnvio;
+        
+        switch (cadastroState.currentType) {
+            case 'PROFISSIONAIS':
+            case 'ADMIN':
+                // Para profissionais, mantém estrutura atual
+                dadosParaEnvio = { ...item, ...dadosAtualizados };
+                break;
+            case 'PACIENTE':
+                // Para pacientes, mapeia apenas campos do PacienteUpdateDTO
+                dadosParaEnvio = {
+                    nomePessoa: dadosAtualizados.nomePessoa || item.nomePessoa,
+                    telefone: dadosAtualizados.telefone || item.telefone,
+                    email: dadosAtualizados.email || item.email,
+                    rgPaciente: dadosAtualizados.rgPaciente || item.rgPaciente,
+                    estadoRg: dadosAtualizados.estadoRg || item.estadoRg
+                };
+                break;
+            default:
+                dadosParaEnvio = { ...item, ...dadosAtualizados };
+        }
+        
+        console.log('📤 Dados para envio:', dadosParaEnvio);
         
         // Chama a função de atualização apropriada
-        await updateFunction(itemId, dadosCompletos);
+        await updateFunction(itemId, dadosParaEnvio);
         
         showSuccess('Alterações salvas com sucesso!');
         closeModal(modal);
