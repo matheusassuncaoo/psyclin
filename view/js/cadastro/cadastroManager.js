@@ -77,7 +77,7 @@ const dataConfigs = {
         columnsMinimal: ['Paciente', 'Status', 'Ações'],
         fields: ['idAnamnese', 'nomePaciente', 'nomeProfissional', 'dataAplicacao', 'statusAnamnese', 'actions'],
         fieldsMinimal: ['nomePaciente', 'statusAnamnese', 'actions'],
-        editableFields: [],
+        editableFields: ['observacoes', 'statusAnamnese'],
         searchField: 'nomePaciente'
     },
     RELATORIO: {
@@ -203,14 +203,14 @@ function renderDataTable(data, config) {
     const responsiveConfig = getResponsiveConfig(config);
     
     container.innerHTML = `
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <!-- Header minimalista -->
-            <div class="bg-[var(--zomp)] text-white p-4">
+        <div class="table-container">
+            <!-- Header da tabela -->
+            <div class="table-header">
                 <div class="flex flex-col space-y-4">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <i data-feather="${config.icon}" class="w-5 h-5"></i>
-                            <h2 class="text-lg font-semibold">${config.title}</h2>
+                            <h2>${config.title}</h2>
                             <span class="bg-white/20 px-2 py-1 rounded-full text-xs">
                                 ${data.length}
                             </span>
@@ -233,7 +233,7 @@ function renderDataTable(data, config) {
                         </div>
                     </div>
                     
-                    <!-- Barra de pesquisa igual ao dashboard -->
+                    <!-- Barra de pesquisa -->
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i data-feather="search" class="text-gray-400 w-4 h-4"></i>
@@ -248,19 +248,19 @@ function renderDataTable(data, config) {
                 </div>
             </div>
             
-            <!-- Tabela Responsiva -->
+            <!-- Tabela com estilo limpo -->
             <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50 border-b">
+                <table class="data-table">
+                    <thead>
                         <tr>
                             ${responsiveConfig.columns.map(col => `
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th>
                                     ${col}
                                 </th>
                             `).join('')}
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-100">
+                    <tbody>
                         ${data.length === 0 ? `
                             <tr>
                                 <td colspan="${responsiveConfig.columns.length}" class="px-4 py-8 text-center text-gray-500">
@@ -275,7 +275,7 @@ function renderDataTable(data, config) {
                 </table>
             </div>
             
-            <!-- Footer minimalista -->
+            <!-- Footer -->
             <div class="bg-gray-50 px-4 py-2 border-t">
                 <div class="flex items-center justify-between text-xs text-gray-500">
                     <span>${data.length} registros</span>
@@ -324,10 +324,10 @@ function renderTableRow(item, index, config) {
     const cells = config.fields.map(field => {
         if (field === 'actions') {
             return `
-                <td class="px-4 py-3 whitespace-nowrap">
-                    <div class="flex items-center justify-center space-x-1">
+                <td>
+                    <div class="table-actions">
                         <button 
-                            class="edit-btn text-gray-500 hover:text-gray-700 p-1.5 rounded hover:bg-gray-100 transition"
+                            class="btn-edit"
                             data-index="${index}"
                             data-id="${itemId}"
                             title="Editar"
@@ -335,7 +335,7 @@ function renderTableRow(item, index, config) {
                             <i data-feather="edit-2" class="w-4 h-4"></i>
                         </button>
                         <button 
-                            class="view-btn text-gray-500 hover:text-blue-600 p-1.5 rounded hover:bg-blue-50 transition"
+                            class="btn-view"
                             data-index="${index}"
                             data-id="${itemId}"
                             title="Visualizar"
@@ -343,7 +343,7 @@ function renderTableRow(item, index, config) {
                             <i data-feather="eye" class="w-4 h-4"></i>
                         </button>
                         <button 
-                            class="delete-btn text-gray-500 hover:text-red-600 p-1.5 rounded hover:bg-red-50 transition"
+                            class="btn-delete"
                             data-index="${index}"
                             data-id="${itemId}"
                             title="Solicitar exclusão"
@@ -370,23 +370,23 @@ function renderTableRow(item, index, config) {
                 switch (value) {
                     case 'APROVADO':
                         statusText = 'Aprovado';
-                        statusClass = 'bg-green-100 text-green-700';
+                        statusClass = 'status-badge active';
                         break;
                     case 'REPROVADO':
                         statusText = 'Reprovado';
-                        statusClass = 'bg-red-100 text-red-700';
+                        statusClass = 'status-badge inactive';
                         break;
                     case 'CANCELADO':
                         statusText = 'Cancelado';
-                        statusClass = 'bg-gray-100 text-gray-700';
+                        statusClass = 'status-badge inactive';
                         break;
                     default:
                         statusText = 'Indefinido';
-                        statusClass = 'bg-yellow-100 text-yellow-700';
+                        statusClass = 'status-badge inactive';
                 }
                 return `
-                    <td class="px-4 py-3 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                    <td>
+                        <span class="${statusClass}">
                             ${statusText}
                         </span>
                     </td>
@@ -396,10 +396,8 @@ function renderTableRow(item, index, config) {
             // Formatação padrão para outros status
             const isActive = value === 1 || value === 'ATIVO' || value === true || value === 'Ativo' || value === 'APROVADO' || value === '1';
             return `
-                <td class="px-4 py-3 whitespace-nowrap">
-                    <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                    }">
+                <td>
+                    <span class="status-badge ${isActive ? 'active' : 'inactive'}">
                         ${isActive ? 'Ativo' : 'Inativo'}
                     </span>
                 </td>
@@ -444,25 +442,13 @@ function renderTableRow(item, index, config) {
         
         // Formatação especial para campos ID
         if (field.includes('id') || field.includes('Id') || field.includes('ID')) {
-            return `
-                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                    #${value}
-                </td>
-            `;
+            return `<td>#${value}</td>`;
         }
         
-        return `
-            <td class="px-4 py-3 text-sm text-gray-900 max-w-xs truncate" title="${value}">
-                ${value}
-            </td>
-        `;
+        return `<td title="${value}">${value}</td>`;
     });
     
-    return `
-        <tr class="hover:bg-gray-50 transition duration-200">
-            ${cells.join('')}
-        </tr>
-    `;
+    return `<tr>${cells.join('')}</tr>`;
 }
 
 /**
@@ -495,21 +481,21 @@ function setupTableEventListeners(config) {
     }
     
     // Botões de ação
-    document.querySelectorAll('.edit-btn').forEach(btn => {
+    document.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const index = e.currentTarget.dataset.index;
             editItem(index, config);
         });
     });
     
-    document.querySelectorAll('.view-btn').forEach(btn => {
+    document.querySelectorAll('.btn-view').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const index = e.currentTarget.dataset.index;
             viewItem(index, config);
         });
     });
     
-    document.querySelectorAll('.delete-btn').forEach(btn => {
+    document.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const index = e.currentTarget.dataset.index;
             requestDeletion(index, config);
@@ -627,7 +613,7 @@ function requestDeletion(index, config) {
 }
 
 /**
- * Mostra modal de edição
+ * Mostra modal de edição limpo e funcional
  */
 function showEditModal(item, config) {
     const modal = createModal('edit', 'Editar Registro', config.icon);
@@ -635,16 +621,17 @@ function showEditModal(item, config) {
     const editableFields = config.editableFields;
     const fieldsHtml = editableFields.map(field => {
         const value = getNestedValue(item, field) || '';
-        const label = field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        const label = formatFieldLabel(field);
         
         return `
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">${label}</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">${label}</label>
                 <input 
                     type="text" 
                     name="${field}"
                     value="${value}"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all duration-200"
+                    placeholder="Digite o ${label.toLowerCase()}"
                 >
             </div>
         `;
@@ -652,19 +639,32 @@ function showEditModal(item, config) {
     
     modal.querySelector('.modal-body').innerHTML = `
         <form id="edit-form">
+            <div class="mb-6">
+                <div class="flex items-center p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+                    <i data-feather="info" class="w-5 h-5 text-blue-500 mr-3"></i>
+                    <p class="text-sm text-blue-700">
+                        Preencha os campos abaixo para atualizar as informações.
+                    </p>
+                </div>
+            </div>
+            
             ${fieldsHtml}
-            <div class="flex justify-end space-x-3 mt-6">
-                <button type="button" class="cancel-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+            
+            <div class="flex justify-end space-x-3 mt-8 pt-6 border-t border-gray-200">
+                <button type="button" class="cancel-btn px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors duration-200">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200">
+                <button type="submit" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-medium transition-colors duration-200">
                     Salvar
                 </button>
             </div>
         </form>
     `;
     
-    // Event listeners
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
+    
     modal.querySelector('.cancel-btn').addEventListener('click', () => closeModal(modal));
     modal.querySelector('#edit-form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -675,43 +675,57 @@ function showEditModal(item, config) {
 }
 
 /**
- * Mostra modal de visualização
+ * Mostra modal de visualização limpo
  */
 function showViewModal(item, config) {
     const modal = createModal('view', 'Detalhes do Registro', 'eye');
     
     const allFields = Object.keys(item);
     const fieldsHtml = allFields.map(field => {
-        if (field === 'id' || field.includes('Id')) return '';
+        if (field === 'id' || field.includes('Id') || field === 'actions') return '';
         
         const value = getNestedValue(item, field) || '-';
-        const label = field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        const label = formatFieldLabel(field);
         
         return `
-            <div class="flex justify-between py-2 border-b border-gray-200">
-                <span class="font-medium text-gray-700">${label}:</span>
-                <span class="text-gray-900">${value}</span>
+            <div class="flex justify-between items-center py-3 px-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                <span class="font-semibold text-gray-700">${label}:</span>
+                <span class="text-gray-900 bg-white px-3 py-1 rounded-md shadow-sm">${value}</span>
             </div>
         `;
-    }).join('');
+    }).filter(html => html).join('');
     
     modal.querySelector('.modal-body').innerHTML = `
-        <div class="space-y-2">
+        <div class="mb-6">
+            <div class="flex items-center p-4 bg-emerald-50 rounded-lg border-l-4 border-emerald-400">
+                <i data-feather="info" class="w-5 h-5 text-emerald-500 mr-3"></i>
+                <p class="text-sm text-emerald-700">
+                    Visualização completa dos dados do registro.
+                </p>
+            </div>
+        </div>
+        
+        <div class="space-y-3 max-h-96 overflow-y-auto">
             ${fieldsHtml}
         </div>
-        <div class="flex justify-end mt-6">
-            <button class="close-btn px-4 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition duration-200">
+        
+        <div class="flex justify-end mt-8 pt-6 border-t border-gray-200">
+            <button class="close-btn px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-medium transition-colors duration-200">
                 Fechar
             </button>
         </div>
     `;
+    
+    if (typeof feather !== 'undefined') {
+        feather.replace();
+    }
     
     modal.querySelector('.close-btn').addEventListener('click', () => closeModal(modal));
     document.body.appendChild(modal);
 }
 
 /**
- * Mostra modal de solicitação de exclusão
+ * Mostra modal de solicitação de exclusão limpo
  */
 function showDeleteRequestModal(item, config) {
     const modal = createModal('delete', 'Solicitar Exclusão', 'alert-triangle');
@@ -720,39 +734,44 @@ function showDeleteRequestModal(item, config) {
     
     modal.querySelector('.modal-body').innerHTML = `
         <div class="text-center">
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <i data-feather="alert-triangle" class="h-6 w-6 text-red-600"></i>
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-6">
+                <i data-feather="alert-triangle" class="h-8 w-8 text-red-600"></i>
             </div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Solicitar Exclusão</h3>
-            <p class="text-sm text-gray-500 mb-6">
-                Você está solicitando a exclusão de: <strong>${itemName}</strong>
+            
+            <h3 class="text-xl font-bold text-gray-900 mb-3">Solicitar Exclusão</h3>
+            <p class="text-gray-600 mb-6">
+                Você está solicitando a exclusão de: <br>
+                <span class="font-bold text-gray-900 text-lg">${itemName}</span>
             </p>
             
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-                <div class="flex">
-                    <i data-feather="info" class="h-5 w-5 text-yellow-400 mr-2"></i>
-                    <div class="text-sm text-yellow-700">
-                        <strong>Importante:</strong> Esta solicitação será enviada para um administrador para aprovação.
-                        Você não pode excluir registros diretamente.
+            <div class="bg-amber-50 border-l-4 border-amber-400 p-4 mb-6 text-left rounded-r-lg">
+                <div class="flex items-start">
+                    <i data-feather="info" class="h-5 w-5 text-amber-500 mr-3 mt-0.5"></i>
+                    <div class="text-sm text-amber-700">
+                        <p class="font-semibold mb-1">Importante:</p>
+                        <p>Esta solicitação será enviada para um administrador para aprovação.</p>
                     </div>
                 </div>
             </div>
             
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Motivo da exclusão</label>
+            <div class="mb-6 text-left">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">
+                    Motivo da exclusão
+                </label>
                 <textarea 
                     id="delete-reason"
-                    rows="3"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    rows="4"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200 resize-none"
                     placeholder="Explique o motivo da solicitação de exclusão..."
+                    required
                 ></textarea>
             </div>
             
-            <div class="flex justify-center space-x-3">
-                <button class="cancel-btn px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+            <div class="flex justify-center space-x-4">
+                <button class="cancel-btn px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors duration-200">
                     Cancelar
                 </button>
-                <button class="confirm-btn px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200">
+                <button class="confirm-btn px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors duration-200">
                     Enviar Solicitação
                 </button>
             </div>
@@ -776,19 +795,28 @@ function showDeleteRequestModal(item, config) {
  */
 function createModal(type, title, icon) {
     const modal = document.createElement('div');
-    modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 backdrop-blur-sm';
     modal.innerHTML = `
-        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-            <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center space-x-2">
-                    <i data-feather="${icon}" class="w-5 h-5 text-emerald-600"></i>
-                    <h3 class="text-lg font-medium text-gray-900">${title}</h3>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <!-- Header do Modal -->
+            <div class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-6 py-5">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-white bg-opacity-20 p-2 rounded-xl">
+                            <i data-feather="${icon}" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">${title}</h3>
+                    </div>
+                    <button class="close-modal text-white hover:text-emerald-200 transition-colors duration-200 p-2 rounded-xl hover:bg-white hover:bg-opacity-20">
+                        <i data-feather="x" class="w-6 h-6"></i>
+                    </button>
                 </div>
-                <button class="close-modal text-gray-400 hover:text-gray-600">
-                    <i data-feather="x" class="w-5 h-5"></i>
-                </button>
             </div>
-            <div class="modal-body"></div>
+            
+            <!-- Body do Modal -->
+            <div class="modal-body p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
+                <!-- Conteúdo será inserido aqui -->
+            </div>
         </div>
     `;
     
@@ -1001,9 +1029,6 @@ const cadastroCache = {
 function getNestedValue(obj, path) {
     if (!obj || !path) return null;
     
-    // Debug: mostrar estrutura quando necessário
-    console.log(`🔍 Buscando '${path}' no objeto:`, obj);
-    
     try {
         // Tenta várias possibilidades para nomes
         if (path === 'nomePessoa') {
@@ -1018,7 +1043,6 @@ function getNestedValue(obj, path) {
             
             for (const possibility of possibilities) {
                 if (possibility && possibility !== null && possibility !== undefined && possibility !== '') {
-                    console.log(`✅ Nome encontrado: '${possibility}'`);
                     return possibility;
                 }
             }
@@ -1053,7 +1077,6 @@ function getNestedValue(obj, path) {
             }
         }
         
-        console.log(`❌ Campo '${path}' não encontrado`);
         return null;
         
     } catch (error) {
@@ -1135,4 +1158,62 @@ window.addEventListener('resize', () => {
     }
 });
 
-export { initCadastroManager, loadDataType };
+/**
+ * Formata o label do campo para exibição
+ */
+function formatFieldLabel(field) {
+    const fieldLabels = {
+        // Campos de pessoa
+        'nomePessoa': 'Nome',
+        'nome': 'Nome',
+        'cpfPessoa': 'CPF',
+        'telefone': 'Telefone',
+        'email': 'E-mail',
+        'rgPaciente': 'RG',
+        'estadoRg': 'Estado do RG',
+        
+        // Campos de profissional
+        'codigoProfissional': 'Registro Profissional',
+        'conselhoProfissional': 'Conselho',
+        'tipoProfissional': 'Especialidade',
+        'statusProfissional': 'Status',
+        
+        // Campos de paciente
+        'statusPaciente': 'Status',
+        'sexoPaciente': 'Sexo',
+        'dataNascimento': 'Data de Nascimento',
+        
+        // Campos de anamnese
+        'observacoes': 'Observações',
+        'statusAnamnese': 'Status',
+        'dataAplicacao': 'Data de Aplicação',
+        
+        // Campos de prontuário
+        'descricaoProntuario': 'Descrição',
+        'dataProcedimento': 'Data do Procedimento',
+        'nomeProcedimento': 'Procedimento'
+    };
+    
+    // Se existe um label específico, usa ele
+    if (fieldLabels[field]) {
+        return fieldLabels[field];
+    }
+    
+    // Caso contrário, formata o nome do campo removendo prefixos comuns
+    let label = field
+        .replace(/^(id|cod|codigo|desc|descricao)/, '')
+        .replace(/(Pessoa|Paciente|Profissional|Anamnese|Prontuario)$/, '')
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, str => str.toUpperCase())
+        .trim();
+    
+    // Remove palavras vazias ou redundantes
+    label = label
+        .replace(/\s+/g, ' ')
+        .replace(/^(De |Da |Do |Para |Com |Sem )/i, '')
+        .trim();
+    
+    return label || 'Campo';
+}
+
+// ...existing code...

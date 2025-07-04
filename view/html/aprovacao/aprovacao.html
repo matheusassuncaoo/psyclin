@@ -11,7 +11,8 @@
     <!-- Importando Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
-     <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+    <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+    <link rel="stylesheet" href="/view/css/cadastro/cadastro-clean.css">
 
 </head>
 
@@ -184,93 +185,562 @@
 
         <!-- Conteúdo Principal -->
         <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
-            <div class="bg-white p-4 rounded-lg shadow">
-                <h2 class="text-xl font-bold mb-4">05 Lista de Pendências, Detalhamento do Documento,
-                    Aprovação/Rejeição, Confirmação de Aprovação/Feedback Enviado</h2>
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-2">Profissionais</th>
-                            <th class="p-2">Registro Acadêmico</th>
-                            <th class="p-2">Telefone</th>
-                            <th class="p-2">Status</th>
-                            <th class="p-2">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="p-2">Bárbara</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Matheus</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Erasmo</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Silva</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Yuri</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">João</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-green-200">Validação</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Reynaldo</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-yellow-200">Em processo</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Nulo</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-red-200">Reprovado</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                        <tr>
-                            <td class="p-2">Nulo</td>
-                            <td class="p-2">000000</td>
-                            <td class="p-2">String(000000-0000)</td>
-                            <td class="p-2 bg-red-200">Reprovado</td>
-                            <td class="p-2"><i data-feather="chevron-up"></i> <i data-feather="chevron-down"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Container das anamneses -->
+            <div class="table-container">
+                <!-- Header da tabela -->
+                <div class="table-header">
+                    <div class="flex flex-col space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="check-square" class="w-5 h-5"></i>
+                                <h2>Lista de Anamneses - Aprovação</h2>
+                                <span id="anamnese-count" class="bg-white/20 px-2 py-1 rounded-full text-xs">
+                                    0
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button 
+                                    id="refresh-btn"
+                                    class="bg-white/20 hover:bg-white/30 p-2 rounded-md transition"
+                                    title="Atualizar"
+                                >
+                                    <i data-feather="refresh-cw" class="w-4 h-4"></i>
+                                </button>
+                                <button 
+                                    id="filter-pending-btn"
+                                    class="bg-white/20 hover:bg-white/30 p-2 rounded-md transition"
+                                    title="Filtrar pendentes"
+                                >
+                                    <i data-feather="filter" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Barra de pesquisa -->
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i data-feather="search" class="text-gray-400 w-4 h-4"></i>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="search-input"
+                                placeholder="Buscar por paciente, profissional..." 
+                                class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]"
+                            >
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabela de anamneses -->
+                <div class="overflow-x-auto">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Paciente</th>
+                                <th>Profissional</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="anamneses-tbody">
+                            <!-- Dados serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Footer -->
+                <div class="bg-gray-50 px-4 py-2 border-t">
+                    <div class="flex items-center justify-between text-xs text-gray-500">
+                        <span id="status-summary">Carregando...</span>
+                        <div class="flex items-center space-x-1">
+                            <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                            <span>Online</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div id="loader" class="loader fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
             </div>
         </div>
     </div>
 
-    
-    <script src="/view/js/dashboard/dashboard.js"></script>
-    <script src="/view/js/global.js"></script>
     </div>
+
+    <!-- Modais -->
+    <!-- Modal de Visualização -->
+    <div id="modal-view" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="modal-content bg-white rounded-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="modal-header bg-gradient-to-r from-emerald-500 to-emerald-600 text-white p-4 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Detalhes da Anamnese</h3>
+                    <button class="close-modal hover:bg-white/20 p-1 rounded">
+                        <i data-feather="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body p-6">
+                <div id="anamnese-details">
+                    <!-- Conteúdo carregado dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação -->
+    <div id="modal-confirm" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="modal-content bg-white rounded-lg max-w-md w-full mx-4">
+            <div class="modal-header bg-gradient-to-r from-amber-500 to-amber-600 text-white p-4 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold">Confirmar Ação</h3>
+                    <button class="close-modal hover:bg-white/20 p-1 rounded">
+                        <i data-feather="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body p-6">
+                <div class="text-center">
+                    <div id="confirm-icon" class="mx-auto w-12 h-12 mb-4"></div>
+                    <p id="confirm-message" class="text-gray-700 mb-6"></p>
+                    <div class="flex space-x-3 justify-center">
+                        <button id="confirm-cancel" class="btn-secondary">
+                            Cancelar
+                        </button>
+                        <button id="confirm-action" class="btn-primary">
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/view/js/services/apiManager.js"></script>
+    <script src="/view/js/dashboard/dashboard.js"></script>
+    <script>
+        // Gerenciador de aprovação de anamneses
+        let anamnesData = [];
+        let filteredData = [];
+        let currentFilter = 'all'; // all, pending, approved, rejected
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+            
+            await loadAnamneses();
+            setupEventListeners();
+        });
+
+        // Carregar anamneses
+        async function loadAnamneses() {
+            showLoader(true);
+            try {
+                const response = await fetch('/anamnese');
+                if (response.ok) {
+                    const result = await response.json();
+                    anamnesData = result.data || [];
+                    applyFilter(currentFilter);
+                    renderTable();
+                    updateSummary();
+                } else {
+                    showError('Erro ao carregar anamneses');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro de conexão');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Renderizar tabela
+        function renderTable() {
+            const tbody = document.getElementById('anamneses-tbody');
+            const count = document.getElementById('anamnese-count');
+            
+            count.textContent = filteredData.length;
+            
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-8 text-gray-500">
+                            <div class="flex flex-col items-center space-y-2">
+                                <i data-feather="inbox" class="w-8 h-8 text-gray-300"></i>
+                                <span class="text-sm">Nenhuma anamnese encontrada</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                feather.replace();
+                return;
+            }
+
+            tbody.innerHTML = filteredData.map(anamnese => `
+                <tr>
+                    <td>#${anamnese.idAnamnese}</td>
+                    <td title="${anamnese.nomePaciente}">${anamnese.nomePaciente}</td>
+                    <td title="${anamnese.nomeProfissional}">${anamnese.nomeProfissional}</td>
+                    <td>${formatDate(anamnese.dataAplicacao)}</td>
+                    <td>
+                        <span class="status-badge ${getStatusClass(anamnese.statusAnamnese)}">
+                            ${getStatusText(anamnese.statusAnamnese)}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <button 
+                                class="btn-view"
+                                onclick="viewAnamnese(${anamnese.idAnamnese})"
+                                title="Visualizar"
+                            >
+                                <i data-feather="eye" class="w-4 h-4"></i>
+                            </button>
+                            ${anamnese.statusAnamnese === 'PENDENTE' ? `
+                                <button 
+                                    class="btn-approve"
+                                    onclick="approveAnamnese(${anamnese.idAnamnese})"
+                                    title="Aprovar"
+                                    style="background: #dcfce7; color: #166534; border-color: #a7f3d0;"
+                                >
+                                    <i data-feather="check" class="w-4 h-4"></i>
+                                </button>
+                                <button 
+                                    class="btn-reject"
+                                    onclick="rejectAnamnese(${anamnese.idAnamnese})"
+                                    title="Reprovar"
+                                    style="background: #fee2e2; color: #dc2626; border-color: #fca5a5;"
+                                >
+                                    <i data-feather="x" class="w-4 h-4"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            feather.replace();
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Busca
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                filteredData = anamnesData.filter(anamnese => 
+                    anamnese.nomePaciente.toLowerCase().includes(term) ||
+                    anamnese.nomeProfissional.toLowerCase().includes(term)
+                );
+                renderTable();
+            });
+
+            // Refresh
+            document.getElementById('refresh-btn').addEventListener('click', loadAnamneses);
+
+            // Filter
+            document.getElementById('filter-pending-btn').addEventListener('click', () => {
+                currentFilter = currentFilter === 'pending' ? 'all' : 'pending';
+                applyFilter(currentFilter);
+                renderTable();
+                updateFilterButton();
+            });
+
+            // Modais
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+
+            document.querySelectorAll('.modal-backdrop').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModals();
+                });
+            });
+        }
+
+        // Funções auxiliares
+        function applyFilter(filter) {
+            switch(filter) {
+                case 'pending':
+                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'PENDENTE');
+                    break;
+                case 'approved':
+                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'APROVADO');
+                    break;
+                case 'rejected':
+                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'REPROVADO');
+                    break;
+                default:
+                    filteredData = [...anamnesData];
+            }
+        }
+
+        function updateFilterButton() {
+            const btn = document.getElementById('filter-pending-btn');
+            const icon = btn.querySelector('i');
+            if (currentFilter === 'pending') {
+                btn.classList.add('bg-amber-500');
+                btn.classList.remove('bg-white/20');
+                icon.setAttribute('data-feather', 'filter-x');
+            } else {
+                btn.classList.remove('bg-amber-500');
+                btn.classList.add('bg-white/20');
+                icon.setAttribute('data-feather', 'filter');
+            }
+            feather.replace();
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'APROVADO': return 'active';
+                case 'REPROVADO': return 'inactive';
+                case 'PENDENTE': return 'inactive';
+                default: return 'inactive';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'APROVADO': return 'Aprovado';
+                case 'REPROVADO': return 'Reprovado';
+                case 'PENDENTE': return 'Pendente';
+                default: return 'Indefinido';
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function updateSummary() {
+            const total = anamnesData.length;
+            const pending = anamnesData.filter(a => a.statusAnamnese === 'PENDENTE').length;
+            const approved = anamnesData.filter(a => a.statusAnamnese === 'APROVADO').length;
+            const rejected = anamnesData.filter(a => a.statusAnamnese === 'REPROVADO').length;
+            
+            document.getElementById('status-summary').textContent = 
+                `Total: ${total} • Pendentes: ${pending} • Aprovadas: ${approved} • Reprovadas: ${rejected}`;
+        }
+
+        function showLoader(show) {
+            document.getElementById('loader').classList.toggle('hidden', !show);
+        }
+
+        function showError(message) {
+            showToast(message, 'error');
+        }
+
+        function showSuccess(message) {
+            showToast(message, 'success');
+        }
+
+        function showToast(message, type) {
+            // Remove toasts existentes
+            document.querySelectorAll('.toast').forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = `toast fixed top-4 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-white font-medium ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-backdrop').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+        }
+
+        // Funções de ação
+        async function viewAnamnese(id) {
+            showLoader(true);
+            try {
+                const response = await fetch(`/anamnese/${id}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    const anamnese = result.data;
+                    showAnamneseDetails(anamnese);
+                } else {
+                    showError('Erro ao carregar detalhes da anamnese');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro de conexão');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        function showAnamneseDetails(anamnese) {
+            const detailsDiv = document.getElementById('anamnese-details');
+            detailsDiv.innerHTML = `
+                <div class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">ID:</label>
+                            <p class="text-gray-900">#${anamnese.idAnamnese}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">Status:</label>
+                            <p class="text-gray-900">
+                                <span class="status-badge ${getStatusClass(anamnese.statusAnamnese)}">
+                                    ${getStatusText(anamnese.statusAnamnese)}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">Paciente:</label>
+                            <p class="text-gray-900">${anamnese.nomePaciente}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">Profissional:</label>
+                            <p class="text-gray-900">${anamnese.nomeProfissional}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">Data de Aplicação:</label>
+                            <p class="text-gray-900">${formatDate(anamnese.dataAplicacao)}</p>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-lg">
+                            <label class="font-semibold text-gray-700">Data da Anamnese:</label>
+                            <p class="text-gray-900">${formatDate(anamnese.dataAnamnese)}</p>
+                        </div>
+                    </div>
+                    
+                    ${anamnese.nomeResponsavel ? `
+                        <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                            <h4 class="font-semibold text-blue-800 mb-2">Responsável</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <p><span class="font-medium">Nome:</span> ${anamnese.nomeResponsavel}</p>
+                                <p><span class="font-medium">CPF:</span> ${anamnese.cpfResponsavel || 'N/A'}</p>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${anamnese.observacoes ? `
+                        <div class="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-400">
+                            <h4 class="font-semibold text-amber-800 mb-2">Observações</h4>
+                            <p class="text-amber-900">${anamnese.observacoes}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${anamnese.statusAnamnese === 'PENDENTE' ? `
+                        <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-400">
+                            <h4 class="font-semibold text-emerald-800 mb-3">Ações de Aprovação</h4>
+                            <div class="flex space-x-3">
+                                <button 
+                                    onclick="approveAnamnese(${anamnese.idAnamnese}); closeModals();"
+                                    class="btn-primary bg-emerald-600 hover:bg-emerald-700"
+                                >
+                                    <i data-feather="check" class="w-4 h-4 mr-2"></i>
+                                    Aprovar
+                                </button>
+                                <button 
+                                    onclick="rejectAnamnese(${anamnese.idAnamnese}); closeModals();"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition flex items-center"
+                                >
+                                    <i data-feather="x" class="w-4 h-4 mr-2"></i>
+                                    Reprovar
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('modal-view').classList.remove('hidden');
+            document.getElementById('modal-view').classList.add('flex');
+            feather.replace();
+        }
+
+        async function approveAnamnese(id) {
+            showConfirmModal(
+                'Aprovar Anamnese',
+                'Tem certeza que deseja aprovar esta anamnese?',
+                'check-circle',
+                'text-green-600',
+                () => updateAnamneseStatus(id, 'APROVADO')
+            );
+        }
+
+        async function rejectAnamnese(id) {
+            showConfirmModal(
+                'Reprovar Anamnese',
+                'Tem certeza que deseja reprovar esta anamnese?',
+                'x-circle',
+                'text-red-600',
+                () => updateAnamneseStatus(id, 'REPROVADO')
+            );
+        }
+
+        function showConfirmModal(title, message, iconName, iconClass, callback) {
+            document.querySelector('#modal-confirm h3').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            
+            const iconDiv = document.getElementById('confirm-icon');
+            iconDiv.innerHTML = `<i data-feather="${iconName}" class="w-12 h-12 ${iconClass}"></i>`;
+            
+            document.getElementById('confirm-action').onclick = () => {
+                closeModals();
+                callback();
+            };
+            
+            document.getElementById('confirm-cancel').onclick = closeModals;
+            
+            document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('modal-confirm').classList.add('flex');
+            
+            feather.replace();
+        }
+
+        async function updateAnamneseStatus(id, status) {
+            showLoader(true);
+            try {
+                const response = await fetch(`/anamnese/${id}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(status)
+                });
+
+                if (response.ok) {
+                    await loadAnamneses(); // Recarregar dados
+                    showSuccess(`Anamnese ${status.toLowerCase()}a com sucesso!`);
+                } else {
+                    const errorData = await response.json();
+                    showError(errorData.message || 'Erro ao atualizar status da anamnese');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro de conexão');
+            } finally {
+                showLoader(false);
+            }
+        }
+    </script>
+    
+    <!-- Inicialização após carregamento -->
+    <script>
+        // Inicializa ícones Feather após carregamento da página
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
+
+    <script src="/view/js/global.js"></script>
 </body>
 
 </html>

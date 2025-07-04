@@ -94,6 +94,36 @@ public class AnamneseService {
     }
 
     /**
+     * Atualiza apenas o status de uma anamnese.
+     * @param id ID da anamnese
+     * @param novoStatus Novo status da anamnese
+     * @return Anamnese atualizada
+     */
+    public Anamnese atualizarStatusAnamnese(Integer id, String novoStatus) {
+        try {
+            if (id == null) {
+                throw new IllegalArgumentException("ID da anamnese é obrigatório");
+            }
+            
+            if (novoStatus == null || novoStatus.trim().isEmpty()) {
+                throw new IllegalArgumentException("Status é obrigatório");
+            }
+            
+            Optional<Anamnese> existente = anamneseRepository.findByIdAnamnese(id);
+            if (existente.isEmpty()) {
+                throw new RuntimeException("Anamnese não encontrada com ID: " + id);
+            }
+            
+            Anamnese anamnese = existente.get();
+            anamnese.setStatusAnamnese(novoStatus.trim().toUpperCase());
+            
+            return anamneseRepository.save(anamnese);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar status da anamnese: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Exclui uma anamnese.
      * @param id ID da anamnese
      */

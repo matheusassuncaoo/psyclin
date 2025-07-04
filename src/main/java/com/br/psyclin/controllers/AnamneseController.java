@@ -120,4 +120,20 @@ public class AnamneseController {
         Long count = anamneseService.contarAtivas();
         return ResponseEntity.ok().body(count);
     }
+
+    /**
+     * Atualiza apenas o status de uma anamnese.
+     */
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ApiResponseDTO<String>> atualizarStatus(@PathVariable Integer id, @RequestBody String novoStatus) {
+        try {
+            // Remove aspas se houver
+            String status = novoStatus.replaceAll("\"", "");
+            anamneseService.atualizarStatusAnamnese(id, status);
+            return ResponseEntity.ok(ApiResponseDTO.success("Status atualizado com sucesso", "Status: " + status));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao atualizar status", e.getMessage()));
+        }
+    }
 }
