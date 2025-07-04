@@ -115,7 +115,7 @@ public class AnamneseService {
             }
             
             Anamnese anamnese = existente.get();
-            anamnese.setStatusAnamnese(novoStatus.trim().toUpperCase());
+            //anamnese.setStatusAnamnese(novoStatus.trim().toUpperCase());
             
             return anamneseRepository.save(anamnese);
         } catch (Exception e) {
