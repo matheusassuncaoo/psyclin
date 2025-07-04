@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
     <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
+    <link rel="stylesheet" href="/view/css/dashboard/calendar.css">
 </head>
 
 <body>
@@ -85,9 +86,9 @@
                             </div>
                         </div>
 
-                        <button class="icon-btn button-config" aria-label="Configurações">
+                        <a href="/view/html/configuracoes/configuracoes.html" class="icon-btn button-config" aria-label="Configurações">
                             <i data-feather="settings"></i>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- Avatar com Dropdown -->
@@ -155,7 +156,7 @@
                 <i data-feather="upload"></i>
                 <span class="ml-2">EMITIR</span>
             </a>
-            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
+            <a href="/view/html/configuracoes/configuracoes.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="settings"></i>
                 <span class="ml-2">CONFIGURAÇÕES</span>
             </a>
@@ -208,62 +209,9 @@
                     <p id="historico-count" class="text-3xl font-bold">000</p>
                 </div>
             </div>
-            <div class="mt-6 bg-[var(--white)] p-4 rounded-lg shadow-md">
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex space-x-2">
-                        <i data-feather="chevron-left" class="cursor-pointer"></i>
-                        <span class="font-semibold">February</span>
-                        <i data-feather="chevron-right" class="cursor-pointer"></i>
-                    </div>
-                </div>
-                <div class="grid grid-cols-7 gap-1 text-center">
-                    <div class="font-semibold">S</div>
-                    <div class="font-semibold">M</div>
-                    <div class="font-semibold">T</div>
-                    <div class="font-semibold">W</div>
-                    <div class="font-semibold">T</div>
-                    <div class="font-semibold">F</div>
-                    <div class="font-semibold">S</div>
-                    <div>27</div>
-                    <div>28</div>
-                    <div>29</div>
-                    <div>30</div>
-                    <div>31</div>
-                    <div>1</div>
-                    <div>2</div>
-                    <div>3</div>
-                    <div>4</div>
-                    <div>5</div>
-                    <div>6</div>
-                    <div>7</div>
-                    <div>8</div>
-                    <div>9</div>
-                    <div>10</div>
-                    <div>11</div>
-                    <div>12</div>
-                    <div>13</div>
-                    <div>14</div>
-                    <div>15</div>
-                    <div>16</div>
-                    <div>17</div>
-                    <div>18</div>
-                    <div>19</div>
-                    <div>20</div>
-                    <div>21</div>
-                    <div>22</div>
-                    <div>23</div>
-                    <div>24</div>
-                    <div>25</div>
-                    <div>26</div>
-                    <div>27</div>
-                    <div>28</div>
-                    <div>29</div>
-                    <div>30</div>
-                </div>
-                <div class="mt-4 flex justify-end space-x-2">
-                    <button class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-                    <button class="px-4 py-2 bg-[var(--zomp)] text-[var(--white)] rounded">Done</button>
-                </div>
+            <div class="mt-6">
+                <!-- Calendário Psyclin -->
+                <div id="psyclin-calendar"></div>
             </div>
 
             <div class="loader fixed inset-50 flex items-center justify-center bg-[var(--zomp)] hidden">
@@ -271,6 +219,9 @@
 
         </div>
         <!-- Importando JavaScript -->
+        <script src="/view/js/components/help-manager.js"></script>
+        <script src="/view/js/components/config-manager.js"></script>
+        <script src="/view/js/dashboard/calendar.js"></script>
         <script src="/view/js/dashboard/dashboard.js"></script>
         <script type="module" src="/view/js/dashboard/dashboardManager.js"></script>
         

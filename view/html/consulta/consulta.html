@@ -51,9 +51,9 @@
         <div class="flex items-center space-x-4">
           <!-- Ícones no Desktop -->
           <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
-            <button class="icon-btn" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
+            <button class="icon-btn button-help" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
             <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
-            <button class="icon-btn" aria-label="Configurações"><i data-feather="settings"></i></button>
+            <a href="/view/html/configuracoes/configuracoes.html" class="icon-btn button-config" aria-label="Configurações"><i data-feather="settings"></i></a>
           </div>
 
           <!-- Avatar com Dropdown -->
@@ -73,9 +73,9 @@
                 <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
               </div>
               <ul class="py-2">
-                <li><a href="#" class="dropdown-link">Dashboard</a></li>
-                <li><a href="#" class="dropdown-link">Anamneses</a></li>
-                <li><a href="#" class="dropdown-link">Configurações</a></li>
+                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a></li>
+                <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
+                <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
                 <li><a href="#" class="dropdown-link">Sair</a></li>
               </ul>
             </div>
@@ -246,6 +246,8 @@
     </div>
 
     <!-- Importando JavaScript -->
+    <script src="/view/js/components/help-manager.js"></script>
+    <script src="/view/js/components/config-manager.js"></script>
     <script src="/view/js/dashboard/dashboard.js"></script>
     <script src="/view/js/consulta/consulta.js"></script>
 </body>

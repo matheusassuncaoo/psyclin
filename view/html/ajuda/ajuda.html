@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psyclin - Central de Ajuda</title>
+    <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- CSS Global e específico -->
+    <link rel="stylesheet" href="/view/css/ajuda/ajuda.css">
+</head>
+
+<body>
+    <!-- Container principal -->
+    <div class="main-content flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-[var(--zomp)] border-b-2 border-[var(--oxford-blue)] shadow-lg">
+            <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
+                <!-- Botão Voltar -->
+                <button onclick="voltarUltimaPagina()" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="arrow-left"></i>
+                </button>
+
+                <!-- Logo e Título -->
+                <div class="flex items-center space-x-4">
+                    <img src="/view/images/FasiclinLogo.png" class="h-16" alt="Fasiclin Logo" />
+                    <h1 class="text-white text-xl font-bold hidden sm:block">Central de Ajuda</h1>
+                </div>
+
+                <!-- Barra de Pesquisa -->
+                <div class="flex-1 mx-4 max-w-md">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-feather="search" class="text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search-help" placeholder="Buscar na ajuda..." 
+                               class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                    </div>
+                </div>
+
+                <!-- Menu Home -->
+                <a href="/view/html/dashboard/dashboard.html" class="icon-btn text-white" aria-label="Voltar ao Dashboard">
+                    <i data-feather="home"></i>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Sidebar de Categorias -->
+            <aside class="w-80 bg-white border-r border-gray-200 overflow-y-auto">
+                <div class="p-6">
+                    <h2 class="text-lg font-semibold text-[var(--oxford-blue)] mb-4">Categorias de Ajuda</h2>
+                    
+                    <!-- Lista de Categorias -->
+                    <nav class="space-y-2">
+                        <button class="category-btn active w-full text-left p-3 rounded-lg transition-colors" data-category="inicio">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="play-circle" class="w-5 h-5"></i>
+                                <span>Primeiros Passos</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="pacientes">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="users" class="w-5 h-5"></i>
+                                <span>Gerenciar Pacientes</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="agenda">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="calendar" class="w-5 h-5"></i>
+                                <span>Agenda e Consultas</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="anamnese">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="clipboard" class="w-5 h-5"></i>
+                                <span>Anamnese</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="prontuario">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="file-text" class="w-5 h-5"></i>
+                                <span>Prontuários</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="relatorios">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="bar-chart-2" class="w-5 h-5"></i>
+                                <span>Relatórios</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="configuracao">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="settings" class="w-5 h-5"></i>
+                                <span>Configurações</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="faq">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="help-circle" class="w-5 h-5"></i>
+                                <span>Perguntas Frequentes</span>
+                            </div>
+                        </button>
+                        
+                        <button class="category-btn w-full text-left p-3 rounded-lg transition-colors" data-category="contato">
+                            <div class="flex items-center space-x-3">
+                                <i data-feather="phone" class="w-5 h-5"></i>
+                                <span>Contato e Suporte</span>
+                            </div>
+                        </button>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Área de Conteúdo -->
+            <main class="flex-1 overflow-y-auto">
+                <div class="p-8">
+                    <!-- Conteúdo será carregado dinamicamente aqui -->
+                    <div id="help-content">
+                        <!-- Conteúdo inicial carregará via JavaScript -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/view/js/components/help-manager.js"></script>
+    <script>
+        // Inicializar Feather Icons
+        feather.replace();
+    </script>
+    <script src="/view/js/ajuda/ajuda.js"></script>
+</body>
+
+</html>

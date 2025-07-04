@@ -115,7 +115,15 @@ public class AnamneseService {
             }
             
             Anamnese anamnese = existente.get();
-            anamnese.setStatusAnamnese(novoStatus.trim().toUpperCase());
+            
+            // Converte String para enum StatusAnamnese
+            try {
+                Anamnese.StatusAnamnese statusEnum = Anamnese.StatusAnamnese.valueOf(novoStatus.trim().toUpperCase());
+                anamnese.setStatusAnamnese(statusEnum);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Status inválido: " + novoStatus + ". Valores válidos: " + 
+                    java.util.Arrays.toString(Anamnese.StatusAnamnese.values()));
+            }
             
             return anamneseRepository.save(anamnese);
         } catch (Exception e) {
