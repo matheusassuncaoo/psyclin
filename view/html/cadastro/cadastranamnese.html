@@ -124,13 +124,37 @@
                             <label for="idPaciente" class="block text-sm font-medium text-gray-700 mb-1">Paciente *</label>
                             <select id="idPaciente" name="idPaciente" required
                                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
-                                <option value="">Selecione um paciente</option>
+                                <option value="">Carregando pacientes...</option>
+                            </select>
+                            <button type="button" id="btn-debug-pacientes" class="mt-1 text-xs text-blue-600 hover:text-blue-800">
+                                🔧 Debug: Recarregar Pacientes
+                            </button>
+                        </div>
+                        <div>
+                            <label for="idProfissional" class="block text-sm font-medium text-gray-700 mb-1">Profissional *</label>
+                            <select id="idProfissional" name="idProfissional" required
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                                <option value="">Carregando profissionais...</option>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Data da Anamnese -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="dataAnamnese" class="block text-sm font-medium text-gray-700 mb-1">Data da Anamnese *</label>
                             <input type="datetime-local" id="dataAnamnese" name="dataAnamnese" required
                                 class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                        </div>
+                        <div>
+                            <label for="statusAnamnese" class="block text-sm font-medium text-gray-700 mb-1">Status da Anamnese *</label>
+                            <select id="statusAnamnese" name="statusAnamnese" required
+                                class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
+                                <option value="PENDENTE">Pendente</option>
+                                <option value="APROVADO">Aprovado</option>
+                                <option value="REPROVADO">Reprovado</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
                         </div>
                     </div>
 
@@ -152,18 +176,18 @@
                         </div>
                     </div>
 
-                    <!-- Autorizações e Status -->
+                    <!-- Autorizações e Status Funcional -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Autorização de Visibilidade *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Autorização de Visualização *</label>
                             <div class="flex items-center space-x-4">
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="autorizacaoVisibilidade" value="true" required
+                                    <input type="radio" name="autorizacaoVisualizacao" value="true" required
                                         class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]">
                                     <span class="ml-2">Sim</span>
                                 </label>
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="autorizacaoVisibilidade" value="false" required
+                                    <input type="radio" name="autorizacaoVisualizacao" value="false" required
                                         class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]">
                                     <span class="ml-2">Não</span>
                                 </label>
@@ -174,7 +198,7 @@
                             <div class="flex items-center space-x-4">
                                 <label class="inline-flex items-center">
                                     <input type="radio" name="statusFuncional" value="true" required
-                                        class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]">
+                                        class="form-radio text-[var(--zomp)] focus:ring-[var(--zomp)]" checked>
                                     <span class="ml-2">Ativo</span>
                                 </label>
                                 <label class="inline-flex items-center">
@@ -186,33 +210,20 @@
                         </div>
                     </div>
 
-                    <!-- Status da Anamnese -->
-                    <div class="campo-container campo-nivel-superior grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="campo">
-                            <label for="statusAnamnese" class="block text-sm font-medium text-gray-700 mb-1">Status da Anamnese</label>
-                            <select id="statusAnamnese" name="statusAnamnese" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
-                                <option value="PENDENTE">Pendente</option>
-                                <option value="APROVADO">Aprovado</option>
-                                <option value="REJEITADO">Rejeitado</option>
-                            </select>
-                        </div>
 
-                        <div class="campo">
-                            <label for="statusFuncional" class="block text-sm font-medium text-gray-700 mb-1">Status Funcional</label>
-                            <select id="statusFuncional" name="statusFuncional" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent">
-                                <option value="true">Ativo</option>
-                                <option value="false">Inativo</option>
-                            </select>
-                        </div>
-                    </div>
 
                     <!-- Observações -->
                     <div class="campo">
                         <label for="observacoes" class="block text-sm font-medium text-gray-700 mb-1">Observações</label>
-                        <textarea id="observacoes" name="observacoes" rows="4"
+                        <textarea id="observacoes" name="observacoes" rows="4" maxlength="500"
                             class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--zomp)] focus:border-transparent transition-colors resize-none"
                             placeholder="Digite as observações (máximo 500 caracteres)"></textarea>
-                        <span class="mensagem-erro hidden text-sm text-red-500 mt-1"></span>
+                        <div class="flex justify-between items-center mt-1">
+                            <span class="mensagem-erro hidden text-sm text-red-500"></span>
+                            <span class="text-xs text-gray-500">
+                                <span id="observacoes-contador">0</span>/500 caracteres
+                            </span>
+                        </div>
                     </div>
 
                     <!-- Botões de Ação -->
@@ -221,15 +232,22 @@
                             class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
                             Cancelar
                         </button>
-                        <button type="submit"
-                            class="px-6 py-2 bg-[var(--zomp)] text-white rounded-lg hover:bg-[var(--oxford-blue)] transition">
+                        <button type="submit" id="btn-salvar-anamnese"
+                            class="px-6 py-2 bg-[var(--zomp)] text-white rounded-lg hover:bg-[var(--oxford-blue)] transition disabled:opacity-50 disabled:cursor-not-allowed">
                             Salvar Anamnese
                         </button>
                     </div>
                 </form>
             </div>
 
-            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            <!-- Modal de Loading -->
+            <div id="loading-modal" class="loader hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="bg-white rounded-lg p-6 shadow-xl">
+                    <div class="flex items-center space-x-3">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--zomp)]"></div>
+                        <span class="text-gray-700 font-medium">Salvando anamnese...</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -237,6 +255,42 @@
         <script src="/view/js/components/notifications.js"></script>
         <script src="/view/js/dashboard/dashboard.js"></script>
         <script type="module" src="/view/js/cadastro/cadastranamnese.js"></script>
+        
+        <!-- Script de inicialização -->
+        <script>
+            // Inicializar ícones Feather
+            feather.replace();
+            
+            // Contador de caracteres para observações
+            document.addEventListener('DOMContentLoaded', function() {
+                const observacoesTextarea = document.getElementById('observacoes');
+                const contador = document.getElementById('observacoes-contador');
+                
+                if (observacoesTextarea && contador) {
+                    observacoesTextarea.addEventListener('input', function() {
+                        const length = this.value.length;
+                        contador.textContent = length;
+                        
+                        // Mudar cor quando próximo do limite
+                        if (length > 450) {
+                            contador.parentElement.classList.add('text-red-500');
+                            contador.parentElement.classList.remove('text-gray-500');
+                        } else {
+                            contador.parentElement.classList.remove('text-red-500');
+                            contador.parentElement.classList.add('text-gray-500');
+                        }
+                    });
+                }
+                
+                // Definir data/hora atual como padrão
+                const dataAnamneseInput = document.getElementById('dataAnamnese');
+                if (dataAnamneseInput) {
+                    const agora = new Date();
+                    agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+                    dataAnamneseInput.value = agora.toISOString().slice(0, 16);
+                }
+            });
+        </script>
     </div>
 </body>
 

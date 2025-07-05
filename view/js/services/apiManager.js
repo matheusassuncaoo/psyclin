@@ -90,11 +90,12 @@ async function pegarPacientesAtivos(){
         }
 
         const apiResponse = await response.json();
-        console.log('📡 Resposta da API:', apiResponse);
+        console.log('📡 Resposta da API (pacientes ativos):', apiResponse);
         
+        // Retorna a estrutura completa da resposta para manter compatibilidade
         if (apiResponse.success && apiResponse.data) {
             console.log('✅ Pacientes ativos carregados com sucesso:', apiResponse.data.length, 'pacientes encontrados');
-            return apiResponse.data;
+            return apiResponse; // Retorna a resposta completa com success, data, etc.
         } else {
             throw new Error(apiResponse.error || 'Erro desconhecido ao buscar pacientes ativos');
         }

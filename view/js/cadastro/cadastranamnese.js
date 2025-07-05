@@ -5,12 +5,13 @@
  */
 
 // Importações
-import { cadastrarAnamnese, pegarPacientes } from '../services/apiManager.js';
+import { cadastrarAnamnese, pegarPacientesAtivos, pegarProfissionaisAtivos } from '../services/apiManager.js';
 
 // Estado do formulário
 let formState = {
     isSubmitting: false,
-    pacientes: []
+    pacientes: [],
+    profissionais: []
 };
 
 // Inicialização quando o DOM carrega
@@ -22,15 +23,22 @@ document.addEventListener('DOMContentLoaded', function() {
  * Inicializa o sistema de cadastro de anamnese
  */
 function initializeCadastroAnamnese() {
+    console.log('🚀 Iniciializando cadastro de anamnese...');
     const form = document.getElementById('form-anamnese');
     
     if (!form) {
-        console.error('Formulário de cadastro não encontrado');
+        console.error('❌ Formulário de cadastro não encontrado');
         return;
     }
 
-    // Carrega lista de pacientes
+    console.log('✅ Formulário encontrado, configurando...');
+
+    // Carrega lista de pacientes e profissionais
     loadPacientes();
+    loadProfissionais();
+    
+    // Configura botão de debug
+    setupDebugButton();
     
     // Configura máscaras dos campos
     setupFieldMasks();
@@ -51,25 +59,77 @@ function initializeCadastroAnamnese() {
     if (typeof feather !== 'undefined') {
         feather.replace();
     }
+    
+    console.log('✅ Cadastro de anamnese inicializado com sucesso!');
 }
 
 /**
- * Carrega lista de pacientes
+ * Configura o botão de debug para recarregar pacientes
+ */
+function setupDebugButton() {
+    const debugBtn = document.getElementById('btn-debug-pacientes');
+    if (debugBtn) {
+        debugBtn.addEventListener('click', async function() {
+            console.log('🔧 DEBUG: Recarregando pacientes...');
+            try {
+                await loadPacientes();
+                showSuccess('Pacientes recarregados com sucesso!');
+            } catch (error) {
+                console.error('❌ Erro no debug:', error);
+                showError('Erro ao recarregar pacientes: ' + error.message);
+            }
+        });
+    }
+}
+
+/**
+ * Carrega lista de pacientes ativos
  */
 async function loadPacientes() {
     try {
+        console.log('🔄 Carregando pacientes...');
         showLoader();
         
-        const response = await pegarPacientes();
-        formState.pacientes = response.data || [];
+        const response = await pegarPacientesAtivos();
+        console.log('📡 Resposta de pacientes:', response);
+        
+        // Verifica se a resposta tem a estrutura esperada
+        if (response && response.success && response.data) {
+            formState.pacientes = response.data;
+            console.log('✅ Pacientes carregados:', formState.pacientes.length);
+        } else if (Array.isArray(response)) {
+            // Se a resposta é um array direto
+            formState.pacientes = response;
+            console.log('✅ Pacientes carregados (array direto):', formState.pacientes.length);
+        } else {
+            console.warn('⚠️ Estrutura de resposta inesperada:', response);
+            formState.pacientes = [];
+        }
         
         populatePacientesSelect();
         
     } catch (error) {
-        console.error('Erro ao carregar pacientes:', error);
-        showError('Erro ao carregar lista de pacientes');
+        console.error('❌ Erro ao carregar pacientes:', error);
+        showError('Erro ao carregar lista de pacientes: ' + error.message);
+        formState.pacientes = [];
     } finally {
         hideLoader();
+    }
+}
+
+/**
+ * Carrega lista de profissionais ativos
+ */
+async function loadProfissionais() {
+    try {
+        const response = await pegarProfissionaisAtivos();
+        formState.profissionais = response.data || [];
+        
+        populateProfissionaisSelect();
+        
+    } catch (error) {
+        console.error('Erro ao carregar profissionais:', error);
+        showError('Erro ao carregar lista de profissionais');
     }
 }
 
@@ -77,18 +137,58 @@ async function loadPacientes() {
  * Popula o select de pacientes
  */
 function populatePacientesSelect() {
+    console.log('🔄 Populando select de pacientes...');
     const select = document.getElementById('idPaciente');
     
-    if (!select) return;
+    if (!select) {
+        console.error('❌ Select de pacientes não encontrado!');
+        return;
+    }
+    
+    console.log('📋 Pacientes disponíveis:', formState.pacientes.length);
     
     // Limpa opções existentes
     select.innerHTML = '<option value="">Selecione um paciente</option>';
     
+    // Verifica se há pacientes
+    if (!formState.pacientes || formState.pacientes.length === 0) {
+        console.warn('⚠️ Nenhum paciente encontrado');
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Nenhum paciente encontrado';
+        option.disabled = true;
+        select.appendChild(option);
+        return;
+    }
+    
     // Adiciona pacientes
-    formState.pacientes.forEach(paciente => {
+    formState.pacientes.forEach((paciente, index) => {
+        console.log(`👤 Adicionando paciente ${index + 1}:`, paciente.nomePessoa);
         const option = document.createElement('option');
         option.value = paciente.idPaciente;
         option.textContent = `${paciente.nomePessoa} - CPF: ${formatCPF(paciente.cpfPessoa)}`;
+        select.appendChild(option);
+    });
+    
+    console.log('✅ Select de pacientes populado com', formState.pacientes.length, 'opções');
+}
+
+/**
+ * Popula o select de profissionais
+ */
+function populateProfissionaisSelect() {
+    const select = document.getElementById('idProfissional');
+    
+    if (!select) return;
+    
+    // Limpa opções existentes
+    select.innerHTML = '<option value="">Selecione um profissional</option>';
+    
+    // Adiciona profissionais
+    formState.profissionais.forEach(profissional => {
+        const option = document.createElement('option');
+        option.value = profissional.idProfissional;
+        option.textContent = `${profissional.nomePessoa} - ${profissional.especialidade || 'Psicólogo'}`;
         select.appendChild(option);
     });
 }
@@ -281,6 +381,13 @@ function validateField(field) {
         case 'idPaciente':
             if (!value) {
                 errorMessage = 'Paciente é obrigatório';
+                isValid = false;
+            }
+            break;
+            
+        case 'idProfissional':
+            if (!value) {
+                errorMessage = 'Profissional é obrigatório';
                 isValid = false;
             }
             break;
