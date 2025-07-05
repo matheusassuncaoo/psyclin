@@ -177,6 +177,32 @@ public class AnamneseService {
     }
 
     /**
+     * Atualiza apenas as observações de uma anamnese.
+     * @param id ID da anamnese
+     * @param novasObservacoes Novas observações da anamnese
+     * @return Anamnese atualizada
+     */
+    public Anamnese atualizarObservacoesAnamnese(Integer id, String novasObservacoes) {
+        try {
+            if (id == null) {
+                throw new IllegalArgumentException("ID da anamnese é obrigatório");
+            }
+            
+            Optional<Anamnese> existente = anamneseRepository.findByIdAnamnese(id);
+            if (existente.isEmpty()) {
+                throw new RuntimeException("Anamnese não encontrada com ID: " + id);
+            }
+            
+            Anamnese anamnese = existente.get();
+            anamnese.setObservacoes(novasObservacoes);
+            
+            return anamneseRepository.save(anamnese);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar observações da anamnese: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Exclui uma anamnese.
      * @param id ID da anamnese
      */

@@ -138,4 +138,20 @@ public class AnamneseController {
                     .body(ApiResponseDTO.error("Erro ao atualizar status", e.getMessage()));
         }
     }
+
+    /**
+     * Atualiza apenas as observações de uma anamnese.
+     */
+    @PutMapping("/{id}/observacoes")
+    public ResponseEntity<ApiResponseDTO<String>> atualizarObservacoes(@PathVariable Integer id, @RequestBody String novasObservacoes) {
+        try {
+            // Remove aspas se houver
+            String observacoes = novasObservacoes.replaceAll("\"", "");
+            anamneseService.atualizarObservacoesAnamnese(id, observacoes);
+            return ResponseEntity.ok(ApiResponseDTO.success("Observações atualizadas com sucesso", "Observações atualizadas"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao atualizar observações", e.getMessage()));
+        }
+    }
 }
