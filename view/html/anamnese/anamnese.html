@@ -4,53 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psyclin Dashboard</title>
+    <title>Psyclin - Anamneses</title>
     <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
     <!-- Importando Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Importando Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- Importando CSS da página -->
-    <link rel="stylesheet" href="/view/css/dashboard.css">
+    <link rel="stylesheet" href="/view/css/dashboard/dashboard.css">
 </head>
 
 <body>
     <!-- Container principal-->
     <div class="flex flex-col h-screen">
         <!-- Navbar -->
-        <nav class="bg-[var(--zomp)] border-[var(--oxford-blue)]">
-            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <nav class="bg-[var(--zomp)] border-b-2 border-[var(--oxford-blue)] shadow-lg">
+            <div class="max-w-screen-xl flex items-center justify-between mx-auto p-4">
                 <!-- Botão Hambúrguer -->
-                <button id="menu-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                <button id="btn-sidebar-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
                     <i data-feather="menu"></i>
                 </button>
 
                 <!-- Logo -->
-                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <a href="/view/html/dashboard/dashboard.html" class="hidden sm:flex items-center space-x-3 rtl:space-x-reverse">
                     <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
                 </a>
+
                 <!-- Barra de Pesquisa no Desktop -->
                 <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <i data-feather="search" class="text-gray-400"></i>
                         </div>
-                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                        <input type="text" placeholder="Pesquisar anamneses..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
                     </div>
                 </div>
 
-                <!-- Botão Lupa (Mobile) -->
-                <button id="mobile-search-toggle" class="sm:hidden text-white">
-                    <i data-feather="search"></i>
-                </button>
-
                 <!-- Menu de Usuário -->
                 <div class="flex items-center space-x-4">
-                    <!-- Ícones no Desktop -->
-                    <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
-                        <button class="icon-btn button-help" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
-                        <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
-                        <a href="/view/html/configuracoes/configuracoes.html" class="icon-btn button-config" aria-label="Configurações"><i data-feather="settings"></i></a>
+                    <!-- Botão Lupa (Mobile) -->
+                    <button id="button-mobile-search" class="icon-btn sm:hidden text-white">
+                        <i data-feather="search"></i>
+                    </button>
+
+                    <!-- Botões para Desktop -->
+                    <div id="desktop-menu" class="hidden sm:flex items-center space-x-4">
+                        <button class="icon-btn button-help" aria-label="Ajuda">
+                            <i data-feather="help-circle"></i>
+                        </button>
+                        <button class="icon-btn button-notification" aria-label="Notificações">
+                            <i data-feather="bell"></i>
+                        </button>
+                        <a href="/view/html/configuracoes/configuracoes.html" class="icon-btn button-config" aria-label="Configurações">
+                            <i data-feather="settings"></i>
+                        </a>
                     </div>
 
                     <!-- Avatar com Dropdown -->
@@ -80,96 +87,258 @@
 
             <!-- Barra de Pesquisa Mobile -->
             <div id="mobile-search-bar" class="hidden sm:hidden p-4">
-                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                <input type="text" placeholder="Pesquisar anamneses..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
             </div>
         </nav>
         <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--oxford-blue)] w-64 p-4 space-y-4 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
             <div class="mb-4">
                 <span class="text-lg font-bold">DASHBOARD</span>
             </div>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/dashboard/dashboard.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="grid"></i>
                 <span class="ml-2">DASHBOARD</span>
             </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/paciente/paciente.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="users"></i>
                 <span class="ml-2">PACIENTES</span>
             </a>
-            <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/cadastro/cadastro.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="database"></i>
                 <span class="ml-2">CADASTRAR</span>
             </a>
-            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded bg-teal-600">
                 <i data-feather="file-text"></i>
                 <span class="ml-2">ANAMNESES</span>
             </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/consulta/consulta.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="coffee"></i>
                 <span class="ml-2">CONSULTA</span>
             </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="check-square"></i>
                 <span class="ml-2">APROVAÇÃO</span>
             </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="/view/html/relatorio/relatorio.html" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="upload"></i>
                 <span class="ml-2">EMITIR</span>
             </a>
-            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+            <a href="#" class="flex items-center p-2 bg-[var(--mountain-meadow)] hover:bg-teal-600 rounded">
                 <i data-feather="settings"></i>
                 <span class="ml-2">CONFIGURAÇÕES</span>
             </a>
-            <div class="mt-auto text-sm">psyclin.1.0A</div>
+            <div class="mt-auto text-sm">psyclin.1.1A</div>
         </div>
 
         <!-- Conteúdo Principal -->
-        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
-            <div class="flex justify-between items-center mb-6">
-                <div class="flex space-x-4">
-                    <button class="bg-[var(--zomp)] text-[#333] text-xs font-semibold px-5 py-3 rounded-md">
-                        ARQUIVADOS
-                    </button>
-                    <button class="bg-[var(--zomp)] text-[#333] text-xs font-semibold px-5 py-3 rounded-md">
-                        PACIENTES
-                    </button>
-                    <button class="bg-[var(--zomp)] text-[#333] text-xs font-semibold px-5 py-3 rounded-md">
-                        HISTORICO
-                    </button>
-                    <button class="bg-[var(--zomp)] text-[#333] text-xs font-semibold px-5 py-3 rounded-md">
-                        RELATORIO
+        <div class="flex-1 p-6 bg-gray-100" style="transition: margin-left 0.3s ease;">
+            <!-- Header da página -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-[var(--oxford-blue)]">Anamneses</h1>
+                        <p class="text-gray-600 mt-1">Gerencie e visualize todas as anamneses dos pacientes</p>
+                    </div>
+                    <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-6 py-2 rounded-lg flex items-center gap-2 transition duration-300">
+                        <i data-feather="plus"></i>
+                        Nova Anamnese
                     </button>
                 </div>
             </div>
 
-            <h1 class="text-2xl font-bold mb-4">Anamnese</h1>
-            <div class="flex flex-col gap-4">
-                <button class="patient-button text-white">
-                    <i data-feather="users"></i>
-                    <span>Paciente 1</span>
-                </button>
-                <button class="patient-button text-white">
-                    <i data-feather="users"></i>
-                    <span>Paciente 2</span>
-                </button>
-                <button class="patient-button text-white">
-                    <i data-feather="users"></i>
-                    <span>Paciente 3</span>
-                </button>
-                <button class="patient-button text-white">
-                    <i data-feather="users"></i>
-                    <span>Paciente 4</span>
-                </button>
+            <!-- Estatísticas -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="file-text" class="text-[var(--zomp)] mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Total</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-[var(--zomp)]">12</p>
+                    <p class="text-sm text-gray-500">Anamneses registradas</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="check-circle" class="text-green-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Completas</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-green-500">8</p>
+                    <p class="text-sm text-gray-500">Finalizadas</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="clock" class="text-orange-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Pendentes</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-orange-500">4</p>
+                    <p class="text-sm text-gray-500">Em andamento</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex items-center">
+                        <i data-feather="calendar" class="text-blue-500 mr-2"></i>
+                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Esta Semana</h3>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-500">3</p>
+                    <p class="text-sm text-gray-500">Novas anamneses</p>
+                </div>
             </div>
 
-            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            <!-- Filtros -->
+            <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+                        <input type="text" placeholder="Nome do paciente ou tipo de anamnese..." class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                            <option value="">Todos</option>
+                            <option value="completa">Completa</option>
+                            <option value="pendente">Pendente</option>
+                            <option value="rascunho">Rascunho</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
+                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                            <option value="">Todos</option>
+                            <option value="hoje">Hoje</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mês</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-4 py-2 rounded-lg transition duration-300">
+                            <i data-feather="search"></i>
+                        </button>
+                        <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-300">
+                            <i data-feather="x"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Anamneses -->
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Anamneses Recentes</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <!-- Item de Anamnese -->
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center text-white font-semibold">
+                                    MF
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Maria Fernanda Silva</h4>
+                                    <p class="text-sm text-gray-500">Anamnese Psicológica Inicial</p>
+                                    <p class="text-xs text-gray-400">Criada em 02/07/2025</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                    Completa
+                                </span>
+                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
+                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
+                                    Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item de Anamnese -->
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">
+                                    JS
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">João Santos</h4>
+                                    <p class="text-sm text-gray-500">Anamnese de Acompanhamento</p>
+                                    <p class="text-xs text-gray-400">Criada em 01/07/2025</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800">
+                                    Pendente
+                                </span>
+                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
+                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
+                                    Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item de Anamnese -->
+                    <div class="p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-white font-semibold">
+                                    AC
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Ana Costa</h4>
+                                    <p class="text-sm text-gray-500">Anamnese Infantil</p>
+                                    <p class="text-xs text-gray-400">Criada em 30/06/2025</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                    Rascunho
+                                </span>
+                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
+                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
+                                    Ver
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Paginação -->
+                <div class="bg-white px-4 py-3 border-t border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Mostrando <span class="font-medium">1</span> a <span class="font-medium">3</span> de <span class="font-medium">12</span> resultados
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i data-feather="chevron-left"></i>
+                                </button>
+                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-[var(--zomp)] text-sm font-medium text-white">1</button>
+                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</button>
+                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</button>
+                                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <i data-feather="chevron-right"></i>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div id="loader-anamneses" class="loader fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--zomp)]"></div>
+                        <span class="text-lg">Carregando anamneses...</span>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Importando JavaScript -->
         <script src="/view/js/components/help-manager.js"></script>
-        <script src="/view/js/components/config-manager.js"></script>
-        <script src="/view/js/dashboard.js"></script>
+        <script src="/view/js/dashboard/dashboard.js"></script>
         
         <!-- Chat Widget -->
         <link rel="stylesheet" href="/view/css/components/chat-widget.css">
