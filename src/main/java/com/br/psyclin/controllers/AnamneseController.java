@@ -2,6 +2,7 @@ package com.br.psyclin.controllers;
 
 import com.br.psyclin.dto.response.ApiResponseDTO;
 import com.br.psyclin.dto.response.AnamneseResponseDTO;
+import com.br.psyclin.dto.request.AnamneseRequestDTO;
 import com.br.psyclin.models.Anamnese;
 import com.br.psyclin.services.AnamneseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -83,12 +82,15 @@ public class AnamneseController {
      * Cadastra uma nova anamnese.
      */
     @PostMapping
-    @Validated
-    public ResponseEntity<Void> cadastrar(@Valid @RequestBody Anamnese anamnese) {
-        Anamnese salva = anamneseService.cadastrarAnamnese(anamnese);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(salva.getIdAnamnese()).toUri();
-        return ResponseEntity.created(uri).build();
+    public ResponseEntity<ApiResponseDTO<AnamneseResponseDTO>> cadastrar(@Valid @RequestBody AnamneseRequestDTO anamneseRequest) {
+        try {
+            Anamnese salva = anamneseService.cadastrarAnamneseComDTO(anamneseRequest);
+            AnamneseResponseDTO anamneseDTO = anamneseService.converterParaDTO(salva);
+            return ResponseEntity.ok(ApiResponseDTO.success("Anamnese cadastrada com sucesso", anamneseDTO));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao cadastrar anamnese", e.getMessage()));
+        }
     }
 
     /**

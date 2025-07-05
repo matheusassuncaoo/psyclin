@@ -3,6 +3,7 @@ package com.br.psyclin.controllers;
 import com.br.psyclin.dto.response.ApiResponseDTO;
 import com.br.psyclin.dto.response.PacienteResponseDTO;
 import com.br.psyclin.dto.request.PacienteUpdateDTO;
+import com.br.psyclin.dto.request.PacienteRequestDTO;
 import com.br.psyclin.models.Paciente;
 import com.br.psyclin.services.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,9 +92,9 @@ public class PacienteController {
      * Cadastra um novo paciente.
      */
     @PostMapping
-    public ResponseEntity<ApiResponseDTO<PacienteResponseDTO>> cadastrar(@Valid @RequestBody Paciente paciente) {
+    public ResponseEntity<ApiResponseDTO<PacienteResponseDTO>> cadastrar(@Valid @RequestBody PacienteRequestDTO pacienteRequest) {
         try {
-            Paciente salvo = pacienteService.cadastrarPaciente(paciente);
+            Paciente salvo = pacienteService.cadastrarPacienteComDTO(pacienteRequest);
             PacienteResponseDTO pacienteDTO = pacienteService.converterParaDTO(salvo);
             return ResponseEntity.ok(ApiResponseDTO.success("Paciente cadastrado com sucesso", pacienteDTO));
         } catch (Exception e) {

@@ -1,7 +1,12 @@
 package com.br.psyclin.services;
 
 import com.br.psyclin.models.Anamnese;
+import com.br.psyclin.models.Paciente;
+import com.br.psyclin.models.Profissional;
+import com.br.psyclin.dto.request.AnamneseRequestDTO;
 import com.br.psyclin.repositories.AnamneseRepository;
+import com.br.psyclin.repositories.PacienteRepository;
+import com.br.psyclin.repositories.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +23,12 @@ public class AnamneseService {
 
     @Autowired
     private AnamneseRepository anamneseRepository;
+    
+    @Autowired
+    private PacienteRepository pacienteRepository;
+    
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
 
     /**
      * Cadastra uma nova anamnese.
@@ -43,6 +54,40 @@ public class AnamneseService {
             }
             
             return anamneseRepository.save(anamnese);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao cadastrar anamnese: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Cadastra uma nova anamnese com base no DTO.
+     * @param anamneseRequest DTO com dados da anamnese
+     * @return Anamnese salva
+     */
+    public Anamnese cadastrarAnamneseComDTO(AnamneseRequestDTO anamneseRequest) {
+        try {
+            // Buscar paciente
+            Paciente paciente = pacienteRepository.findById(anamneseRequest.getIdPaciente())
+                .orElseThrow(() -> new IllegalArgumentException("Paciente não encontrado"));
+            
+            // Buscar profissional
+            Profissional profissional = profissionalRepository.findById(anamneseRequest.getIdProfissional())
+                .orElseThrow(() -> new IllegalArgumentException("Profissional não encontrado"));
+            
+            // Criar anamnese
+            Anamnese anamnese = new Anamnese();
+            anamnese.setPaciente(paciente);
+            anamnese.setProfissional(profissional);
+            anamnese.setDataAnamnese(anamneseRequest.getDataAnamnese());
+            anamnese.setNomeResponsavel(anamneseRequest.getNomeResponsavel());
+            anamnese.setCpfResponsavel(anamneseRequest.getCpfResponsavel());
+            anamnese.setAutorizacaoVisualizacao(anamneseRequest.getAutorizacaoVisualizacao());
+            anamnese.setStatusAnamnese(anamneseRequest.getStatusAnamnese());
+            anamnese.setStatusFuncional(anamneseRequest.getStatusFuncional());
+            anamnese.setObservacoes(anamneseRequest.getObservacoes());
+            
+            return anamneseRepository.save(anamnese);
+            
         } catch (Exception e) {
             throw new RuntimeException("Erro ao cadastrar anamnese: " + e.getMessage(), e);
         }

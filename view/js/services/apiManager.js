@@ -754,105 +754,49 @@ async function excluirPaciente(id) {
 }
 
 /**
- * Busca profissional por ID
+ * Cadastra uma nova anamnese
  */
-async function buscarProfissionalPorId(id) {
+async function cadastrarAnamnese(dadosAnamnese) {
     try {
-        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PROFISSIONAIS + `/${id}`);
-        console.log('🔍 Buscando profissional por ID:', id);
-
-        const response = await fetch(endpoint, {
-            method: 'GET',
-            headers: API_CONFIG.DEFAULT_HEADERS,
-            mode: 'cors'
-        });
-
-        if (!response.ok) {
-            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
-        }
-
-        const apiResponse = await response.json();
-        if (apiResponse.success) {
-            console.log('✅ Profissional encontrado:', apiResponse.data);
-            return apiResponse.data;
-        } else {
-            throw new Error(apiResponse.error || 'Erro ao buscar profissional');
-        }
-    } catch (error) {
-        console.error('💥 Erro ao buscar profissional:', error);
-        throw error;
-    }
-}
-
-/**
- * Busca paciente por ID
- */
-async function buscarPacientePorId(id) {
-    try {
-        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PACIENTES + `/${id}`);
-        console.log('🔍 Buscando paciente por ID:', id);
-
-        const response = await fetch(endpoint, {
-            method: 'GET',
-            headers: API_CONFIG.DEFAULT_HEADERS,
-            mode: 'cors'
-        });
-
-        if (!response.ok) {
-            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
-        }
-
-        const apiResponse = await response.json();
-        if (apiResponse.success) {
-            console.log('✅ Paciente encontrado:', apiResponse.data);
-            return apiResponse.data;
-        } else {
-            throw new Error(apiResponse.error || 'Erro ao buscar paciente');
-        }
-    } catch (error) {
-        console.error('💥 Erro ao buscar paciente:', error);
-        throw error;
-    }
-}
-
-/**
- * Envia solicitação de exclusão (sistema de aprovação)
- */
-async function solicitarExclusao(tipo, id, motivo, usuarioSolicitante) {
-    try {
-        console.log('📋 Enviando solicitação de exclusão:', {
-            tipo,
-            id,
-            motivo,
-            usuarioSolicitante,
-            timestamp: new Date().toISOString()
-        });
+        console.log('🔄 Cadastrando anamnese:', dadosAnamnese);
         
-        // Por enquanto, apenas simula o envio - implementar endpoint de solicitação posteriormente
-        // const endpoint = buildApiUrl('/solicitacao-exclusao');
-        // const response = await fetch(endpoint, {
-        //     method: 'POST',
-        //     headers: API_CONFIG.DEFAULT_HEADERS,
-        //     mode: 'cors',
-        //     body: JSON.stringify({
-        //         tipoEntidade: tipo,
-        //         idEntidade: id,
-        //         motivo: motivo,
-        //         usuarioSolicitante: usuarioSolicitante,
-        //         dataHoraSolicitacao: new Date().toISOString(),
-        //         statusSolicitacao: 'PENDENTE'
-        //     })
-        // });
+        const anamneseEndpoint = buildApiUrl(API_CONFIG.ENDPOINTS.ANAMNESES);
+        
+        const response = await fetch(anamneseEndpoint, {
+            method: 'POST',
+            headers: {
+                ...API_CONFIG.DEFAULT_HEADERS,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dadosAnamnese),
+            mode: 'cors'
+        });
 
-        // Simula sucesso
-        console.log('✅ Solicitação de exclusão enviada com sucesso');
-        return {
-            id: Date.now(),
-            status: 'PENDENTE',
-            mensagem: 'Solicitação enviada para aprovação'
-        };
+        console.log('📡 Resposta do cadastro de anamnese:', {
+            status: response.status,
+            statusText: response.statusText
+        });
+
+        if (!response.ok) {
+            if (response.status === 400) {
+                const errorData = await response.json();
+                throw new Error(`❌ Dados inválidos: ${errorData.message || 'Verifique os campos preenchidos'}`);
+            } else if (response.status === 409) {
+                throw new Error('❌ Conflito: Anamnese já existe para este paciente');
+            } else if (response.status >= 500) {
+                throw new Error(`❌ Erro do servidor (${response.status}): ${response.statusText}`);
+            } else {
+                throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+        }
+
+        const apiResponse = await response.json();
+        console.log('✅ Anamnese cadastrada com sucesso:', apiResponse);
+        
+        return apiResponse;
+        
     } catch (error) {
-        console.error('💥 Erro ao enviar solicitação de exclusão:', error);
+        console.error('❌ Erro ao cadastrar anamnese:', error);
         throw error;
     }
 }
@@ -939,6 +883,118 @@ async function executarLimpezaEmergencia() {
     }
 }
 
+// Função para buscar um paciente por ID
+async function buscarPacientePorId(id) {
+    try {
+        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PACIENTES + `/${id}`);
+        console.log('🔍 Buscando paciente por ID:', id);
+
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: API_CONFIG.DEFAULT_HEADERS,
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('❌ Paciente não encontrado');
+            }
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Paciente encontrado:', apiResponse.data);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao buscar paciente');
+        }
+    } catch (error) {
+        console.error('💥 Erro ao buscar paciente por ID:', error);
+        throw error;
+    }
+}
+
+/**
+ * Busca um profissional por ID
+ */
+async function buscarProfissionalPorId(id) {
+    try {
+        const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PROFISSIONAIS + `/${id}`);
+        console.log('🔍 Buscando profissional por ID:', id);
+
+        const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: API_CONFIG.DEFAULT_HEADERS,
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('❌ Profissional não encontrado');
+            }
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log('✅ Profissional encontrado:', apiResponse.data);
+            return apiResponse.data;
+        } else {
+            throw new Error(apiResponse.error || 'Erro ao buscar profissional');
+        }
+    } catch (error) {
+        console.error('💥 Erro ao buscar profissional por ID:', error);
+        throw error;
+    }
+}
+
+/**
+ * Solicita exclusão de um registro (funcionalidade genérica)
+ */
+async function solicitarExclusao(tipo, id) {
+    try {
+        console.log(`🗑️ Solicitando exclusão de ${tipo} com ID:`, id);
+        
+        // Determinar o endpoint baseado no tipo
+        let endpoint;
+        switch (tipo.toLowerCase()) {
+            case 'paciente':
+                endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PACIENTES + `/${id}`);
+                break;
+            case 'profissional':
+                endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PROFISSIONAIS + `/${id}`);
+                break;
+            case 'anamnese':
+                endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.ANAMNESES + `/${id}`);
+                break;
+            default:
+                throw new Error(`❌ Tipo de exclusão não suportado: ${tipo}`);
+        }
+
+        const response = await fetch(endpoint, {
+            method: 'DELETE',
+            headers: API_CONFIG.DEFAULT_HEADERS,
+            mode: 'cors'
+        });
+
+        if (!response.ok) {
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+        }
+
+        const apiResponse = await response.json();
+        if (apiResponse.success) {
+            console.log(`✅ ${tipo} excluído com sucesso:`, apiResponse.message);
+            return true;
+        } else {
+            throw new Error(apiResponse.error || `Erro ao excluir ${tipo}`);
+        }
+    } catch (error) {
+        console.error(`💥 Erro ao excluir ${tipo}:`, error);
+        throw error;
+    }
+}
+
 // Exportando as funções para serem usadas em outros módulos
 export { 
     pegarPacientes, 
@@ -963,6 +1019,7 @@ export {
     atualizarProfissional,
     excluirProfissional,
     cadastrarPaciente,
+    cadastrarAnamnese,
     atualizarPaciente,
     excluirPaciente,
     buscarProfissionalPorId,

@@ -30,6 +30,7 @@ public class AnamneseResponseDTO {
         if (statusAnamnese == null) return "Indefinido";
         
         return switch (statusAnamnese.toUpperCase()) {
+            case "PENDENTE" -> "Pendente";
             case "APROVADO" -> "Aprovado";
             case "REPROVADO" -> "Reprovado";
             case "CANCELADO" -> "Cancelado";

@@ -123,6 +123,6 @@ public class Anamnese {
      * Enum para o status da anamnese.
      */
     public enum StatusAnamnese {
-        APROVADO, REPROVADO, CANCELADO;
+        PENDENTE, APROVADO, REPROVADO, CANCELADO;
     }
 } 

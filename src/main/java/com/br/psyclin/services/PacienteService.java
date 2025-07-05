@@ -1,14 +1,32 @@
 package com.br.psyclin.services;
 
 import com.br.psyclin.models.Paciente;
+import com.br.psyclin.models.PessoaFisica;
+import com.br.psyclin.models.Pessoa;
+import com.br.psyclin.models.Endereco;
+import com.br.psyclin.models.Contato;
+import com.br.psyclin.models.Email;
+import com.br.psyclin.models.TipoContato;
+import com.br.psyclin.models.TipoLogradouro;
+import com.br.psyclin.models.Cidade;
 import com.br.psyclin.dto.response.PacienteResponseDTO;
+import com.br.psyclin.dto.request.PacienteRequestDTO;
 import com.br.psyclin.repositories.PacienteRepository;
+import com.br.psyclin.repositories.PessoaFisicaRepository;
+import com.br.psyclin.repositories.PessoaRepository;
+import com.br.psyclin.repositories.EnderecoRepository;
+import com.br.psyclin.repositories.ContatoRepository;
+import com.br.psyclin.repositories.EmailRepository;
+import com.br.psyclin.repositories.TipoContatoRepository;
+import com.br.psyclin.repositories.TipoLogradouroRepository;
+import com.br.psyclin.repositories.CidadeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 /**
  * Service para operações de negócio relacionadas a Pacientes.
@@ -20,6 +38,30 @@ public class PacienteService {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+    
+    @Autowired
+    private PessoaFisicaRepository pessoaFisicaRepository;
+    
+    @Autowired
+    private PessoaRepository pessoaRepository;
+    
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+    
+    @Autowired
+    private ContatoRepository contatoRepository;
+    
+    @Autowired
+    private EmailRepository emailRepository;
+    
+    @Autowired
+    private TipoContatoRepository tipoContatoRepository;
+    
+    @Autowired
+    private TipoLogradouroRepository tipoLogradouroRepository;
+    
+    @Autowired
+    private CidadeRepository cidadeRepository;
 
     /**
      * Cadastra um novo paciente.
@@ -314,5 +356,120 @@ public class PacienteService {
         dto.setEstadoRg(paciente.getEstadoRg() != null ? paciente.getEstadoRg().toString() : null);
 
         return dto;
+    }
+
+    /**
+     * Cadastra um novo paciente com base no DTO.
+     * @param pacienteRequest DTO com dados do paciente
+     * @return Paciente salvo
+     */
+    public Paciente cadastrarPacienteComDTO(PacienteRequestDTO pacienteRequest) {
+        try {
+            // 1. Criar e salvar Pessoa
+            Pessoa pessoa = new Pessoa();
+            pessoa.setTipoPessoa(Pessoa.TipoPessoa.F); // Pessoa Física
+            pessoa = pessoaRepository.save(pessoa);
+            
+            // 2. Criar e salvar PessoaFisica
+            PessoaFisica pessoaFisica = new PessoaFisica();
+            pessoaFisica.setPessoa(pessoa);
+            pessoaFisica.setNomePessoa(pacienteRequest.getNomePessoa());
+            pessoaFisica.setCpfPessoa(pacienteRequest.getCpfPessoa());
+            pessoaFisica.setDataNascimento(pacienteRequest.getDataNascimento());
+            pessoaFisica.setSexo(pacienteRequest.getSexo());
+            pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
+            
+            // 3. Criar Endereço
+            if (pacienteRequest.getCep() != null && !pacienteRequest.getCep().isEmpty()) {
+                // Buscar ou criar TipoLogradouro padrão
+                TipoLogradouro tipoLogradouro = tipoLogradouroRepository.findByTipo("Rua")
+                    .orElseGet(() -> {
+                        TipoLogradouro novo = new TipoLogradouro();
+                        novo.setTipo("Rua");
+                        return tipoLogradouroRepository.save(novo);
+                    });
+                
+                // Buscar ou criar Cidade
+                Cidade cidade = cidadeRepository.findByCidadeAndEstado(
+                    pacienteRequest.getCidade(), pacienteRequest.getEstado())
+                    .orElseGet(() -> {
+                        Cidade nova = new Cidade();
+                        nova.setCidade(pacienteRequest.getCidade());
+                        nova.setEstado(pacienteRequest.getEstado());
+                        return cidadeRepository.save(nova);
+                    });
+                
+                Endereco endereco = new Endereco();
+                endereco.setPessoa(pessoa);
+                endereco.setCep(pacienteRequest.getCep());
+                endereco.setLogradouro(pacienteRequest.getLogradouro());
+                endereco.setNumero(pacienteRequest.getNumero());
+                endereco.setComplemento(pacienteRequest.getComplemento());
+                endereco.setBairro(pacienteRequest.getBairro());
+                endereco.setTipoLogradouro(tipoLogradouro);
+                endereco.setCidade(cidade);
+                endereco.setTipoEndereco(Endereco.TipoEndereco.RES); // Residencial padrão
+                enderecoRepository.save(endereco);
+            }
+            
+            // 4. Criar Email
+            if (pacienteRequest.getEmail() != null && !pacienteRequest.getEmail().isEmpty()) {
+                Email email = new Email();
+                email.setPessoa(pessoa);
+                email.setEmail(pacienteRequest.getEmail());
+                emailRepository.save(email);
+            }
+            
+            // 5. Criar Contatos (telefone e celular)
+            List<Contato> contatos = new ArrayList<>();
+            
+            if (pacienteRequest.getTelefone() != null && !pacienteRequest.getTelefone().isEmpty()) {
+                // Buscar ou criar TipoContato para telefone
+                TipoContato tipoTelefone = tipoContatoRepository.findByTipo("Telefone")
+                    .orElseGet(() -> {
+                        TipoContato novo = new TipoContato();
+                        novo.setTipo("Telefone");
+                        return tipoContatoRepository.save(novo);
+                    });
+                
+                Contato telefoneContato = new Contato();
+                telefoneContato.setPessoa(pessoa);
+                telefoneContato.setNumero(pacienteRequest.getTelefone());
+                telefoneContato.setTipoContato(tipoTelefone);
+                contatos.add(telefoneContato);
+            }
+            
+            if (pacienteRequest.getCelular() != null && !pacienteRequest.getCelular().isEmpty()) {
+                // Buscar ou criar TipoContato para celular
+                TipoContato tipoCelular = tipoContatoRepository.findByTipo("Celular")
+                    .orElseGet(() -> {
+                        TipoContato novo = new TipoContato();
+                        novo.setTipo("Celular");
+                        return tipoContatoRepository.save(novo);
+                    });
+                
+                Contato celularContato = new Contato();
+                celularContato.setPessoa(pessoa);
+                celularContato.setNumero(pacienteRequest.getCelular());
+                celularContato.setTipoContato(tipoCelular);
+                contatos.add(celularContato);
+            }
+            
+            if (!contatos.isEmpty()) {
+                contatoRepository.saveAll(contatos);
+            }
+            
+            // 6. Criar e salvar Paciente
+            Paciente paciente = new Paciente();
+            paciente.setPessoaFisica(pessoaFisica);
+            paciente.setRgPaciente(pacienteRequest.getRgPaciente());
+            paciente.setEstadoRg(pacienteRequest.getEstadoRg());
+            paciente.setStatusPaciente(true); // Ativo por padrão
+            
+            return pacienteRepository.save(paciente);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao cadastrar paciente: " + e.getMessage(), e);
+        }
     }
 }

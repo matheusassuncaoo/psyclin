@@ -209,7 +209,7 @@
                                 <button 
                                     id="filter-pending-btn"
                                     class="bg-white/20 hover:bg-white/30 p-2 rounded-md transition"
-                                    title="Filtrar pendentes"
+                                    title="Filtrar aguardando aprovação"
                                 >
                                     <i data-feather="filter" class="w-4 h-4"></i>
                                 </button>
@@ -319,13 +319,19 @@
     </div>
 
     <!-- Scripts -->
-    <script type="module" src="/view/js/services/apiManager.js"></script>
-    <script src="/view/js/dashboard/dashboard.js"></script>
-    <script>
+    <script type="module">
+        // Importar configuração da API
+        import { API_CONFIG, buildApiUrl } from '/view/js/config/apiConfig.js';
+        
         // Gerenciador de aprovação de anamneses
         let anamnesData = [];
         let filteredData = [];
         let currentFilter = 'all'; // all, pending, approved, rejected
+
+        // Expor variáveis e funções globalmente
+        window.anamnesData = anamnesData;
+        window.filteredData = filteredData;
+        window.currentFilter = currentFilter;
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', async function() {
@@ -341,10 +347,12 @@
         async function loadAnamneses() {
             showLoader(true);
             try {
-                const response = await fetch('/anamnese');
+                const anamneseEndpoint = buildApiUrl(API_CONFIG.ENDPOINTS.ANAMNESES);
+                const response = await fetch(anamneseEndpoint);
                 if (response.ok) {
                     const result = await response.json();
                     anamnesData = result.data || [];
+                    window.anamnesData = anamnesData; // Atualizar referência global
                     applyFilter(currentFilter);
                     renderTable();
                     updateSummary();
@@ -364,9 +372,9 @@
             const tbody = document.getElementById('anamneses-tbody');
             const count = document.getElementById('anamnese-count');
             
-            count.textContent = filteredData.length;
+            count.textContent = window.filteredData.length;
             
-            if (filteredData.length === 0) {
+            if (window.filteredData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="6" class="text-center py-8 text-gray-500">
@@ -381,7 +389,7 @@
                 return;
             }
 
-            tbody.innerHTML = filteredData.map(anamnese => `
+            tbody.innerHTML = window.filteredData.map(anamnese => `
                 <tr>
                     <td>#${anamnese.idAnamnese}</td>
                     <td title="${anamnese.nomePaciente}">${anamnese.nomePaciente}</td>
@@ -401,7 +409,7 @@
                             >
                                 <i data-feather="eye" class="w-4 h-4"></i>
                             </button>
-                            ${anamnese.statusAnamnese === 'PENDENTE' ? `
+                            ${anamnese.statusAnamnese !== 'APROVADO' && anamnese.statusAnamnese !== 'REPROVADO' ? `
                                 <button 
                                     class="btn-approve"
                                     onclick="approveAnamnese(${anamnese.idAnamnese})"
@@ -432,10 +440,11 @@
             // Busca
             document.getElementById('search-input').addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
-                filteredData = anamnesData.filter(anamnese => 
+                filteredData = window.anamnesData.filter(anamnese => 
                     anamnese.nomePaciente.toLowerCase().includes(term) ||
                     anamnese.nomeProfissional.toLowerCase().includes(term)
                 );
+                window.filteredData = filteredData; // Atualizar referência global
                 renderTable();
             });
 
@@ -445,6 +454,7 @@
             // Filter
             document.getElementById('filter-pending-btn').addEventListener('click', () => {
                 currentFilter = currentFilter === 'pending' ? 'all' : 'pending';
+                window.currentFilter = currentFilter; // Atualizar referência global
                 applyFilter(currentFilter);
                 renderTable();
                 updateFilterButton();
@@ -466,23 +476,27 @@
         function applyFilter(filter) {
             switch(filter) {
                 case 'pending':
-                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'PENDENTE');
+                    // Considera "pendente" aquelas que não são APROVADO nem REPROVADO
+                    filteredData = window.anamnesData.filter(a => 
+                        a.statusAnamnese !== 'APROVADO' && a.statusAnamnese !== 'REPROVADO'
+                    );
                     break;
                 case 'approved':
-                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'APROVADO');
+                    filteredData = window.anamnesData.filter(a => a.statusAnamnese === 'APROVADO');
                     break;
                 case 'rejected':
-                    filteredData = anamnesData.filter(a => a.statusAnamnese === 'REPROVADO');
+                    filteredData = window.anamnesData.filter(a => a.statusAnamnese === 'REPROVADO');
                     break;
                 default:
-                    filteredData = [...anamnesData];
+                    filteredData = [...window.anamnesData];
             }
+            window.filteredData = filteredData; // Atualizar referência global
         }
 
         function updateFilterButton() {
             const btn = document.getElementById('filter-pending-btn');
             const icon = btn.querySelector('i');
-            if (currentFilter === 'pending') {
+            if (window.currentFilter === 'pending') {
                 btn.classList.add('bg-amber-500');
                 btn.classList.remove('bg-white/20');
                 icon.setAttribute('data-feather', 'filter-x');
@@ -498,8 +512,8 @@
             switch(status) {
                 case 'APROVADO': return 'active';
                 case 'REPROVADO': return 'inactive';
-                case 'PENDENTE': return 'inactive';
-                default: return 'inactive';
+                case 'CANCELADO': return 'inactive';
+                default: return 'pending'; // Para qualquer outro status, considera pendente
             }
         }
 
@@ -507,8 +521,8 @@
             switch(status) {
                 case 'APROVADO': return 'Aprovado';
                 case 'REPROVADO': return 'Reprovado';
-                case 'PENDENTE': return 'Pendente';
-                default: return 'Indefinido';
+                case 'CANCELADO': return 'Cancelado';
+                default: return 'Aguardando'; // Para qualquer outro status
             }
         }
 
@@ -519,13 +533,15 @@
         }
 
         function updateSummary() {
-            const total = anamnesData.length;
-            const pending = anamnesData.filter(a => a.statusAnamnese === 'PENDENTE').length;
-            const approved = anamnesData.filter(a => a.statusAnamnese === 'APROVADO').length;
-            const rejected = anamnesData.filter(a => a.statusAnamnese === 'REPROVADO').length;
+            const total = window.anamnesData.length;
+            const pending = window.anamnesData.filter(a => 
+                a.statusAnamnese !== 'APROVADO' && a.statusAnamnese !== 'REPROVADO'
+            ).length;
+            const approved = window.anamnesData.filter(a => a.statusAnamnese === 'APROVADO').length;
+            const rejected = window.anamnesData.filter(a => a.statusAnamnese === 'REPROVADO').length;
             
             document.getElementById('status-summary').textContent = 
-                `Total: ${total} • Pendentes: ${pending} • Aprovadas: ${approved} • Reprovadas: ${rejected}`;
+                `Total: ${total} • Aguardando: ${pending} • Aprovadas: ${approved} • Reprovadas: ${rejected}`;
         }
 
         function showLoader(show) {
@@ -566,7 +582,8 @@
         async function viewAnamnese(id) {
             showLoader(true);
             try {
-                const response = await fetch(`/anamnese/${id}`);
+                const anamneseEndpoint = buildApiUrl(API_CONFIG.ENDPOINTS.ANAMNESES);
+                const response = await fetch(`${anamneseEndpoint}/${id}`);
                 if (response.ok) {
                     const result = await response.json();
                     const anamnese = result.data;
@@ -634,7 +651,7 @@
                         </div>
                     ` : ''}
                     
-                    ${anamnese.statusAnamnese === 'PENDENTE' ? `
+                    ${anamnese.statusAnamnese !== 'APROVADO' && anamnese.statusAnamnese !== 'REPROVADO' ? `
                         <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-400">
                             <h4 class="font-semibold text-emerald-800 mb-3">Ações de Aprovação</h4>
                             <div class="flex space-x-3">
@@ -706,7 +723,8 @@
         async function updateAnamneseStatus(id, status) {
             showLoader(true);
             try {
-                const response = await fetch(`/anamnese/${id}/status`, {
+                const anamneseEndpoint = buildApiUrl(API_CONFIG.ENDPOINTS.ANAMNESES);
+                const response = await fetch(`${anamneseEndpoint}/${id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -728,9 +746,17 @@
                 showLoader(false);
             }
         }
+
+        // Expor funções globalmente para uso em onclick
+        window.viewAnamnese = viewAnamnese;
+        window.approveAnamnese = approveAnamnese;
+        window.rejectAnamnese = rejectAnamnese;
+        window.loadAnamneses = loadAnamneses;
     </script>
     
     <!-- Importando JavaScript -->
+    <script type="module" src="/view/js/services/apiManager.js"></script>
+    <script src="/view/js/dashboard/dashboard.js"></script>
     <script src="/view/js/components/help-manager.js"></script>
     <script src="/view/js/components/config-manager.js"></script>
     
@@ -744,7 +770,6 @@
         });
     </script>
 
-    <script src="/view/js/global.js"></script>
 </body>
 
 </html>
