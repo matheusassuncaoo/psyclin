@@ -1,19 +1,19 @@
 /**
- * @fileoverview Script para cadastro de profissionais
- * Gerencia o formulário de cadastro de novos profissionais
+ * @fileoverview Script para cadastro de administradores (profissionais master)
+ * Gerencia o formulário de cadastro de administradores do sistema
  * @version 1.0
  * @author Sistema Psyclin
  */
 
 /**
- * Inicializa o sistema de cadastro de profissionais
+ * Inicializa o sistema de cadastro de administrador
  */
-function initCadastroProfissional() {
-    console.log('🚀 Inicializando sistema de cadastro de profissional...');
+function initCadastroAdmin() {
+    console.log('🚀 Inicializando sistema de cadastro de administrador...');
     
-    const form = document.getElementById('form-profissional');
+    const form = document.getElementById('form-admin');
     if (!form) {
-        console.error('❌ Formulário de profissional não encontrado');
+        console.error('❌ Formulário de administrador não encontrado');
         return;
     }
 
@@ -29,7 +29,35 @@ function initCadastroProfissional() {
     // Carregar dados dos selects
     loadSelectData();
     
-    console.log('✅ Sistema de cadastro de profissional inicializado');
+    // Marcar campos fixos como ADMIN
+    setAdminDefaults();
+    
+    console.log('✅ Sistema de cadastro de administrador inicializado');
+}
+
+/**
+ * Define valores padrão para administrador
+ */
+function setAdminDefaults() {
+    // Tipo fixo como ADMIN (valor 5 para administrador)
+    const tipoSelect = document.getElementById('tipoProfissional');
+    if (tipoSelect) {
+        tipoSelect.value = '5'; // ADMIN
+        tipoSelect.disabled = true;
+    }
+    
+    // Conselho fixo como ADMIN
+    const conselhoSelect = document.getElementById('conselhoProfissional');
+    if (conselhoSelect) {
+        conselhoSelect.value = 'ADMIN';
+        conselhoSelect.disabled = true;
+    }
+    
+    // Status ativo por padrão
+    const statusSelect = document.getElementById('statusProfissional');
+    if (statusSelect) {
+        statusSelect.value = '1'; // Ativo
+    }
 }
 
 /**
@@ -107,11 +135,6 @@ function setupInputMasks() {
     if (emailInput) {
         emailInput.maxLength = 100;
     }
-
-    const especialidadeInput = document.getElementById('especialidade');
-    if (especialidadeInput) {
-        especialidadeInput.maxLength = 100;
-    }
 }
 
 /**
@@ -148,9 +171,6 @@ async function buscarEnderecoPorCep(event) {
 function loadSelectData() {
     // Carregar estados
     loadEstados();
-    
-    // Carregar supervisores (quando necessário)
-    loadSupervisores();
 }
 
 /**
@@ -200,18 +220,6 @@ function loadEstados() {
 }
 
 /**
- * Carrega lista de supervisores (placeholder - implementar conforme API)
- */
-function loadSupervisores() {
-    const supervisorSelect = document.getElementById('supervisor');
-    if (!supervisorSelect) return;
-
-    // TODO: Implementar carregamento real da API
-    // Por enquanto, placeholder
-    supervisorSelect.innerHTML = '<option value="">Selecione o supervisor</option>';
-}
-
-/**
  * Manipula o envio do formulário
  */
 async function handleFormSubmit(event) {
@@ -223,22 +231,22 @@ async function handleFormSubmit(event) {
     try {
         showLoader(true);
         
-        // Coleta os dados do formulário - ESTRUTURA CORRETA DO BANCO
-        const dadosProfissional = {
+        // Coleta os dados do formulário - ESTRUTURA PARA ADMINISTRADOR
+        const dadosAdmin = {
             // Dados Pessoais Obrigatórios
             nomePessoa: formData.get('nomePessoa')?.trim(),
             cpfPessoa: formData.get('cpfPessoa')?.replace(/\D/g, ''), // Remove formatação
             dataNascPessoa: formData.get('dataNascPessoa'),
             sexoPessoa: formData.get('sexoPessoa'),
             
-            // Dados Profissionais Obrigatórios
-            tipoProfissional: parseInt(formData.get('tipoProfissional')) || 0,
-            conselhoProfissional: formData.get('conselhoProfissional')?.trim(),
+            // Dados Profissionais Fixos para ADMIN
+            tipoProfissional: 5, // ADMIN
+            conselhoProfissional: 'ADMIN',
             codigoProfissional: formData.get('codigoProfissional')?.trim(),
             
             // Dados Profissionais Opcionais
-            especialidade: formData.get('especialidade')?.trim() || null,
-            supervisor: formData.get('supervisor') ? parseInt(formData.get('supervisor')) : null,
+            especialidade: 'Administrador do Sistema',
+            supervisor: null, // Admin não tem supervisor
             statusProfissional: parseInt(formData.get('statusProfissional')) || 1,
             
             // Dados de Contato Obrigatórios
@@ -258,24 +266,25 @@ async function handleFormSubmit(event) {
         };
 
         // Validação básica
-        const validationResult = validateProfissionalData(dadosProfissional);
+        const validationResult = validateAdminData(dadosAdmin);
         if (!validationResult.isValid) {
             showError(validationResult.message);
             return;
         }
 
-        console.log('📝 Enviando dados do profissional:', dadosProfissional);
+        console.log('📝 Enviando dados do administrador:', dadosAdmin);
 
-        // Chama a API para cadastrar
-        const resultado = await window.apiManager.cadastrarProfissional(dadosProfissional);
+        // Chama a API para cadastrar (usa a mesma função do profissional)
+        const resultado = await window.apiManager.cadastrarProfissional(dadosAdmin);
         
-        console.log('✅ Profissional cadastrado com sucesso:', resultado);
+        console.log('✅ Administrador cadastrado com sucesso:', resultado);
         
         // Mostra mensagem de sucesso
-        showSuccess('Profissional cadastrado com sucesso!');
+        showSuccess('Administrador cadastrado com sucesso!');
         
         // Limpa o formulário
         form.reset();
+        setAdminDefaults(); // Redefine valores padrão
         
         // Redireciona após um breve delay
         setTimeout(() => {
@@ -283,17 +292,17 @@ async function handleFormSubmit(event) {
         }, 2000);
         
     } catch (error) {
-        console.error('💥 Erro ao cadastrar profissional:', error);
-        showError('Erro ao cadastrar profissional: ' + error.message);
+        console.error('💥 Erro ao cadastrar administrador:', error);
+        showError('Erro ao cadastrar administrador: ' + error.message);
     } finally {
         showLoader(false);
     }
 }
 
 /**
- * Valida os dados do profissional baseado na estrutura real do banco
+ * Valida os dados do administrador
  */
-function validateProfissionalData(dados) {
+function validateAdminData(dados) {
     // Validações dos campos obrigatórios de PessoaFisica
     if (!dados.nomePessoa) {
         return { isValid: false, message: 'Nome é obrigatório' };
@@ -327,21 +336,9 @@ function validateProfissionalData(dados) {
         return { isValid: false, message: 'Sexo deve ser M ou F' };
     }
 
-    // Validações dos campos obrigatórios de Profissional
-    if (!dados.tipoProfissional || dados.tipoProfissional === 0) {
-        return { isValid: false, message: 'Tipo de profissional é obrigatório' };
-    }
-
-    if (![1, 2, 3, 4].includes(dados.tipoProfissional)) {
-        return { isValid: false, message: 'Tipo de profissional inválido' };
-    }
-
-    if (!dados.conselhoProfissional) {
-        return { isValid: false, message: 'Conselho profissional é obrigatório' };
-    }
-
+    // Validações específicas do administrador
     if (!dados.codigoProfissional) {
-        return { isValid: false, message: 'Código profissional é obrigatório' };
+        return { isValid: false, message: 'Código de administrador é obrigatório' };
     }
 
     // Validações dos campos obrigatórios de Contato
@@ -407,11 +404,6 @@ function validateProfissionalData(dados) {
         return { isValid: false, message: 'Estado é obrigatório' };
     }
 
-    // Validações condicionais
-    if ([1, 2].includes(dados.tipoProfissional) && !dados.supervisor) {
-        return { isValid: false, message: 'Supervisor é obrigatório para Psicólogos e Estagiários' };
-    }
-
     // Validações de campos opcionais (se preenchidos)
     if (dados.complemento && dados.complemento.length > 100) {
         return { isValid: false, message: 'Complemento deve ter no máximo 100 caracteres' };
@@ -462,18 +454,10 @@ function isValidEmail(email) {
 }
 
 /**
- * Valida formato de telefone
- */
-function isValidPhone(phone) {
-    const phoneRegex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
-    return phoneRegex.test(phone);
-}
-
-/**
  * Configura validação em tempo real para todos os campos obrigatórios
  */
 function setupRealTimeValidation() {
-    const form = document.getElementById('form-profissional');
+    const form = document.getElementById('form-admin');
     if (!form) return;
 
     // Validação de CPF
@@ -509,8 +493,8 @@ function setupRealTimeValidation() {
                 const nascimento = new Date(data);
                 const idade = hoje.getFullYear() - nascimento.getFullYear();
                 
-                if (idade < 16 || idade > 100) {
-                    showFieldError(dataNascInput, errorSpan, 'Idade deve estar entre 16 e 100 anos');
+                if (idade < 18 || idade > 80) {
+                    showFieldError(dataNascInput, errorSpan, 'Idade deve estar entre 18 e 80 anos para administradores');
                 } else {
                     hideFieldError(dataNascInput, errorSpan);
                 }
@@ -573,7 +557,7 @@ function setupRealTimeValidation() {
         });
     }
 
-    // Validação de código profissional
+    // Validação de código
     const codigoInput = form.querySelector('#codigoProfissional');
     if (codigoInput) {
         codigoInput.addEventListener('blur', () => {
@@ -581,16 +565,16 @@ function setupRealTimeValidation() {
             const errorSpan = codigoInput.nextElementSibling;
             
             if (!codigo) {
-                showFieldError(codigoInput, errorSpan, 'Código profissional é obrigatório');
+                showFieldError(codigoInput, errorSpan, 'Código de administrador é obrigatório');
             } else if (codigo.length < 3) {
-                showFieldError(codigoInput, errorSpan, 'Código profissional deve ter pelo menos 3 caracteres');
+                showFieldError(codigoInput, errorSpan, 'Código deve ter pelo menos 3 caracteres');
             } else {
                 hideFieldError(codigoInput, errorSpan);
             }
         });
     }
 
-    // Validação de CEP
+    // Demais validações de endereço...
     const cepInput = form.querySelector('#cep');
     if (cepInput) {
         cepInput.addEventListener('blur', () => {
@@ -605,108 +589,6 @@ function setupRealTimeValidation() {
                 hideFieldError(cepInput, errorSpan);
             }
         });
-    }
-
-    // Validação de logradouro
-    const logradouroInput = form.querySelector('#logradouro');
-    if (logradouroInput) {
-        logradouroInput.addEventListener('blur', () => {
-            const logradouro = logradouroInput.value.trim();
-            const errorSpan = logradouroInput.nextElementSibling;
-            
-            if (!logradouro) {
-                showFieldError(logradouroInput, errorSpan, 'Logradouro é obrigatório');
-            } else if (logradouro.length > 100) {
-                showFieldError(logradouroInput, errorSpan, 'Logradouro deve ter no máximo 100 caracteres');
-            } else {
-                hideFieldError(logradouroInput, errorSpan);
-            }
-        });
-    }
-
-    // Validação de número
-    const numeroInput = form.querySelector('#numero');
-    if (numeroInput) {
-        numeroInput.addEventListener('blur', () => {
-            const numero = numeroInput.value.trim();
-            const errorSpan = numeroInput.nextElementSibling;
-            
-            if (!numero) {
-                showFieldError(numeroInput, errorSpan, 'Número é obrigatório');
-            } else if (numero.length > 10) {
-                showFieldError(numeroInput, errorSpan, 'Número deve ter no máximo 10 caracteres');
-            } else {
-                hideFieldError(numeroInput, errorSpan);
-            }
-        });
-    }
-
-    // Validação de bairro
-    const bairroInput = form.querySelector('#bairro');
-    if (bairroInput) {
-        bairroInput.addEventListener('blur', () => {
-            const bairro = bairroInput.value.trim();
-            const errorSpan = bairroInput.nextElementSibling;
-            
-            if (!bairro) {
-                showFieldError(bairroInput, errorSpan, 'Bairro é obrigatório');
-            } else if (bairro.length > 100) {
-                showFieldError(bairroInput, errorSpan, 'Bairro deve ter no máximo 100 caracteres');
-            } else {
-                hideFieldError(bairroInput, errorSpan);
-            }
-        });
-    }
-
-    // Validação de cidade
-    const cidadeInput = form.querySelector('#cidade');
-    if (cidadeInput) {
-        cidadeInput.addEventListener('blur', () => {
-            const cidade = cidadeInput.value.trim();
-            const errorSpan = cidadeInput.nextElementSibling;
-            
-            if (!cidade) {
-                showFieldError(cidadeInput, errorSpan, 'Cidade é obrigatória');
-            } else {
-                hideFieldError(cidadeInput, errorSpan);
-            }
-        });
-    }
-
-    // Validação de estado
-    const estadoInput = form.querySelector('#estado');
-    if (estadoInput) {
-        estadoInput.addEventListener('change', () => {
-            const estado = estadoInput.value;
-            const errorSpan = estadoInput.nextElementSibling;
-            
-            if (!estado) {
-                showFieldError(estadoInput, errorSpan, 'Estado é obrigatório');
-            } else {
-                hideFieldError(estadoInput, errorSpan);
-            }
-        });
-    }
-
-    // Validação de supervisor (condicional)
-    const tipoProfissionalInput = form.querySelector('#tipoProfissional');
-    const supervisorInput = form.querySelector('#supervisor');
-    
-    if (tipoProfissionalInput && supervisorInput) {
-        const validarSupervisor = () => {
-            const tipo = parseInt(tipoProfissionalInput.value);
-            const supervisor = supervisorInput.value;
-            const errorSpan = supervisorInput.nextElementSibling;
-            
-            if ([1, 2].includes(tipo) && !supervisor) {
-                showFieldError(supervisorInput, errorSpan, 'Supervisor é obrigatório para Psicólogos e Estagiários');
-            } else {
-                hideFieldError(supervisorInput, errorSpan);
-            }
-        };
-        
-        tipoProfissionalInput.addEventListener('change', validarSupervisor);
-        supervisorInput.addEventListener('change', validarSupervisor);
     }
 }
 
@@ -804,16 +686,17 @@ function createNotification(message, type) {
  */
 function limparFormulario() {
     if (confirm('Tem certeza que deseja limpar todos os campos?')) {
-        const form = document.getElementById('form-profissional');
+        const form = document.getElementById('form-admin');
         if (form) {
             form.reset();
+            setAdminDefaults(); // Redefine valores padrão para admin
             
             // Remove classes de validação
             const inputs = form.querySelectorAll('input, select');
             inputs.forEach(input => {
                 input.classList.remove('border-red-500', 'border-green-500');
                 const errorSpan = input.nextElementSibling;
-                if (errorSpan && errorSpan.classList.contains('text-red-600')) {
+                if (errorSpan && errorSpan.classList.contains('hidden')) {
                     errorSpan.classList.add('hidden');
                 }
             });
@@ -822,8 +705,8 @@ function limparFormulario() {
 }
 
 // Inicializa quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', initCadastroProfissional);
+document.addEventListener('DOMContentLoaded', initCadastroAdmin);
 
 // Exporta para uso global se necessário
-window.initCadastroProfissional = initCadastroProfissional;
+window.initCadastroAdmin = initCadastroAdmin;
 window.limparFormulario = limparFormulario;

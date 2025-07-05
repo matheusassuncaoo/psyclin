@@ -665,7 +665,8 @@ async function excluirProfissional(id) {
 async function cadastrarPaciente(dadosPaciente) {
     try {
         const endpoint = buildApiUrl(API_CONFIG.ENDPOINTS.PACIENTES);
-        console.log('📝 Cadastrando novo paciente:', dadosPaciente);
+        console.log('📝 Cadastrando novo paciente no endpoint:', endpoint);
+        console.log('📝 Dados enviados:', dadosPaciente);
 
         const response = await fetch(endpoint, {
             method: 'POST',
@@ -674,16 +675,37 @@ async function cadastrarPaciente(dadosPaciente) {
             body: JSON.stringify(dadosPaciente)
         });
 
+        console.log('📡 Status da resposta:', response.status, response.statusText);
+
         if (!response.ok) {
-            throw new Error(`❌ Erro HTTP: ${response.status} - ${response.statusText}`);
+            // Tenta obter mais detalhes do erro
+            let errorDetails = '';
+            try {
+                const errorText = await response.text();
+                console.log('❌ Detalhes do erro do servidor:', errorText);
+                
+                // Tenta parsear como JSON
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    errorDetails = errorJson.message || errorJson.error || errorText;
+                } catch {
+                    errorDetails = errorText;
+                }
+            } catch {
+                errorDetails = response.statusText;
+            }
+            
+            throw new Error(`❌ Erro HTTP: ${response.status} - ${errorDetails}`);
         }
 
         const apiResponse = await response.json();
+        console.log('✅ Resposta da API:', apiResponse);
+        
         if (apiResponse.success) {
             console.log('✅ Paciente cadastrado com sucesso:', apiResponse.message);
             return apiResponse.data;
         } else {
-            throw new Error(apiResponse.error || 'Erro ao cadastrar paciente');
+            throw new Error(apiResponse.error || apiResponse.message || 'Erro ao cadastrar paciente');
         }
     } catch (error) {
         console.error('💥 Erro ao cadastrar paciente:', error);

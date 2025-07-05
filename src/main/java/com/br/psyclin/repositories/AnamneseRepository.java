@@ -163,4 +163,12 @@ public interface AnamneseRepository extends JpaRepository<Anamnese, Integer> {
      * @return Lista de anamneses com a autorização especificada
      */
     List<Anamnese> findByAutorizacaoVisualizacao(Boolean autorizacaoVisualizacao);
-} 
+
+    /**
+     * Conta anamneses criadas após uma data específica.
+     * 
+     * @param dataInicio Data de início para contagem
+     * @return Número de anamneses criadas após a data
+     */
+    long countByDataAnamneseAfter(LocalDateTime dataInicio);
+}

@@ -4,7 +4,7 @@
  * @author Sistema Psyclin
  */
 
-// Importações
+// Importar funções da API
 import { cadastrarPaciente } from '../services/apiManager.js';
 
 // Estado do formulário
@@ -55,7 +55,9 @@ function setupFieldMasks() {
     const cpfField = document.getElementById('cpfPessoa');
     if (cpfField) {
         cpfField.addEventListener('input', function(e) {
-            e.target.value = formatCPF(e.target.value);
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            e.target.value = formatCPF(value);
         });
     }
 
@@ -63,22 +65,89 @@ function setupFieldMasks() {
     const cepField = document.getElementById('cep');
     if (cepField) {
         cepField.addEventListener('input', function(e) {
-            e.target.value = formatCEP(e.target.value);
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 8) value = value.substring(0, 8);
+            e.target.value = formatCEP(value);
         });
     }
 
-    // Máscaras para telefones
+    // Máscara para telefone
     const telefoneField = document.getElementById('telefone');
     if (telefoneField) {
         telefoneField.addEventListener('input', function(e) {
-            e.target.value = formatPhone(e.target.value);
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.substring(0, 11);
+            e.target.value = formatPhone(value);
         });
     }
 
-    const celularField = document.getElementById('celular');
-    if (celularField) {
-        celularField.addEventListener('input', function(e) {
-            e.target.value = formatPhone(e.target.value);
+    // Máscara para RG (apenas números e letras)
+    const rgField = document.getElementById('rgPaciente');
+    if (rgField) {
+        rgField.addEventListener('input', function(e) {
+            // Remove caracteres especiais, mantém apenas números e letras
+            let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+            if (value.length > 15) value = value.substring(0, 15);
+            e.target.value = value.toUpperCase();
+        });
+    }
+
+    // Filtro para nome (apenas letras e espaços)
+    const nomeField = document.getElementById('nomePessoa');
+    if (nomeField) {
+        nomeField.addEventListener('input', function(e) {
+            // Remove números e caracteres especiais
+            let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\u00C0-\u017F\s]/g, '');
+            if (value.length > 100) value = value.substring(0, 100);
+            e.target.value = value;
+        });
+    }
+
+    // Filtros para campos de endereço
+    const logradouroField = document.getElementById('logradouro');
+    if (logradouroField) {
+        logradouroField.addEventListener('input', function(e) {
+            if (e.target.value.length > 100) {
+                e.target.value = e.target.value.substring(0, 100);
+            }
+        });
+    }
+
+    const numeroField = document.getElementById('numero');
+    if (numeroField) {
+        numeroField.addEventListener('input', function(e) {
+            // Permite números e letras (ex: 123A)
+            let value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+            if (value.length > 10) value = value.substring(0, 10);
+            e.target.value = value.toUpperCase();
+        });
+    }
+
+    const bairroField = document.getElementById('bairro');
+    if (bairroField) {
+        bairroField.addEventListener('input', function(e) {
+            if (e.target.value.length > 100) {
+                e.target.value = e.target.value.substring(0, 100);
+            }
+        });
+    }
+
+    const cidadeField = document.getElementById('cidade');
+    if (cidadeField) {
+        cidadeField.addEventListener('input', function(e) {
+            // Remove números, mantém apenas letras e espaços
+            let value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\u00C0-\u017F\s]/g, '');
+            if (value.length > 100) value = value.substring(0, 100);
+            e.target.value = value;
+        });
+    }
+
+    const complementoField = document.getElementById('complemento');
+    if (complementoField) {
+        complementoField.addEventListener('input', function(e) {
+            if (e.target.value.length > 100) {
+                e.target.value = e.target.value.substring(0, 100);
+            }
         });
     }
 }
@@ -96,10 +165,29 @@ function setupRealTimeValidation() {
             validateField(this);
         });
         
-        // Limpa erro ao digitar
+        // Limpa erro ao digitar (com delay para não interferir na digitação)
         field.addEventListener('input', function() {
-            clearFieldError(this);
+            const field = this;
+            // Remove erro visual imediatamente
+            clearFieldError(field);
+            
+            // Valida após parar de digitar por 500ms
+            clearTimeout(field.validationTimeout);
+            field.validationTimeout = setTimeout(() => {
+                if (field.value.trim() !== '') {
+                    validateField(field);
+                }
+            }, 500);
         });
+
+        // Validação especial para radio buttons
+        if (field.type === 'radio') {
+            field.addEventListener('change', function() {
+                const radioGroup = form.querySelectorAll(`input[name="${this.name}"]`);
+                radioGroup.forEach(radio => clearFieldError(radio));
+                validateField(this);
+            });
+        }
     });
 }
 
@@ -116,6 +204,68 @@ function setupCepLookup() {
             if (cep.length === 8) {
                 buscarEnderecoPorCEP(cep);
             }
+        });
+    }
+    
+    // Carrega lista de estados
+    loadEstados();
+}
+
+/**
+ * Carrega lista de estados brasileiros
+ */
+function loadEstados() {
+    const estados = [
+        { sigla: 'AC', nome: 'Acre' },
+        { sigla: 'AL', nome: 'Alagoas' },
+        { sigla: 'AP', nome: 'Amapá' },
+        { sigla: 'AM', nome: 'Amazonas' },
+        { sigla: 'BA', nome: 'Bahia' },
+        { sigla: 'CE', nome: 'Ceará' },
+        { sigla: 'DF', nome: 'Distrito Federal' },
+        { sigla: 'ES', nome: 'Espírito Santo' },
+        { sigla: 'GO', nome: 'Goiás' },
+        { sigla: 'MA', nome: 'Maranhão' },
+        { sigla: 'MT', nome: 'Mato Grosso' },
+        { sigla: 'MS', nome: 'Mato Grosso do Sul' },
+        { sigla: 'MG', nome: 'Minas Gerais' },
+        { sigla: 'PA', nome: 'Pará' },
+        { sigla: 'PB', nome: 'Paraíba' },
+        { sigla: 'PR', nome: 'Paraná' },
+        { sigla: 'PE', nome: 'Pernambuco' },
+        { sigla: 'PI', nome: 'Piauí' },
+        { sigla: 'RJ', nome: 'Rio de Janeiro' },
+        { sigla: 'RN', nome: 'Rio Grande do Norte' },
+        { sigla: 'RS', nome: 'Rio Grande do Sul' },
+        { sigla: 'RO', nome: 'Rondônia' },
+        { sigla: 'RR', nome: 'Roraima' },
+        { sigla: 'SC', nome: 'Santa Catarina' },
+        { sigla: 'SP', nome: 'São Paulo' },
+        { sigla: 'SE', nome: 'Sergipe' },
+        { sigla: 'TO', nome: 'Tocantins' }
+    ];
+
+    // Preenche os selects de estado
+    const estadoSelect = document.getElementById('estado');
+    const estadoRgSelect = document.getElementById('estdoRgPac');
+    
+    if (estadoSelect) {
+        estadoSelect.innerHTML = '<option value="">Selecione o estado</option>';
+        estados.forEach(estado => {
+            const option = document.createElement('option');
+            option.value = estado.sigla;
+            option.textContent = `${estado.sigla} - ${estado.nome}`;
+            estadoSelect.appendChild(option);
+        });
+    }
+    
+    if (estadoRgSelect) {
+        estadoRgSelect.innerHTML = '<option value="">Selecione o estado</option>';
+        estados.forEach(estado => {
+            const option = document.createElement('option');
+            option.value = estado.sigla;
+            option.textContent = `${estado.sigla} - ${estado.nome}`;
+            estadoRgSelect.appendChild(option);
         });
     }
 }
@@ -192,8 +342,11 @@ async function handleFormSubmit(e) {
         showLoader();
         
         const formData = collectFormData(form);
+        console.log('🚀 Enviando dados para a API...');
+        
         const response = await cadastrarPaciente(formData);
         
+        console.log('✅ Resposta da API:', response);
         showSuccess('Paciente cadastrado com sucesso!');
         
         // Redireciona após 2 segundos
@@ -202,8 +355,25 @@ async function handleFormSubmit(e) {
         }, 2000);
         
     } catch (error) {
-        console.error('Erro ao cadastrar paciente:', error);
-        showError(error.message || 'Erro ao cadastrar paciente');
+        console.error('💥 Erro completo:', error);
+        console.error('💥 Stack trace:', error.stack);
+        
+        // Tratamento específico de erros
+        let errorMessage = 'Erro ao cadastrar paciente';
+        
+        if (error.message) {
+            if (error.message.includes('500')) {
+                errorMessage = 'Erro interno do servidor. Verifique se todos os campos estão preenchidos corretamente e se o servidor está funcionando.';
+            } else if (error.message.includes('400')) {
+                errorMessage = 'Dados inválidos. Verifique se todos os campos obrigatórios estão preenchidos corretamente.';
+            } else if (error.message.includes('404')) {
+                errorMessage = 'Serviço não encontrado. Verifique se o servidor está rodando.';
+            } else {
+                errorMessage = error.message;
+            }
+        }
+        
+        showError(errorMessage);
     } finally {
         formState.isSubmitting = false;
         hideLoader();
@@ -211,32 +381,48 @@ async function handleFormSubmit(e) {
 }
 
 /**
- * Coleta dados do formulário
+ * Coleta dados do formulário baseado na estrutura real do banco
  */
 function collectFormData(form) {
     const formData = new FormData(form);
-    const data = {};
     
-    // Coleta todos os campos
-    for (let [key, value] of formData.entries()) {
-        data[key] = value;
-    }
+    // Estrutura correta baseada no PacienteRequestDTO
+    const data = {
+        // Dados Pessoais (PessoaFisica) - nomes corretos do DTO
+        nomePessoa: formData.get('nomePessoa')?.trim(),
+        cpfPessoa: formData.get('cpfPessoa')?.replace(/\D/g, ''), // Remove formatação
+        dataNascimento: formData.get('dataNascPessoa'), // Nome correto no DTO
+        sexo: formData.get('sexoPessoa'), // Nome correto no DTO
+        
+        // Dados Específicos do Paciente (obrigatórios)
+        rgPaciente: formData.get('rgPaciente')?.trim(),
+        estadoRg: formData.get('estdoRgPac'), // Nome correto no DTO
+        
+        // Dados de Contato 
+        telefone: formData.get('telefone')?.replace(/\D/g, ''), // Remove formatação
+        email: formData.get('email')?.trim() || null,
+        
+        // Dados de Endereço Obrigatórios
+        cep: formData.get('cep')?.replace(/\D/g, ''), // Remove formatação
+        logradouro: formData.get('logradouro')?.trim(),
+        numero: formData.get('numero')?.trim(),
+        bairro: formData.get('bairro')?.trim(),
+        cidade: formData.get('cidade')?.trim(),
+        estado: formData.get('estado')?.trim(),
+        
+        // Dados de Endereço Opcionais
+        complemento: formData.get('complemento')?.trim() || null
+    };
     
-    // Remove formatação dos campos
-    if (data.cpfPessoa) {
-        data.cpfPessoa = data.cpfPessoa.replace(/\D/g, '');
-    }
+    // Log dos dados coletados para debug
+    console.log('📋 Dados coletados do formulário:', data);
     
-    if (data.cep) {
-        data.cep = data.cep.replace(/\D/g, '');
-    }
+    // Verificar se há campos undefined ou vazios obrigatórios
+    const camposObrigatorios = ['nomePessoa', 'cpfPessoa', 'dataNascimento', 'sexo', 'rgPaciente', 'estadoRg', 'telefone', 'cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'];
+    const camposVazios = camposObrigatorios.filter(campo => !data[campo]);
     
-    if (data.telefone) {
-        data.telefone = data.telefone.replace(/\D/g, '');
-    }
-    
-    if (data.celular) {
-        data.celular = data.celular.replace(/\D/g, '');
+    if (camposVazios.length > 0) {
+        console.warn('⚠️ Campos obrigatórios vazios:', camposVazios);
     }
     
     return data;
@@ -246,12 +432,30 @@ function collectFormData(form) {
  * Valida o formulário completo
  */
 function validateForm(form) {
-    const fields = form.querySelectorAll('input[required], select[required]');
     let isValid = true;
     
+    // Validar campos input e select obrigatórios
+    const fields = form.querySelectorAll('input[required], select[required]');
     fields.forEach(field => {
-        if (!validateField(field)) {
-            isValid = false;
+        // Pula radio buttons duplicados (serão validados em grupo)
+        if (field.type === 'radio') {
+            const radioName = field.name;
+            const radioGroup = form.querySelectorAll(`input[name="${radioName}"]`);
+            const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+            
+            // Valida apenas o primeiro radio do grupo para evitar duplicação
+            if (field === radioGroup[0]) {
+                if (!isChecked) {
+                    showFieldValidation(field, false, 'Este campo é obrigatório');
+                    isValid = false;
+                } else {
+                    showFieldValidation(field, true, '');
+                }
+            }
+        } else {
+            if (!validateField(field)) {
+                isValid = false;
+            }
         }
     });
     
@@ -259,7 +463,7 @@ function validateForm(form) {
 }
 
 /**
- * Valida um campo específico
+ * Valida um campo específico baseado na estrutura real do banco
  */
 function validateField(field) {
     const value = field.value.trim();
@@ -271,66 +475,156 @@ function validateField(field) {
     switch (fieldName) {
         case 'nomePessoa':
             if (!value) {
+                isValid = false;
                 errorMessage = 'Nome é obrigatório';
+            } else if (value.length < 2 || value.length > 100) {
                 isValid = false;
-            } else if (value.length < 2) {
-                errorMessage = 'Nome deve ter pelo menos 2 caracteres';
-                isValid = false;
+                errorMessage = 'Nome deve ter entre 2 e 100 caracteres';
             }
             break;
             
         case 'cpfPessoa':
-            const cpf = value.replace(/\D/g, '');
-            if (!cpf) {
+            const cpfNumerico = value.replace(/\D/g, '');
+            if (!cpfNumerico) {
+                isValid = false;
                 errorMessage = 'CPF é obrigatório';
+            } else if (cpfNumerico.length !== 11) {
                 isValid = false;
-            } else if (!isValidCPF(cpf)) {
-                errorMessage = 'CPF inválido';
+                errorMessage = 'CPF deve ter 11 dígitos';
+            }
+            // Removida validação matemática - aceita qualquer CPF com 11 dígitos
+            break;
+            
+        case 'dataNascPessoa':
+            if (!value) {
                 isValid = false;
+                errorMessage = 'Data de nascimento é obrigatória';
+            } else {
+                const hoje = new Date();
+                const nascimento = new Date(value);
+                const idade = hoje.getFullYear() - nascimento.getFullYear();
+                
+                if (idade < 0 || idade > 120) {
+                    isValid = false;
+                    errorMessage = 'Data de nascimento inválida';
+                }
+            }
+            break;
+            
+        case 'sexoPessoa':
+            // Para radio buttons, verificar se algum está selecionado
+            const radioGroup = document.querySelectorAll(`input[name="${fieldName}"]`);
+            const isSelected = Array.from(radioGroup).some(radio => radio.checked);
+            
+            if (!isSelected) {
+                isValid = false;
+                errorMessage = 'Sexo é obrigatório';
+            }
+            break;
+            
+        case 'rgPaciente':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'RG é obrigatório';
+            } else if (value.length < 5 || value.length > 15) {
+                isValid = false;
+                errorMessage = 'RG deve ter entre 5 e 15 caracteres';
+            }
+            break;
+            
+        case 'estdoRgPac':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Estado do RG é obrigatório';
+            }
+            break;
+            
+        case 'telefone':
+            const telefoneNumerico = value.replace(/\D/g, '');
+            if (!telefoneNumerico) {
+                isValid = false;
+                errorMessage = 'Telefone é obrigatório';
+            } else if (telefoneNumerico.length < 10 || telefoneNumerico.length > 12) {
+                isValid = false;
+                errorMessage = 'Telefone deve ter entre 10 e 12 dígitos';
             }
             break;
             
         case 'email':
-            if (value && !isValidEmail(value)) {
+            if (value && value.length > 100) {
+                isValid = false;
+                errorMessage = 'Email deve ter no máximo 100 caracteres';
+            } else if (value && !isValidEmail(value)) {
+                isValid = false;
                 errorMessage = 'Email inválido';
-                isValid = false;
-            }
-            break;
-            
-        case 'dataNascimento':
-            if (!value) {
-                errorMessage = 'Data de nascimento é obrigatória';
-                isValid = false;
-            } else if (new Date(value) >= new Date()) {
-                errorMessage = 'Data deve ser anterior à data atual';
-                isValid = false;
             }
             break;
             
         case 'cep':
-            const cep = value.replace(/\D/g, '');
-            if (!cep) {
+            const cepNumerico = value.replace(/\D/g, '');
+            if (!cepNumerico) {
+                isValid = false;
                 errorMessage = 'CEP é obrigatório';
+            } else if (cepNumerico.length !== 8) {
                 isValid = false;
-            } else if (cep.length !== 8) {
                 errorMessage = 'CEP deve ter 8 dígitos';
+            }
+            break;
+            
+        case 'logradouro':
+            if (!value) {
                 isValid = false;
+                errorMessage = 'Logradouro é obrigatório';
+            } else if (value.length > 100) {
+                isValid = false;
+                errorMessage = 'Logradouro deve ter no máximo 100 caracteres';
+            }
+            break;
+            
+        case 'numero':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Número é obrigatório';
+            } else if (value.length > 10) {
+                isValid = false;
+                errorMessage = 'Número deve ter no máximo 10 caracteres';
+            }
+            break;
+            
+        case 'bairro':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Bairro é obrigatório';
+            } else if (value.length > 100) {
+                isValid = false;
+                errorMessage = 'Bairro deve ter no máximo 100 caracteres';
+            }
+            break;
+            
+        case 'cidade':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Cidade é obrigatória';
+            }
+            break;
+            
+        case 'estado':
+            if (!value) {
+                isValid = false;
+                errorMessage = 'Estado é obrigatório';
+            }
+            break;
+            
+        case 'complemento':
+            if (value && value.length > 100) {
+                isValid = false;
+                errorMessage = 'Complemento deve ter no máximo 100 caracteres';
             }
             break;
     }
     
-    // Validação geral para campos obrigatórios
-    if (field.hasAttribute('required') && !value) {
-        errorMessage = 'Este campo é obrigatório';
-        isValid = false;
-    }
-    
-    // Mostra ou limpa erro
-    if (!isValid) {
-        showFieldError(field, errorMessage);
-    } else {
-        clearFieldError(field);
-    }
+    // Mostra ou esconde erro
+    showFieldValidation(field, isValid, errorMessage);
     
     return isValid;
 }
@@ -353,12 +647,73 @@ function showFieldError(field, message) {
  * Limpa erro de um campo específico
  */
 function clearFieldError(field) {
+    // Remove classes de erro
     field.classList.remove('border-red-500');
+    field.classList.remove('border-green-500');
     field.classList.add('border-gray-300');
     
-    const errorSpan = field.parentNode.querySelector('.mensagem-erro');
+    // Encontra o span de erro (pode estar no próprio campo ou no contêiner pai)
+    let errorSpan = field.parentNode.querySelector('.mensagem-erro');
+    
+    // Se não encontrou, procura no contêiner pai (para radio buttons)
+    if (!errorSpan && field.type === 'radio') {
+        const fieldContainer = field.closest('.campo');
+        if (fieldContainer) {
+            errorSpan = fieldContainer.querySelector('.mensagem-erro');
+        }
+    }
+    
     if (errorSpan) {
         errorSpan.classList.add('hidden');
+        errorSpan.textContent = '';
+    }
+}
+
+/**
+ * Mostra/esconde validação do campo
+ */
+function showFieldValidation(field, isValid, errorMessage) {
+    // Remove classes anteriores
+    field.classList.remove('border-red-500', 'border-green-500');
+    
+    // Encontra o span de erro
+    let errorSpan = field.parentNode.querySelector('.mensagem-erro');
+    
+    // Se não encontrou, procura no contêiner pai (para radio buttons)
+    if (!errorSpan && field.type === 'radio') {
+        const fieldContainer = field.closest('.campo');
+        if (fieldContainer) {
+            errorSpan = fieldContainer.querySelector('.mensagem-erro');
+        }
+    }
+    
+    if (isValid) {
+        // Campo válido - borda verde
+        field.classList.add('border-green-500');
+        if (errorSpan) {
+            errorSpan.classList.add('hidden');
+            errorSpan.textContent = '';
+        }
+    } else {
+        // Campo inválido - borda vermelha e mensagem de erro
+        field.classList.add('border-red-500');
+        if (errorSpan) {
+            errorSpan.textContent = errorMessage;
+            errorSpan.classList.remove('hidden');
+        }
+    }
+    
+    // Para radio buttons, aplica o estilo em todos os botões do grupo
+    if (field.type === 'radio') {
+        const radioGroup = document.querySelectorAll(`input[name="${field.name}"]`);
+        radioGroup.forEach(radio => {
+            radio.classList.remove('border-red-500', 'border-green-500');
+            if (isValid) {
+                radio.classList.add('border-green-500');
+            } else {
+                radio.classList.add('border-red-500');
+            }
+        });
     }
 }
 
@@ -368,8 +723,19 @@ function clearFieldError(field) {
  * Formata CPF
  */
 function formatCPF(value) {
+    // Remove tudo que não é dígito
     const digits = value.replace(/\D/g, '');
-    return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    
+    // Aplica a máscara conforme o tamanho
+    if (digits.length <= 3) {
+        return digits;
+    } else if (digits.length <= 6) {
+        return digits.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    } else if (digits.length <= 9) {
+        return digits.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else {
+        return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+    }
 }
 
 /**
@@ -377,7 +743,12 @@ function formatCPF(value) {
  */
 function formatCEP(value) {
     const digits = value.replace(/\D/g, '');
-    return digits.replace(/(\d{5})(\d{3})/, '$1-$2');
+    
+    if (digits.length <= 5) {
+        return digits;
+    } else {
+        return digits.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+    }
 }
 
 /**
@@ -385,40 +756,25 @@ function formatCEP(value) {
  */
 function formatPhone(value) {
     const digits = value.replace(/\D/g, '');
-    if (digits.length <= 10) {
-        return digits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    
+    if (digits.length <= 2) {
+        return digits;
+    } else if (digits.length <= 6) {
+        return digits.replace(/(\d{2})(\d{1,4})/, '($1) $2');
+    } else if (digits.length <= 10) {
+        return digits.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
     } else {
-        return digits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        return digits.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
     }
 }
 
 /**
- * Valida CPF
+ * Valida CPF - versão simplificada (apenas verifica se tem 11 dígitos)
  */
 function isValidCPF(cpf) {
-    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
-        return false;
-    }
-    
-    let sum = 0;
-    for (let i = 0; i < 9; i++) {
-        sum += parseInt(cpf.charAt(i)) * (10 - i);
-    }
-    
-    let remainder = 11 - (sum % 11);
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.charAt(9))) return false;
-    
-    sum = 0;
-    for (let i = 0; i < 10; i++) {
-        sum += parseInt(cpf.charAt(i)) * (11 - i);
-    }
-    
-    remainder = 11 - (sum % 11);
-    if (remainder === 10 || remainder === 11) remainder = 0;
-    if (remainder !== parseInt(cpf.charAt(10))) return false;
-    
-    return true;
+    // Remove formatação e verifica se tem 11 dígitos
+    const digits = cpf.replace(/\D/g, '');
+    return digits.length === 11;
 }
 
 /**
@@ -472,3 +828,20 @@ function showError(message) {
         alert(message); // Fallback
     }
 }
+
+// Inicializa quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCadastroPaciente();
+    
+    // Garantir que os ícones sejam carregados
+    setTimeout(() => {
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    }, 100);
+});
+
+// Exporta para uso global se necessário
+window.initializeCadastroPaciente = initializeCadastroPaciente;
+
+

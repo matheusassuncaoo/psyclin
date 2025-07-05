@@ -132,87 +132,135 @@
 
         <!-- Conteúdo Principal -->
         <div class="flex-1 p-6 bg-gray-100" style="transition: margin-left 0.3s ease;">
-            <!-- Header da página -->
+            <!-- Header da página Responsivo -->
             <div class="mb-6">
-                <div class="flex justify-between items-center">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                     <div>
-                        <h1 class="text-3xl font-bold text-[var(--oxford-blue)]">Anamneses</h1>
-                        <p class="text-gray-600 mt-1">Gerencie e visualize todas as anamneses dos pacientes</p>
+                        <h1 class="text-2xl md:text-3xl font-bold text-[var(--oxford-blue)]">Anamneses</h1>
+                        <p class="text-sm md:text-base text-gray-600 mt-1">Gerencie e visualize todas as anamneses dos pacientes</p>
                     </div>
-                    <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-6 py-2 rounded-lg flex items-center gap-2 transition duration-300">
-                        <i data-feather="plus"></i>
-                        Nova Anamnese
+                    <button id="btn-nova-anamnese" class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg flex items-center justify-center gap-2 transition duration-300 whitespace-nowrap">
+                        <i data-feather="plus" class="w-4 h-4 md:w-5 md:h-5"></i>
+                        <span class="text-sm md:text-base">Nova Anamnese</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Estatísticas -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <div class="flex items-center">
-                        <i data-feather="file-text" class="text-[var(--zomp)] mr-2"></i>
-                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Total</h3>
+            <!-- Estatísticas Responsivas -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6" id="estatisticas-container">
+                <div class="bg-white p-3 md:p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center mb-2">
+                        <i data-feather="file-text" class="text-[var(--zomp)] mr-2 w-5 h-5"></i>
+                        <h3 class="text-sm md:text-lg font-semibold text-[var(--oxford-blue)] truncate">Total</h3>
                     </div>
-                    <p class="text-2xl font-bold text-[var(--zomp)]">12</p>
-                    <p class="text-sm text-gray-500">Anamneses registradas</p>
+                    <p id="stat-total" class="text-xl md:text-2xl font-bold text-[var(--zomp)]">0</p>
+                    <p class="text-xs md:text-sm text-gray-500">Anamneses registradas</p>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <div class="flex items-center">
-                        <i data-feather="check-circle" class="text-green-500 mr-2"></i>
-                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Completas</h3>
+                <div class="bg-white p-3 md:p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center mb-2">
+                        <i data-feather="check-circle" class="text-green-500 mr-2 w-5 h-5"></i>
+                        <h3 class="text-sm md:text-lg font-semibold text-[var(--oxford-blue)] truncate">Aprovadas</h3>
                     </div>
-                    <p class="text-2xl font-bold text-green-500">8</p>
-                    <p class="text-sm text-gray-500">Finalizadas</p>
+                    <p id="stat-completas" class="text-xl md:text-2xl font-bold text-green-500">0</p>
+                    <p class="text-xs md:text-sm text-gray-500">Finalizadas</p>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <div class="flex items-center">
-                        <i data-feather="clock" class="text-orange-500 mr-2"></i>
-                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Pendentes</h3>
+                <div class="bg-white p-3 md:p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center mb-2">
+                        <i data-feather="clock" class="text-orange-500 mr-2 w-5 h-5"></i>
+                        <h3 class="text-sm md:text-lg font-semibold text-[var(--oxford-blue)] truncate">Pendentes</h3>
                     </div>
-                    <p class="text-2xl font-bold text-orange-500">4</p>
-                    <p class="text-sm text-gray-500">Em andamento</p>
+                    <p id="stat-pendentes" class="text-xl md:text-2xl font-bold text-orange-500">0</p>
+                    <p class="text-xs md:text-sm text-gray-500">Em andamento</p>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <div class="flex items-center">
-                        <i data-feather="calendar" class="text-blue-500 mr-2"></i>
-                        <h3 class="text-lg font-semibold text-[var(--oxford-blue)]">Esta Semana</h3>
+                <div class="bg-white p-3 md:p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center mb-2">
+                        <i data-feather="calendar" class="text-blue-500 mr-2 w-5 h-5"></i>
+                        <h3 class="text-sm md:text-lg font-semibold text-[var(--oxford-blue)] truncate">Esta Semana</h3>
                     </div>
-                    <p class="text-2xl font-bold text-blue-500">3</p>
-                    <p class="text-sm text-gray-500">Novas anamneses</p>
+                    <p id="stat-esta-semana" class="text-xl md:text-2xl font-bold text-blue-500">0</p>
+                    <p class="text-xs md:text-sm text-gray-500">Novas anamneses</p>
                 </div>
             </div>
 
-            <!-- Filtros -->
+            <!-- Filtros Responsivos -->
             <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-                <div class="flex flex-wrap gap-4 items-center">
-                    <div class="flex-1 min-w-[200px]">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
-                        <input type="text" placeholder="Nome do paciente ou tipo de anamnese..." class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
+                <!-- Header dos Filtros Mobile -->
+                <div class="sm:hidden mb-4">
+                    <button id="toggle-filtros" class="w-full flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <span class="font-medium text-gray-700">Filtros</span>
+                        <i data-feather="chevron-down" class="transform transition-transform duration-200"></i>
+                    </button>
+                </div>
+                
+                <!-- Container dos Filtros -->
+                <div id="filtros-container" class="hidden sm:block">
+                    <!-- Primeira linha - Busca -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <i data-feather="search" class="text-gray-400 w-4 h-4"></i>
+                            </div>
+                            <input id="filtro-busca" type="text" placeholder="Nome do paciente, profissional ou observações..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)] focus:border-transparent">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
-                            <option value="">Todos</option>
-                            <option value="completa">Completa</option>
-                            <option value="pendente">Pendente</option>
-                            <option value="rascunho">Rascunho</option>
-                        </select>
+                    
+                    <!-- Segunda linha - Filtros -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="filtro-status" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)] focus:border-transparent">
+                                <option value="">Todos os status</option>
+                                <option value="PENDENTE">Pendente</option>
+                                <option value="APROVADO">Aprovado</option>
+                                <option value="REPROVADO">Reprovado</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Período</label>
+                            <select id="filtro-periodo" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)] focus:border-transparent">
+                                <option value="">Todos os períodos</option>
+                                <option value="hoje">Hoje</option>
+                                <option value="semana">Esta semana</option>
+                                <option value="mes">Este mês</option>
+                                <option value="trimestre">Este trimestre</option>
+                                <option value="ano">Este ano</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Paciente</label>
+                            <select id="filtro-paciente" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)] focus:border-transparent">
+                                <option value="">Todos os pacientes</option>
+                                <!-- Será populado dinamicamente -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Profissional</label>
+                            <select id="filtro-profissional" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)] focus:border-transparent">
+                                <option value="">Todos os profissionais</option>
+                                <!-- Será populado dinamicamente -->
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Período</label>
-                        <select class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--mountain-meadow)]">
-                            <option value="">Todos</option>
-                            <option value="hoje">Hoje</option>
-                            <option value="semana">Esta semana</option>
-                            <option value="mes">Este mês</option>
-                        </select>
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-4 py-2 rounded-lg transition duration-300">
-                            <i data-feather="search"></i>
+                    
+                    <!-- Terceira linha - Botões -->
+                    <div class="mt-4 flex flex-col sm:flex-row gap-2">
+                        <button id="btn-aplicar-filtros" class="flex-1 sm:flex-initial bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2 transition duration-300">
+                            <i data-feather="search" class="w-4 h-4"></i>
+                            <span>Aplicar Filtros</span>
                         </button>
-                        <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-300">
-                            <i data-feather="x"></i>
+                        <button id="btn-limpar-filtros" class="flex-1 sm:flex-initial bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2 transition duration-300">
+                            <i data-feather="x" class="w-4 h-4"></i>
+                            <span>Limpar</span>
+                        </button>
+                        <button id="btn-exportar" class="flex-1 sm:flex-initial bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg flex items-center justify-center gap-2 transition duration-300">
+                            <i data-feather="download" class="w-4 h-4"></i>
+                            <span class="hidden sm:inline">Exportar</span>
                         </button>
                     </div>
                 </div>
@@ -221,105 +269,26 @@
             <!-- Lista de Anamneses -->
             <div class="bg-white rounded-lg shadow-md">
                 <div class="p-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Anamneses Recentes</h3>
+                    <h3 class="text-lg font-semibold text-gray-900">Anamneses</h3>
                 </div>
-                <div class="divide-y divide-gray-200">
-                    <!-- Item de Anamnese -->
-                    <div class="p-4 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-full bg-gray-500 flex items-center justify-center text-white font-semibold">
-                                    MF
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-medium text-gray-900">Maria Fernanda Silva</h4>
-                                    <p class="text-sm text-gray-500">Anamnese Psicológica Inicial</p>
-                                    <p class="text-xs text-gray-400">Criada em 02/07/2025</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                    Completa
-                                </span>
-                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
-                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
-                                    Ver
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Item de Anamnese -->
-                    <div class="p-4 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center text-white font-semibold">
-                                    JS
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-medium text-gray-900">João Santos</h4>
-                                    <p class="text-sm text-gray-500">Anamnese de Acompanhamento</p>
-                                    <p class="text-xs text-gray-400">Criada em 01/07/2025</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-orange-100 text-orange-800">
-                                    Pendente
-                                </span>
-                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
-                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
-                                    Ver
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Item de Anamnese -->
-                    <div class="p-4 hover:bg-gray-50 transition-colors">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-4">
-                                <div class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-white font-semibold">
-                                    AC
-                                </div>
-                                <div>
-                                    <h4 class="text-sm font-medium text-gray-900">Ana Costa</h4>
-                                    <p class="text-sm text-gray-500">Anamnese Infantil</p>
-                                    <p class="text-xs text-gray-400">Criada em 30/06/2025</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
-                                    Rascunho
-                                </span>
-                                <button class="bg-gray-100 hover:bg-gray-200 text-gray-700 hover:text-gray-900 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5">
-                                    <i data-feather="eye" class="w-3.5 h-3.5"></i>
-                                    Ver
-                                </button>
-                            </div>
-                        </div>
+                <div id="lista-anamneses" class="divide-y divide-gray-200">
+                    <!-- As anamneses serão carregadas dinamicamente aqui -->
+                    <div class="p-8 text-center text-gray-500">
+                        <i data-feather="file-text" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                        <p>Carregando anamneses...</p>
                     </div>
                 </div>
 
                 <!-- Paginação -->
-                <div class="bg-white px-4 py-3 border-t border-gray-200">
+                <div id="paginacao-container" class="bg-white px-4 py-3 border-t border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-700">
-                                Mostrando <span class="font-medium">1</span> a <span class="font-medium">3</span> de <span class="font-medium">12</span> resultados
+                                Mostrando <span id="pag-inicio" class="font-medium">1</span> a <span id="pag-fim" class="font-medium">10</span> de <span id="pag-total" class="font-medium">0</span> resultados
                             </p>
                         </div>
-                        <div>
-                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <i data-feather="chevron-left"></i>
-                                </button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-[var(--zomp)] text-sm font-medium text-white">1</button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">2</button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">3</button>
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <i data-feather="chevron-right"></i>
-                                </button>
-                            </nav>
+                        <div id="paginacao-botoes">
+                            <!-- Botões de paginação serão gerados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -339,6 +308,34 @@
         <!-- Importando JavaScript -->
         <script src="/view/js/components/help-manager.js"></script>
         <script src="/view/js/dashboard/dashboard.js"></script>
+        
+        <!-- Anamnese Scripts -->
+        <script src="/view/js/anamnese/anamneseManager.js"></script>
+        <script src="/view/js/anamnese/anamnese.js"></script>
+        <script src="/view/js/anamnese/debug-anamnese.js"></script>
+        
+        <!-- Script de inicialização -->
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                console.log('🚀 Inicializando página de anamneses...');
+                
+                // Inicializar icons do Feather
+                feather.replace();
+                
+                // Inicializar gerenciador de anamneses
+                if (typeof initAnamneseManager === 'function') {
+                    await initAnamneseManager();
+                    console.log('✅ Gerenciador de anamneses inicializado');
+                } else {
+                    console.error('❌ Função initAnamneseManager não encontrada');
+                }
+                
+                // Atualizar ícones após carregamento dinâmico
+                setTimeout(() => {
+                    feather.replace();
+                }, 1000);
+            });
+        </script>
         
         <!-- Chat Widget -->
         <link rel="stylesheet" href="/view/css/components/chat-widget.css">

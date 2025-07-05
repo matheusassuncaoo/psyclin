@@ -335,4 +335,36 @@ public class AnamneseService {
 
         return dto;
     }
+
+    /**
+     * Obtém estatísticas gerais das anamneses
+     * @return Map com estatísticas
+     */
+    public java.util.Map<String, Object> obterEstatisticas() {
+        java.util.Map<String, Object> estatisticas = new java.util.HashMap<>();
+        
+        try {
+            long total = anamneseRepository.count();
+            long ativas = anamneseRepository.countByStatusAnamnese(com.br.psyclin.models.Anamnese.StatusAnamnese.APROVADO);
+            long pendentes = anamneseRepository.countByStatusAnamnese(com.br.psyclin.models.Anamnese.StatusAnamnese.PENDENTE);
+            
+            // Anamneses desta semana
+            java.time.LocalDateTime inicioSemana = java.time.LocalDateTime.now().with(java.time.DayOfWeek.MONDAY).withHour(0).withMinute(0).withSecond(0);
+            long estaSemana = anamneseRepository.countByDataAnamneseAfter(inicioSemana);
+            
+            estatisticas.put("total", total);
+            estatisticas.put("completas", ativas);
+            estatisticas.put("pendentes", pendentes);
+            estatisticas.put("estaSemana", estaSemana);
+            
+        } catch (Exception e) {
+            // Em caso de erro, retorna valores padrão
+            estatisticas.put("total", 0L);
+            estatisticas.put("completas", 0L);
+            estatisticas.put("pendentes", 0L);
+            estatisticas.put("estaSemana", 0L);
+        }
+        
+        return estatisticas;
+    }
 }

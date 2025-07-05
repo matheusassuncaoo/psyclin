@@ -52,7 +52,7 @@ const dataConfigs = {
         columnsMinimal: ['Nome', 'Status', 'Ações'],
         fields: ['idProfissional', 'nomePessoa', 'codigoProfissional', 'conselhoProfissional', 'statusProfissional', 'actions'],
         fieldsMinimal: ['nomePessoa', 'statusProfissional', 'actions'],
-        filter: (item) => item.tipoProfissional === "4" || item.tipoProfissional === 4, // Apenas administradores master
+        filter: (item) => item.tipoProfissional === "5" || item.tipoProfissional === 5, // Apenas administradores master
         editableFields: ['nomePessoa', 'codigoProfissional'],
         searchField: 'nomePessoa'
     },
@@ -216,6 +216,14 @@ function renderDataTable(data, config) {
                             </span>
                         </div>
                         <div class="flex items-center space-x-2">
+                            <button 
+                                id="add-new-btn"
+                                class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md transition flex items-center space-x-2"
+                                title="Cadastrar Novo"
+                            >
+                                <i data-feather="plus" class="w-4 h-4"></i>
+                                <span class="hidden sm:inline">Novo</span>
+                            </button>
                             <button 
                                 id="refresh-btn"
                                 class="bg-white/20 hover:bg-white/30 p-2 rounded-md transition"
@@ -460,6 +468,14 @@ function setupTableEventListeners(config) {
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             filterTable(e.target.value, config);
+        });
+    }
+    
+    // Add new button
+    const addNewBtn = document.getElementById('add-new-btn');
+    if (addNewBtn) {
+        addNewBtn.addEventListener('click', () => {
+            redirectToCreatePage(cadastroState.currentType);
         });
     }
     
@@ -1216,4 +1232,24 @@ function formatFieldLabel(field) {
     return label || 'Campo';
 }
 
-// ...existing code...
+/**
+ * Redireciona para a página de cadastro baseada no tipo
+ */
+function redirectToCreatePage(type) {
+    const redirectMap = {
+        'PROFISSIONAIS': '/view/html/cadastro/cadastrarprofissional.html',
+        'ADMIN': '/view/html/cadastro/cadastraradmin.html',
+        'PACIENTE': '/view/html/cadastro/cadastrarpaciente.html',
+        'ANAMNESE': '/view/html/anamnese/anamnese.html',
+        'RELATORIO': '/view/html/relatorio/relatorio.html'
+    };
+    
+    const url = redirectMap[type];
+    if (url) {
+        console.log(`🔄 Redirecionando para: ${url}`);
+        window.location.href = url;
+    } else {
+        console.warn(`❌ Página de cadastro não encontrada para tipo: ${type}`);
+        showError(`Página de cadastro não disponível para ${type}`);
+    }
+}

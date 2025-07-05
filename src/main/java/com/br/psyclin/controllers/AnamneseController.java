@@ -154,4 +154,18 @@ public class AnamneseController {
                     .body(ApiResponseDTO.error("Erro ao atualizar observações", e.getMessage()));
         }
     }
+
+    /**
+     * Busca estatísticas gerais das anamneses para o dashboard.
+     */
+    @GetMapping("/estatisticas")
+    public ResponseEntity<ApiResponseDTO<java.util.Map<String, Object>>> obterEstatisticas() {
+        try {
+            java.util.Map<String, Object> estatisticas = anamneseService.obterEstatisticas();
+            return ResponseEntity.ok(ApiResponseDTO.success("Estatísticas obtidas com sucesso", estatisticas));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponseDTO.error("Erro ao obter estatísticas", e.getMessage()));
+        }
+    }
 }
