@@ -277,7 +277,7 @@ psyclin/
 
 **Matheus Assunção** - *Estudante de Analise e Desenvolvimento de Sistemas & Project Lead*
 - 📧 matheus.assuncao@fasipe.edu.br
-- 🐙 [@matheusassuncao](https://github.com/matheusassuncao)
+- 🐙 [@matheusassuncao](https://github.com/matheusassuncaoo)
 - 🎯 Cadastro de pacientes e coordenação geral
 
 **Silas Gabriel** - *Estudante de Analise e Desenvolvimento de Sistemas*
@@ -287,17 +287,17 @@ psyclin/
 
 **Yuri Del Poso** - *Estudante de Analise e Desenvolvimento de Sistemas*
 - 📧 yuri.delposo@fasipe.edu.br
-- 🐙 [@yuridelposo](https://github.com/yuridelposo)
+- 🐙 [@yuridelposo](https://github.com/yuridellpozzo)
 - 🎯 Gestão de consultas e APIs REST
 
 **Erasmo Cossatto** - *Estudante de Analise e Desenvolvimento de Sistemas*
 - 📧 erasmo.cossatto@fasipe.edu.br
-- 🐙 [@erasmocossatto](https://github.com/erasmocossatto)
+- 🐙 [@erasmocossatto](https://github.com/ErasmoCossatto)
 - 🎯 Aprovação do orientador e administração do banco
 
 **João Carlos** - *Estudante de Analise e Desenvolvimento de Sistemas*
 - 📧 joao.carlos@fasipe.edu.br
-- 🐙 [@joaocarlos](https://github.com/joaocarlos)
+- 🐙 [@joaocarlos](https://github.com/jcasjoca)
 - 🎯 Emissão de relatórios e documentação técnica
 
 ### 👨‍🏫 Orientação Acadêmica
