@@ -290,8 +290,6 @@ psyclin/
 **João Carlos** - *Estudante de Analise e Desenvolvimento de Sistemas*
 - 🐙 https://www.linkedin.com/in/jcasjoca/
 - 🐙 https://github.com/jcasjoca
-- 🐙 https://www.instagram.com/jcasjoca
-- 🐙 https://wa.me/65992723799
  
 ### 👨‍🏫 Orientação Acadêmica
 
