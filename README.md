@@ -288,8 +288,10 @@ psyclin/
 - 🐙 [@erasmocossatto](https://github.com/ErasmoCossatto)
 
 **João Carlos** - *Estudante de Analise e Desenvolvimento de Sistemas*
-- 🐙 [@joaocarlos](https://github.com/jcasjoca)
-
+- 🐙 [@jcasjoca](https://github.com/jcasjoca)
+- 🐙 https://www.instagram.com/jcasjoca
+- 🐙 https://wa.me/65992723799
+ 
 ### 👨‍🏫 Orientação Acadêmica
 
 **Prof. João Francisco Borba** - *Orientador do Projeto*
