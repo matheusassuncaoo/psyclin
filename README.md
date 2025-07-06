@@ -276,34 +276,24 @@ psyclin/
 ### Core Team - FASIPE Cuiabá
 
 **Matheus Assunção** - *Estudante de Analise e Desenvolvimento de Sistemas & Project Lead*
-- 📧 matheus.assuncao@fasipe.edu.br
 - 🐙 [@matheusassuncao](https://github.com/matheusassuncaoo)
-- 🎯 Cadastro de pacientes e coordenação geral
 
 **Silas Gabriel** - *Estudante de Analise e Desenvolvimento de Sistemas*
-- 📧 silas.gabriel@fasipe.edu.br
 - 🐙 [@silasgabriel](https://github.com/silasgabriel)
-- 🎯 Registro de anamnese e UI/UX
 
 **Yuri Del Poso** - *Estudante de Analise e Desenvolvimento de Sistemas*
-- 📧 yuri.delposo@fasipe.edu.br
 - 🐙 [@yuridelposo](https://github.com/yuridellpozzo)
-- 🎯 Gestão de consultas e APIs REST
 
 **Erasmo Cossatto** - *Estudante de Analise e Desenvolvimento de Sistemas*
-- 📧 erasmo.cossatto@fasipe.edu.br
 - 🐙 [@erasmocossatto](https://github.com/ErasmoCossatto)
-- 🎯 Aprovação do orientador e administração do banco
 
 **João Carlos** - *Estudante de Analise e Desenvolvimento de Sistemas*
-- 📧 joao.carlos@fasipe.edu.br
 - 🐙 [@joaocarlos](https://github.com/jcasjoca)
-- 🎯 Emissão de relatórios e documentação técnica
 
 ### 👨‍🏫 Orientação Acadêmica
 
 **Prof. João Francisco Borba** - *Orientador do Projeto*
-- 📧 joao.borba@fasipe.edu.br
+- 📧 adsfasipecuiaba.com.br
 - 🎯 Supervisão técnica e acadêmica
 
 ---
