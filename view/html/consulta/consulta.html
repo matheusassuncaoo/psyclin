@@ -2,254 +2,324 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psyclin - Cadastro</title>
-  <link rel="shortcut icon" href="/view/images/FasiclinIcon.png" type="image/x-icon">
-  <!-- Importando Tailwind CSS -->
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- Importando Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
-  <!-- Importando CSS da página -->
-  <link rel="stylesheet" href="/view/css/dashboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psyclin - Consultas</title>
+    <link rel="shortcut icon" href="/psyclin-new/front-end/images/FasiclinIcon.png" type="image/x-icon">
+    <!-- Importando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+    <!-- Script para suprimir avisos do Tailwind -->
+    <script src="../../js/tailwind-fix.js"></script>
+    <!-- Importando Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <!-- Importando CSS da página -->
+    <link rel="stylesheet" href="../../css/dashboard.css">
 </head>
 
 <body>
-  <!-- Container principal-->
-  <div class="flex flex-col h-screen">
-    <!-- Navbar -->
-    <nav class="bg-[var(--zomp)] border-[var(--oxford-blue)]">
-      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <!-- Botão Hambúrguer -->
-        <button id="menu-toggle"
-          class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
-          <i data-feather="menu"></i>
-        </button>
-
-        <!-- Logo -->
-        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="/view/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
-        </a>
-
-        <!-- Barra de Pesquisa no Desktop -->
-        <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <i data-feather="search" class="text-gray-400"></i>
-            </div>
-            <input type="text" placeholder="Estou procurando por..."
-              class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
-          </div>
-        </div>
-
-        <!-- Botão Lupa (Mobile) -->
-        <button id="mobile-search-toggle" class="sm:hidden text-white">
-          <i data-feather="search"></i>
-        </button>
-
-        <!-- Menu de Usuário -->
-        <div class="flex items-center space-x-4">
-          <!-- Ícones no Desktop -->
-          <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
-            <button class="icon-btn button-help" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
-            <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
-            <a href="/view/html/configuracoes/configuracoes.html" class="icon-btn button-config" aria-label="Configurações"><i data-feather="settings"></i></a>
-          </div>
-
-          <!-- Avatar com Dropdown -->
-          <div class="relative">
-            <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow"
-              id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
-              <span class="sr-only">Abrir menu do usuário</span>
-              <img class="w-8 h-8 rounded-full"
-                src="https://i.pinimg.com/736x/82/cc/ec/82ccec14bb719cf672d8ee43bb52e99b.jpg" alt="Foto do usuário">
-            </button>
-            <!-- Dropdown -->
-            <div
-              class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg"
-              id="user-dropdown">
-              <div class="px-4 py-3">
-                <span class="block text-sm text-prussian-blue">Usuário</span>
-                <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
-              </div>
-              <ul class="py-2">
-                <li><a href="/view/html/dashboard/dashboard.html" class="dropdown-link">Dashboard</a></li>
-                <li><a href="/view/html/anamnese/anamnese.html" class="dropdown-link">Anamneses</a></li>
-                <li><a href="/view/html/configuracoes/configuracoes.html" class="dropdown-link">Configurações</a></li>
-                <li><a href="#" class="dropdown-link">Sair</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Barra de Pesquisa Mobile -->
-      <div id="mobile-search-bar" class="hidden sm:hidden p-4">
-        <input type="text" placeholder="Estou procurando por..."
-          class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
-      </div>
-    </nav>
-    <!-- Sidebar -->
-    <div id="sidebar"
-      class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
-      <div class="mb-4">
-        <span class="text-lg font-bold">DASHBOARD</span>
-      </div>
-      <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="grid"></i>
-        <span class="ml-2">DASHBOARD</span>
-      </a>
-      <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="users"></i>
-        <span class="ml-2">PACIENTES</span>
-      </a>
-      <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="database"></i>
-        <span class="ml-2">CADASTRAR</span>
-      </a>
-      <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="file-text"></i>
-        <span class="ml-2">ANAMNESES</span>
-      </a>
-      <a href="consulta.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="coffee"></i>
-        <span class="ml-2">CONSULTA</span>
-      </a>
-      <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="check-square"></i>
-        <span class="ml-2">APROVAÇÃO</span>
-      </a>
-      <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="upload"></i>
-        <span class="ml-2">EMITIR</span>
-      </a>
-      <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
-        <i data-feather="settings"></i>
-        <span class="ml-2">CONFIGURAÇÕES</span>
-      </a>
-      <div class="mt-auto text-sm">psyclin.1.0A</div>
-    </div>
-
-    <!-- Conteúdo Principal -->
-    <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-[#2AA078] font-semibold text-4xl mb-6" style="font-family: 'Inter', sans-serif;">
-          Consultas
-        </h1>
-
-        <div id="btn-group" class="flex justify-end space-x-3 mb-6">
-          <button data-type="hoje"
-            class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">HOJE</button>
-          <button data-type="semana"
-            class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">SEMANA</button>
-          <button data-type="mes"
-            class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">MÊS</button>
-        </div>
-
-        <div class="border-2 border-[#2A6DB0] rounded-xl bg-[#D9C6C6] p-6">
-          <div class="grid grid-cols-3 gap-4 mb-4 text-[#1A2A2A] font-semibold text-lg md:text-xl"
-            style="font-family: 'Inter', sans-serif;">
-            <div>Consultas Previstas</div>
-            <div></div>
-            <div class="flex items-center justify-center">Data Consulta</div>
-          </div>
-
-          <div id="botoesVerde" class="space-y-3">
-            <div class="flex justify-between items-center rounded-lg text-[#1A2A2A] font-semibold text-sm"
-              style="font-family: 'Inter', sans-serif;">
-              <div class="flex items-center space-x-4 w-1/2 bg-[#2AA078] rounded-lg px-4 py-3 relative">
-                <div class="w-10 h-10 rounded-full bg-[#1A2A2A]"></div>
-                <span class="text-base md:text-lg lg:text-xl">zeca</span>
-                <button aria-label="Detalhes da consulta de zeca"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#1A2A2A] hover:text-white transition-colors"
-                  type="button" onclick="alert('Em breve direcionará para outra página')">
-                  &gt;
+    <!-- Container principal-->
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="bg-[var(--zomp)] border-[var(--oxford-blue)]">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+                <!-- Botão Hambúrguer -->
+                <button id="menu-toggle" class="text-white p-2 sm:p-3 md:p-4 lg:p-5 rounded-md bg-[var(--zomp)] hover:bg-[var(--oxford-blue)] transition duration-300">
+                    <i data-feather="menu"></i>
                 </button>
-              </div>
-              <div class="w-1/3 text-right flex items-center justify-center text-base md:text-lg lg:text-xl">Hoje -
-                15:00hrs</div>
+
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="/psyclin-new/front-end/images/FasiclinLogo.png" class="h-20" alt="Fasiclin Logo" />
+                </a>
+
+                <!-- Barra de Pesquisa no Desktop -->
+                <div id="search-bar" class="hidden sm:block flex-1 mx-4 min-w-[200px] sm:min-w-[300px]">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <i data-feather="search" class="text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-10 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
+                    </div>
+                </div>
+
+                <!-- Botão Lupa (Mobile) -->
+                <button id="mobile-search-toggle" class="sm:hidden text-white">
+                    <i data-feather="search"></i>
+                </button>
+
+                <!-- Menu de Usuário -->
+                <div class="flex items-center space-x-4">
+                    <!-- Ícones no Desktop -->
+                    <div id="desktop-icons" class="hidden sm:flex items-center space-x-4">
+                        <button class="icon-btn" aria-label="Ajuda"><i data-feather="help-circle"></i></button>
+                        <button class="icon-btn" aria-label="Notificações"><i data-feather="bell"></i></button>
+                        <button class="icon-btn" aria-label="Configurações"><i data-feather="settings"></i></button>
+                    </div>
+
+                    <!-- Avatar com Dropdown -->
+                    <div class="relative">
+                        <button class="flex text-sm bg-oxford-blue rounded-full focus:ring-4 focus:ring-mountain-meadow" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown">
+                            <span class="sr-only">Abrir menu do usuário</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://i.pinimg.com/736x/82/cc/ec/82ccec14bb719cf672d8ee43bb52e99b.jpg"
+                                alt="Foto do usuário">
+                        </button>
+                        <!-- Dropdown -->
+                        <div class="z-50 hidden absolute right-0 mt-2 w-48 text-base list-none bg-white divide-y divide-oxford-blue rounded-lg shadow-lg" id="user-dropdown">
+                            <div class="px-4 py-3">
+                                <span class="block text-sm text-prussian-blue">Usuário</span>
+                                <span class="block text-sm text-oxford-blue truncate">psicologo@fasiclin.com</span>
+                            </div>
+                            <ul class="py-2">
+                                <li><a href="#" class="dropdown-link">Dashboard</a></li>
+                                <li><a href="#" class="dropdown-link">Anamneses</a></li>
+                                <li><a href="#" class="dropdown-link">Configurações</a></li>
+                                <li><a href="#" class="dropdown-link">Sair</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex justify-between items-center rounded-lg text-[#1A2A2A] font-semibold text-sm"
-              style="font-family: 'Inter', sans-serif;">
-              <div class="flex items-center space-x-4 w-1/2 bg-[#2AA078] rounded-lg px-4 py-3 relative">
-                <div class="w-10 h-10 rounded-full bg-[#2AC9E9]"></div>
-                <span class="text-base md:text-lg lg:text-xl">ana</span>
-                <button aria-label="Detalhes da consulta de ana"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#1A2A2A] hover:text-white transition-colors"
-                  type="button" onclick="alert('Em breve direcionará para outra página')">
-                  &gt;
-                </button>
-              </div>
-              <div class="w-1/3 text-right flex items-center justify-center text-base md:text-lg lg:text-xl">15/03 -
-                10:00hrs</div>
+            <!-- Barra de Pesquisa Mobile -->
+            <div id="mobile-search-bar" class="hidden sm:hidden p-4">
+                <input type="text" placeholder="Estou procurando por..." class="w-full p-2 pl-3 text-sm text-gray-900 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-mountain-meadow">
             </div>
-
-            <div class="flex justify-between items-center rounded-lg text-[#1A2A2A] font-semibold text-sm"
-              style="font-family: 'Inter', sans-serif;">
-              <div class="flex items-center space-x-4 w-1/2 bg-[#2AA078] rounded-lg px-4 py-3 relative">
-                <div class="w-10 h-10 rounded-full bg-[#2AC9E9]"></div>
-                <span class="text-base md:text-lg lg:text-xl">miriam</span>
-                <button aria-label="Detalhes da consulta de miriam"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#1A2A2A] hover:text-white transition-colors"
-                  type="button" onclick="alert('Em breve direcionará para outra página')">
-                  &gt;
-                </button>
-              </div>
-              <div class="w-1/3 text-right flex items-center justify-center text-base md:text-lg lg:text-xl">20/03 -
-                09:00hrs</div>
+        </nav>
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-[var(--zomp)] text-[var(--white)] w-64 p-4 space-y-2 transition-transform duration-300 ease-in-out transform -translate-x-full fixed top-16 left-0 h-[calc(100%-64px)] z-50">
+            <div class="mb-4">
+                <span class="text-lg font-bold">DASHBOARD</span>
             </div>
-
-            <div class="flex justify-between items-center rounded-lg text-[#1A2A2A] font-semibold text-sm"
-              style="font-family: 'Inter', sans-serif;">
-              <div class="flex items-center space-x-4 w-1/2 bg-[#2AA078] rounded-lg px-4 py-3 relative">
-                <div class="w-10 h-10 rounded-full bg-[#1A2A2A]"></div>
-                <span class="text-base md:text-lg lg:text-xl">joao</span>
-                <button aria-label="Detalhes da consulta de joao"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-[#1A2A2A] hover:text-white transition-colors"
-                  type="button" onclick="alert('Em breve direcionará para outra página')">
-                  &gt;
-                </button>
-              </div>
-              <div class="w-1/3 text-right flex items-center justify-center text-base md:text-lg lg:text-xl">30/03 -
-                17:00hrs</div>
-            </div>
-          </div>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="grid"></i>
+                <span class="ml-2">DASHBOARD</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="users"></i>
+                <span class="ml-2">PACIENTES</span>
+            </a>
+            <a href="/view/html/cadastrar/cadastrar.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="database"></i>
+                <span class="ml-2">CADASTRAR</span>
+            </a>
+            <a href="/view/html/anamnese/anamnese.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="file-text"></i>
+                <span class="ml-2">ANAMNESES</span>
+            </a>
+            <a href="consulta.html" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="coffee"></i>
+                <span class="ml-2">CONSULTA</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="check-square"></i>
+                <span class="ml-2">APROVAÇÃO</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="upload"></i>
+                <span class="ml-2">EMITIR</span>
+            </a>
+            <a href="#" class="flex items-center p-2 hover:bg-teal-700 rounded">
+                <i data-feather="settings"></i>
+                <span class="ml-2">CONFIGURAÇÕES</span>
+            </a>
+            <div class="mt-auto text-sm">psyclin.1.0A</div>
         </div>
 
-        <div class="flex items-center justify-between mt-6 px-2">
-          <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-full bg-[#1A2A2A]"></div>
-            <span class="text-[#1A2A2A] font-semibold text-xl md:text-2xl"
-              style="font-family: 'Inter', sans-serif;">Homem</span>
-          </div>
+        <!-- Conteúdo Principal -->
+        <div class="content-wrapper flex-1 p-6 bg-gray-100 pt-20">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-[#2AA078] font-semibold text-4xl mb-6" style="font-family: 'Inter', sans-serif;">
+                  Consultas
+                </h1>
+            
+                <div id="btn-group" class="flex justify-end space-x-3 mb-6">
+                  <button data-type="hoje" class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">HOJE</button>
+                  <button data-type="semana" class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">SEMANA</button>
+                  <button data-type="mes" class="btn-select bg-[#2AA078] hover:bg-[#238a66] text-black text-sm font-semibold px-6 py-3 rounded transition-colors duration-200">MÊS</button>
+                </div>
+            
+                <div class="border-2 border-[#2A6DB0] rounded-xl bg-[#D9C6C6] p-6">
+                  <div class="grid grid-cols-3 gap-4 mb-4 text-[#1A2A2A] font-semibold text-lg md:text-xl" style="font-family: 'Inter', sans-serif;">
+                    <div>Consultas Previstas</div>
+                    <div></div>
+                    <div class="flex items-center justify-center">Data Consulta</div>
+                  </div>
+            
+                  <div id="consultas-container" class="space-y-3">
+                    <!-- As consultas serão carregadas dinamicamente aqui pelo JavaScript -->
+                  </div>
+                </div>
+            
+                <div class="flex items-center justify-between mt-6 px-2">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-full bg-[#1A2A2A]"></div>
+                    <span class="text-[#1A2A2A] font-semibold text-xl md:text-2xl" style="font-family: 'Inter', sans-serif;">Homem</span>
+                  </div>
+            
+                  <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-full bg-[#2AC9E9]"></div>
+                    <span class="text-[#1A2A2A] font-semibold text-xl md:text-2xl" style="font-family: 'Inter', sans-serif;">Mulher</span>
+                  </div>
+            
+                  <button id="nova-consulta-btn" class="flex items-center space-x-3 bg-[#1A2A2A] text-white font-semibold text-xl md:text-2xl px-8 py-4 rounded">
+                    <i data-feather="plus" class="fas fa-plus text-white"></i>
+                    <span> Nova Consulta</span>
+                  </button>
+                </div>
+              </div>
+              <!-------------------------------------------------------------------->
 
-          <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 rounded-full bg-[#2AC9E9]"></div>
-            <span class="text-[#1A2A2A] font-semibold text-xl md:text-2xl"
-              style="font-family: 'Inter', sans-serif;">Mulher</span>
-          </div>
+              <!-- NOVA TELA DE SELEÇÃO DE PACIENTES (OCULTA POR PADRÃO) -->
+              <div id="nova-consulta-screen" class="hidden max-w-2xl mx-auto">
+                <h1 class="text-[#2AA078] font-semibold text-4xl mb-6" style="font-family: 'Inter', sans-serif;">
+                  Nova Consulta
+                </h1>
+                
+                <div class="border-2 border-[#2A6DB0] rounded-xl bg-[#D9C6C6] p-6">
+                  <h3 class="text-xl font-semibold text-[#1A2A2A] mb-4" style="font-family: 'Inter', sans-serif;">
+                    Pacientes Cadastrados no Sistema
+                  </h3>
 
-          <button
-            class="flex items-center space-x-3 bg-[#1A2A2A] text-white font-semibold text-xl md:text-2xl px-8 py-4 rounded">
-            <i data-feather="plus" class="fas fa-plus text-white"></i>
-            <span> Nova Consulta</span>
-          </button>
+                  <!-- Campo de busca para pacientes -->
+                  <div class="relative mb-4">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                      <i data-feather="search" class="text-gray-400"></i>
+                    </div>
+                    <input 
+                      type="text" 
+                      id="patientSearchInput" 
+                      placeholder="Buscar paciente por nome..." 
+                      class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2AA078] text-[#1A2A2A]"
+                    >
+                  </div>
+                  
+                  <!-- Lista de pacientes -->
+                  <div id="patientList" class="space-y-3 mb-6 max-h-96 overflow-y-auto">
+                    <!-- Os pacientes serão carregados dinamicamente aqui -->
+                    <div class="flex items-center justify-center py-8">
+                      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2AA078]"></div>
+                      <span class="ml-2 text-[#1A2A2A]">Carregando pacientes...</span>
+                    </div>
+                  </div>
+
+                  <!-- Botões de ação -->
+                  <div class="flex justify-between">
+                    <button 
+                      id="voltar-btn" 
+                      class="flex items-center space-x-2 bg-[#1A2A2A] text-white font-semibold px-6 py-3 rounded hover:bg-gray-700 transition-colors"
+                    >
+                      <i data-feather="arrow-left"></i>
+                      <span>Voltar</span>
+                    </button>
+                    
+                    <button 
+                      id="avancar-btn" 
+                      class="bg-[#2AA078] text-white font-semibold px-6 py-3 rounded hover:bg-[#238a66] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled
+                    >
+                      Avançar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- NOVA TELA DE DETALHES DA CONSULTA (OCULTA POR PADRÃO) -->
+              <div id="detalhes-consulta-screen" class="hidden max-w-4xl mx-auto">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-[#2AA078] font-semibold text-4xl" style="font-family: 'Inter', sans-serif;">
+                        Detalhes da Consulta
+                    </h1>
+                    <button id="voltar-para-consultas-btn" class="flex items-center space-x-2 bg-[#1A2A2A] text-white font-semibold px-6 py-3 rounded hover:bg-gray-700 transition-colors">
+                        <i data-feather="arrow-left"></i>
+                        <span>Voltar para Consultas</span>
+                    </button>
+                </div>
+                
+                <div id="detalhes-content" class="border-2 border-[#2A6DB0] rounded-xl bg-[#D9C6C6] p-6">
+                    <!-- Conteúdo dos detalhes será carregado aqui -->
+                    <div class="text-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2AA078] mx-auto"></div>
+                        <p class="mt-4 text-[#1A2A2A]">Carregando detalhes...</p>
+                    </div>
+                </div>
+              </div>
+
+            <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
+            </div>
         </div>
-      </div>
-      <!-------------------------------------------------------------------->
 
+        <!-- Modal de Sucesso -->
+        <div id="success-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center border-4 border-[var(--zomp)]">
+                <div class="flex justify-center items-center w-16 h-16 mx-auto bg-green-100 rounded-full mb-4">
+                    <i data-feather="check" class="w-10 h-10 text-green-600"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">Agendamento Criado!</h3>
+                <p id="modal-message" class="text-gray-600 mb-6">
+                    <!-- A mensagem será inserida aqui pelo JavaScript -->
+                </p>
+                <button id="modal-ok-btn" class="bg-[var(--zomp)] hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300">
+                    OK
+                </button>
+            </div>
+        </div>
 
+        <!-- Modal de Feedback de Status -->
+        <div id="status-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm mx-auto text-center border-4 border-[var(--zomp)]">
+                <div id="status-modal-icon" class="flex justify-center items-center w-16 h-16 mx-auto rounded-full mb-4"></div>
+                <h3 id="status-modal-title" class="text-2xl font-bold text-gray-800 mb-2"></h3>
+                <p id="status-modal-message" class="text-gray-600 mb-6"></p>
+                <button id="status-modal-ok-btn" class="bg-[var(--zomp)] hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300">
+                    OK
+                </button>
+            </div>
+        </div>
 
-      <div class="loader hidden fixed inset-0 flex items-center justify-center bg-[var(--zomp)]">
-      </div>
-    </div>
+        <!-- Modal de Agendar Retorno -->
+        <div id="modal-agendar-retorno" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-auto text-center border-4 border-[var(--zomp)]">
+                <h2 class="text-2xl font-bold text-[#2AA078] mb-4">Agendar Retorno</h2>
+                <form id="form-agendar-retorno" class="space-y-4">
+                    <div>
+                        <label for="retorno-data" class="block text-left font-semibold text-[#1A2A2A] mb-1">Data</label>
+                        <input type="date" id="retorno-data" name="retorno-data" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#2AA078]" required>
+                    </div>
+                    <div>
+                        <label for="retorno-hora" class="block text-left font-semibold text-[#1A2A2A] mb-1">Hora</label>
+                        <input type="time" id="retorno-hora" name="retorno-hora" class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#2AA078]" required step="60">
+                    </div>
+                    <div class="flex justify-between mt-6">
+                        <button type="button" id="cancelar-retorno-btn" class="bg-gray-300 text-gray-800 font-semibold px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors">Cancelar</button>
+                        <button type="submit" class="bg-[#2AA078] text-white font-semibold px-6 py-2 rounded-lg hover:bg-[#238a66] transition-colors">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-    <!-- Importando JavaScript -->
-    <script src="/view/js/components/help-manager.js"></script>
-    <script src="/view/js/components/config-manager.js"></script>
-    <script src="/view/js/dashboard/dashboard.js"></script>
-    <script src="/view/js/consulta/consulta.js"></script>
+        <!-- Modal de Relatórios -->
+        <div id="modal-relatorios" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full mx-auto text-center border-4 border-[var(--zomp)]">
+                <h2 class="text-2xl font-bold text-[#2AA078] mb-4">Relatórios do Paciente</h2>
+                <div id="lista-relatorios" class="space-y-2 max-h-96 overflow-y-auto mb-4 flex flex-col"></div>
+                <button id="fechar-relatorios" class="mt-2 px-6 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Fechar</button>
+            </div>
+        </div>
+
+        <!-- Modal de Detalhe do Relatório -->
+        <div id="modal-detalhe-relatorio" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-auto text-center">
+                <h2 class="text-xl font-bold mb-4 text-[#2AA078]">Detalhes do Relatório</h2>
+                <div class="mb-2"><b>Data:</b> <span id="detalhe-relatorio-data"></span></div>
+                <div class="mb-2"><b>Descrição:</b><br><div id="detalhe-relatorio-desc" class="bg-gray-100 rounded p-2 mt-1"></div></div>
+                <button id="fechar-detalhe-relatorio" class="mt-4 px-6 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Fechar</button>
+            </div>
+        </div>
+
+        <!-- Importando JavaScript -->
+        <script src="../../js/dashboard.js"></script>
+        <script src="../../js/consulta.js"></script>
 </body>
 
 </html>
