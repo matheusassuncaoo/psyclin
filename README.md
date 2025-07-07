@@ -198,7 +198,7 @@ mvn spring-boot:run
 
 ## 📋 To-Do List
 
-### 🔄 Em Desenvolvimento
+### 🔄 Falta Desenvolver
 - [ ] Finalizar módulo de Anamnese
 - [ ] Implementar sistema de consultas
 - [ ] Desenvolver aprovação do orientador
@@ -273,9 +273,9 @@ psyclin/
 
 ## 🤝 Equipe de Desenvolvimento
 
-### Core Team - FASIPE Cuiabá
+### Psyclin Team - FASIPE Cuiabá
 
-**Matheus Assunção** - *Estudante de Analise e Desenvolvimento de Sistemas & Project Lead*
+**Matheus Assunção** - *Estudante de Analise e Desenvolvimento de Sistemas & Tech Lead*
 - 🐙 [@matheusassuncao](https://github.com/matheusassuncaoo)
 
 **Silas Gabriel** - *Estudante de Analise e Desenvolvimento de Sistemas*
@@ -294,7 +294,7 @@ psyclin/
 ### 👨‍🏫 Orientação Acadêmica
 
 **Prof. João Francisco Borba** - *Orientador do Projeto*
-- 📧 adsfasipecuiaba.com.br
+- 📧 ads@fasipecuiaba.com.br
 - 🎯 Supervisão técnica e acadêmica
 
 ---
